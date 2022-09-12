@@ -1,0 +1,6 @@
+name: BaseTemplate
+main: main.java.me.avankziar.base.spigot.BaseMain
+version: 1
+author: Avankziar
+api-version: 1.17
+description: A Template
