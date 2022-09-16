@@ -18,7 +18,7 @@ public class UpperGuiClickEvent extends Event
 	private String pluginName;
 	private String inventoryIdentifier;
 	private SettingsLevel settingsLevel;
-	private HashMap<ClickFunctionType, String> functionMap = new HashMap<>();
+	private HashMap<ClickType, String> functionMap = new HashMap<>();
 	private LinkedHashMap<String, Byte> valuesByte = new LinkedHashMap<>();
 	private LinkedHashMap<String, byte[]> valuesByteArray = new LinkedHashMap<>();
 	private LinkedHashMap<String, Double> valuesDouble = new LinkedHashMap<>();
@@ -33,7 +33,7 @@ public class UpperGuiClickEvent extends Event
 	public UpperGuiClickEvent(InventoryClickEvent inventoryClickEvent,
 			String pluginName, String inventoryIdentifier,
 			SettingsLevel settingsLevel,
-			HashMap<ClickFunctionType, String> functionMap)
+			HashMap<ClickType, String> functionMap)
 	{
 		setCancelled(false);
 		setInventoryClickEvent(inventoryClickEvent);
@@ -271,18 +271,18 @@ public class UpperGuiClickEvent extends Event
 		this.valuesString = valuesString;
 	}
 	
-	private void setFunctionMap(HashMap<ClickFunctionType, String> functionMap)
+	private void setFunctionMap(HashMap<ClickType, String> functionMap)
 	{
 		this.functionMap = functionMap;
 	}
 	
-	public HashMap<ClickFunctionType, String> getFunctionMap()
+	public HashMap<ClickType, String> getFunctionMap()
 	{
 		return functionMap;
 	}
 	
-	public String getFunction(ClickFunctionType clickFunctionType)
+	public String getFunction(ClickType clickType)
 	{
-		return functionMap.get(clickFunctionType);
+		return functionMap.get(clickType);
 	}
 }

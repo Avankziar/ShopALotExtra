@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.Language.ISO639_2B;
+import main.java.me.avankziar.sale.spigot.objects.GuiType;
 
 public class YamlHandler
 {
@@ -29,6 +30,12 @@ public class YamlHandler
 	private YamlConfiguration lang = new YamlConfiguration();
 	private File bmlanguage = null;
 	private YamlConfiguration bmlang = new YamlConfiguration();
+	private File matlanguage = null;
+	private YamlConfiguration matlang = new YamlConfiguration();
+	private File enchlanguage = null;
+	private YamlConfiguration enchlang = new YamlConfiguration();
+	
+	private LinkedHashMap<GuiType, YamlConfiguration> gui = new LinkedHashMap<>();
 
 	public YamlHandler(SaLE plugin)
 	{
@@ -54,6 +61,21 @@ public class YamlHandler
 	public YamlConfiguration getBMLang()
 	{
 		return bmlang;
+	}
+	
+	public YamlConfiguration getMaterialLang()
+	{
+		return matlang;
+	}
+	
+	public YamlConfiguration getEnchLang()
+	{
+		return enchlang;
+	}
+	
+	public YamlConfiguration getGui(GuiType guiType)
+	{
+		return gui.get(guiType);
 	}
 	
 	private YamlConfiguration loadYamlTask(File file, YamlConfiguration yaml)
@@ -250,7 +272,7 @@ public class YamlHandler
 			SaLE.log.info("Create %lang%.yml...".replace("%lang%", languageString));
 			try(InputStream in = plugin.getResource("default.yml"))
 			{
-				Files.copy(in, config.toPath());
+				Files.copy(in, language.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -262,10 +284,11 @@ public class YamlHandler
 			return false;
 		}
 		writeFile(language, lang, plugin.getYamlManager().getLanguageKey());
-		bmlanguage = new File(directory.getPath(), "bm_"+languageString+".yml");
+		
+		bmlanguage = new File(directory.getPath(), languageString+"_bonusmalus.yml");
 		if(!bmlanguage.exists()) 
 		{
-			SaLE.log.info("Create bm_%lang%.yml...".replace("%lang%", languageString));
+			SaLE.log.info("Create %lang%_bonusmalus.yml...".replace("%lang%", languageString));
 			try(InputStream in = plugin.getResource("default.yml"))
 			{
 				Files.copy(in, bmlanguage.toPath());
@@ -280,12 +303,77 @@ public class YamlHandler
 			return false;
 		}
 		writeFile(bmlanguage, bmlang, plugin.getYamlManager().getBonusMalusLanguageKey());
+		
+		matlanguage = new File(directory.getPath(), languageString+"_material.yml");
+		if(!matlanguage.exists()) 
+		{
+			SaLE.log.info("Create %lang%_material.yml...".replace("%lang%", languageString));
+			try(InputStream in = plugin.getResource("default.yml"))
+			{
+				Files.copy(in, matlanguage.toPath());
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		matlang = loadYamlTask(matlanguage, matlang);
+		if(matlang == null)
+		{
+			return false;
+		}
+		writeFile(matlanguage, matlang, plugin.getYamlManager().getMaterialLanguageKey());
+		
+		enchlanguage = new File(directory.getPath(), languageString+"_enchantment.yml");
+		if(!matlanguage.exists()) 
+		{
+			SaLE.log.info("Create %lang%_enchantment.yml...".replace("%lang%", languageString));
+			try(InputStream in = plugin.getResource("default.yml"))
+			{
+				Files.copy(in, enchlanguage.toPath());
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		enchlang = loadYamlTask(enchlanguage, enchlang);
+		if(enchlang == null)
+		{
+			return false;
+		}
+		writeFile(enchlanguage, enchlang, plugin.getYamlManager().getEnchantmentLanguageKey());
 		return true;
 	}
 	
 	private boolean mkdirGUIs()
 	{
-		
+		String languageString = plugin.getYamlManager().getLanguageType().toString().toLowerCase();
+		File directory = new File(plugin.getDataFolder()+"/Gui/");
+		if(!directory.exists())
+		{
+			directory.mkdir();
+		}
+		List<GuiType> list = new ArrayList<GuiType>(EnumSet.allOf(GuiType.class));
+		for(GuiType g : list)
+		{
+			File gf = new File(directory.getPath(), languageString+"_"+g.toString()+".yml");
+			if(!gf.exists()) 
+			{
+				SaLE.log.info("Create %lang%.yml...".replace("%lang%", languageString+"_"+g.toString()));
+				try(InputStream in = plugin.getResource("default.yml"))
+				{
+					Files.copy(in, gf.toPath());
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			YamlConfiguration gui = loadYamlTask(gf, new YamlConfiguration());
+			if (gui == null)
+			{
+				return false;
+			}
+			writeFile(gf, gui, plugin.getYamlManager().getGuiKey(g));
+		}
 		return true;
 	}
 }

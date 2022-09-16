@@ -2,6 +2,7 @@ package main.java.me.avankziar.sale.spigot.gui;
 
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -54,13 +55,25 @@ public class GUIApi
 	private String pluginName;
 	private String inventoryIdentifier;
 	private static JavaPlugin plugin = SaLE.getPlugin();
+	private SettingsLevel settingsLevel;
 	
-	public GUIApi(String pluginName, String inventoryIdentifier, InventoryHolder owner, int row, String title)
+	public GUIApi(String pluginName, String inventoryIdentifier, InventoryHolder owner, int row, String title, SettingsLevel settingsLevel)
 	{
 		if(row > 6) row = 6;
 		this.inventory = Bukkit.createInventory(owner, row*9, title);
 		this.pluginName = pluginName;
 		this.inventoryIdentifier = inventoryIdentifier;
+		this.settingsLevel = settingsLevel;
+	}
+	
+	public GUIApi(String pluginName, Inventory inventory, 
+			String inventoryIdentifier, SettingsLevel settingsLevel)
+	{
+		this.inventory = inventory;
+		this.inventory.clear();
+		this.pluginName = pluginName;
+		this.inventoryIdentifier = inventoryIdentifier;
+		this.settingsLevel = settingsLevel;
 	}
 	
 	/**
@@ -88,13 +101,9 @@ public class GUIApi
 		pdc.set(new NamespacedKey(plugin, INVENTORYIDENTIFIER), PersistentDataType.STRING, inventoryIdentifier);
 		pdc.set(new NamespacedKey(plugin, CLICKEVENTCANCEL), PersistentDataType.STRING, String.valueOf(clickEventCancel));
 		pdc.set(new NamespacedKey(plugin, SETTINGLEVEL), PersistentDataType.STRING, settingsLevel.getName());
-		if(clickFunction == null || clickFunction.length <= 0)
-		{
-			return null;
-		}
 		for(ClickFunction cf : clickFunction)
 		{
-			switch(cf.getClickFunctionType())
+			switch(cf.getClickType())
 			{
 			case DROP:
 				pdc.set(new NamespacedKey(plugin, DROP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
@@ -120,7 +129,7 @@ public class GUIApi
 				pdc.set(new NamespacedKey(plugin, NUMPAD_8_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
 			case NUMPAD_9:
 				pdc.set(new NamespacedKey(plugin, NUMPAD_9_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case SHIFT_DROP:
+			case CTRL_DROP:
 				pdc.set(new NamespacedKey(plugin, SHIFT_DROP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
 			case SHIFT_LEFT:
 				pdc.set(new NamespacedKey(plugin, SHIFT_LEFT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
@@ -223,7 +232,7 @@ public class GUIApi
 		}
 		for(ClickFunction cf : clickFunction)
 		{
-			switch(cf.getClickFunctionType())
+			switch(cf.getClickType())
 			{
 			case DROP:
 				pdc.set(new NamespacedKey(plugin, DROP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
@@ -249,7 +258,7 @@ public class GUIApi
 				pdc.set(new NamespacedKey(plugin, NUMPAD_8_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
 			case NUMPAD_9:
 				pdc.set(new NamespacedKey(plugin, NUMPAD_9_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case SHIFT_DROP:
+			case CTRL_DROP:
 				pdc.set(new NamespacedKey(plugin, SHIFT_DROP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
 			case SHIFT_LEFT:
 				pdc.set(new NamespacedKey(plugin, SHIFT_LEFT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
@@ -340,38 +349,40 @@ public class GUIApi
 	public void open(Player player) 
 	{
 		if(this.inventory != null) player.openInventory(this.inventory);
+		addInGui(player.getUniqueId(), inventoryIdentifier, settingsLevel);
 	}
 	
 	//Key == playeruuid
 	//Value == InventoryIdentifier
-	private static LinkedHashMap<String, String> playerInGui = new LinkedHashMap<>();
+	private static LinkedHashMap<UUID, String> playerInGui = new LinkedHashMap<>();
+	//Key == playeruuid
+	//Value == Player actual SettingsLevel
+	private static LinkedHashMap<UUID, SettingsLevel> playerGuiSettingsLevel = new LinkedHashMap<>();
 	
-	public static boolean isInGui(String uuid)
+	public static boolean isInGui(UUID uuid)
     {
     	return playerInGui.containsKey(uuid);
     }
 	
-	public static String getGui(String uuid)
+	public static String getGui(UUID uuid)
 	{
 		return playerInGui.get(uuid);
 	}
+	
+	public static SettingsLevel getSettingsLevel(UUID uuid)
+	{
+		return playerGuiSettingsLevel.get(uuid);
+	}
     
-	public static void addInGui(String uuid, String inventoryIdentifier)
+	public static void addInGui(UUID uuid, String inventoryIdentifier, SettingsLevel settingsLevel)
     {
-    	if(!playerInGui.containsKey(uuid))
-    	{
-    		playerInGui.put(uuid, inventoryIdentifier);
-    	} else
-    	{
-    		playerInGui.replace(uuid, inventoryIdentifier);
-    	}
+		playerInGui.put(uuid, inventoryIdentifier);
+		playerGuiSettingsLevel.put(uuid, settingsLevel);
     }
     
-	public static void removeInGui(String uuid)
+	public static void removeInGui(UUID uuid)
     {
-    	if(playerInGui.containsKey(uuid))
-    	{
-    		playerInGui.remove(uuid);
-    	}
+		playerInGui.remove(uuid);
+		playerGuiSettingsLevel.remove(uuid);
     }
 }

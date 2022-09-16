@@ -1,24 +1,32 @@
 package main.java.me.avankziar.sale.spigot.gui.events;
 
+import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
+
 public class ClickFunction
 {
-	private ClickFunctionType clickFunctionType;
+	private ClickType clickType;
 	private String function;
 	
-	public ClickFunction(ClickFunctionType clickFunctionType, String function)
+	public ClickFunction(ClickType clickFunctionType, String function)
 	{
-		setClickFunctionType(clickFunctionType);
+		setClickType(clickFunctionType);
 		setFunction(function);
 	}
-
-	public ClickFunctionType getClickFunctionType()
+	
+	public ClickFunction(ClickType clickFunctionType, ClickFunctionType function)
 	{
-		return clickFunctionType;
+		setClickType(clickFunctionType);
+		setFunction(function.toString());
 	}
 
-	public void setClickFunctionType(ClickFunctionType clickFunctionType)
+	public ClickType getClickType()
 	{
-		this.clickFunctionType = clickFunctionType;
+		return clickType;
+	}
+
+	public void setClickType(ClickType clickType)
+	{
+		this.clickType = clickType;
 	}
 
 	public String getFunction()
@@ -34,6 +42,6 @@ public class ClickFunction
 	@Override
 	public String toString()
 	{
-		return clickFunctionType.toString()+";"+function;
+		return clickType.toString()+";"+function;
 	}
 }

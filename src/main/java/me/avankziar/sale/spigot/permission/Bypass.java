@@ -2,11 +2,19 @@ package main.java.me.avankziar.sale.spigot.permission;
 
 import java.util.LinkedHashMap;
 
+import main.java.me.avankziar.sale.spigot.SaLE;
+
 public class Bypass
 {
 	public enum Permission
 	{
-		SHOP_CREATION
+		SHOP_CREATION,
+		SHOP_GUI_BYPASS;
+		
+		public String getBonusMalus()
+		{
+			return SaLE.getPlugin().pluginName.toLowerCase()+":"+this.toString().toLowerCase();
+		}
 	}
 	private static LinkedHashMap<Bypass.Permission, String> mapPerm = new LinkedHashMap<>();
 	
@@ -22,7 +30,13 @@ public class Bypass
 	
 	public enum CountPermission
 	{
-		SHOP_CREATION_AMOUNT_
+		SHOP_CREATION_AMOUNT_,
+		SHOP_ITEMSTORAGE_AMOUNT_;
+		
+		public String getBonusMalus()
+		{
+			return SaLE.getPlugin().pluginName.toLowerCase()+":"+this.toString().toLowerCase();
+		}
 	}
 	private static LinkedHashMap<Bypass.CountPermission, String> mapCount = new LinkedHashMap<>();
 	

@@ -1,6 +1,7 @@
 package main.java.me.avankziar.sale.spigot.gui.listener;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -18,9 +19,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import main.java.me.avankziar.sale.spigot.gui.GUIApi;
 import main.java.me.avankziar.sale.spigot.gui.GuiValues;
 import main.java.me.avankziar.sale.spigot.gui.events.BottomGuiClickEvent;
-import main.java.me.avankziar.sale.spigot.gui.events.ClickFunctionType;
+import main.java.me.avankziar.sale.spigot.gui.events.ClickType;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.gui.events.UpperGuiClickEvent;
+import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 
 public class GuiPreListener implements Listener
 {
@@ -59,16 +61,20 @@ public class GuiPreListener implements Listener
 	@EventHandler
 	public void onGuiClose(InventoryCloseEvent event)
 	{
-		String uuid = event.getPlayer().getUniqueId().toString();
+		UUID uuid = event.getPlayer().getUniqueId();
 		if(GUIApi.isInGui(uuid))
 		{
 			GUIApi.removeInGui(uuid);
+		}
+		if(SignHandler.inCheck(uuid))
+		{
+			SignHandler.checkAfterAdministration(uuid);
 		}
 	}
 	
 	private void getBottomGuiEvent(InventoryClickEvent event)
 	{
-		String uuid = event.getWhoClicked().getUniqueId().toString();
+		UUID uuid = event.getWhoClicked().getUniqueId();
 		if(!GUIApi.isInGui(uuid))
 		{
 			return;
@@ -107,7 +113,7 @@ public class GuiPreListener implements Listener
 			event.setCancelled(true);
 			event.setResult(Result.DENY);
 		}
-		HashMap<ClickFunctionType, String> functionMap = getFunctionMap(plugin, pdc);
+		HashMap<ClickType, String> functionMap = getFunctionMap(plugin, pdc);
 		UpperGuiClickEvent gce = new UpperGuiClickEvent(
 				event, 
 				pdc.get(npluginName, PersistentDataType.STRING),
@@ -190,9 +196,9 @@ public class GuiPreListener implements Listener
 		Bukkit.getPluginManager().callEvent(gce);
 	}
 	
-	private HashMap<ClickFunctionType, String> getFunctionMap(JavaPlugin plugin, PersistentDataContainer pdc)
+	private HashMap<ClickType, String> getFunctionMap(JavaPlugin plugin, PersistentDataContainer pdc)
 	{
-		HashMap<ClickFunctionType, String> map = new HashMap<>();
+		HashMap<ClickType, String> map = new HashMap<>();
 		NamespacedKey nl = new NamespacedKey(plugin, GUIApi.LEFT_FUNCTION);
 		NamespacedKey nr = new NamespacedKey(plugin, GUIApi.RIGHT_FUNCTION);
 		NamespacedKey nd = new NamespacedKey(plugin, GUIApi.DROP_FUNCTION);
@@ -209,22 +215,22 @@ public class GuiPreListener implements Listener
 		NamespacedKey nn7 = new NamespacedKey(plugin, GUIApi.NUMPAD_7_FUNCTION);
 		NamespacedKey nn8 = new NamespacedKey(plugin, GUIApi.NUMPAD_8_FUNCTION);
 		NamespacedKey nn9 = new NamespacedKey(plugin, GUIApi.NUMPAD_9_FUNCTION);
-		if(pdc.has(nl, PersistentDataType.STRING)){map.put(ClickFunctionType.LEFT, pdc.get(nl, PersistentDataType.STRING));}
-		if(pdc.has(nr, PersistentDataType.STRING)){map.put(ClickFunctionType.RIGHT, pdc.get(nr, PersistentDataType.STRING));}
-		if(pdc.has(nd, PersistentDataType.STRING)){map.put(ClickFunctionType.DROP, pdc.get(nd, PersistentDataType.STRING));}
-		if(pdc.has(nsl, PersistentDataType.STRING)){map.put(ClickFunctionType.SHIFT_LEFT, pdc.get(nsl, PersistentDataType.STRING));}
-		if(pdc.has(nsr, PersistentDataType.STRING)){map.put(ClickFunctionType.SHIFT_RIGHT, pdc.get(nsr, PersistentDataType.STRING));}
-		if(pdc.has(nsd, PersistentDataType.STRING)){map.put(ClickFunctionType.SHIFT_DROP, pdc.get(nsd, PersistentDataType.STRING));}
-		if(pdc.has(ns, PersistentDataType.STRING)){map.put(ClickFunctionType.SWAP, pdc.get(ns, PersistentDataType.STRING));}
-		if(pdc.has(nn1, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_1, pdc.get(nn1, PersistentDataType.STRING));}
-		if(pdc.has(nn2, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_2, pdc.get(nn2, PersistentDataType.STRING));}
-		if(pdc.has(nn3, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_3, pdc.get(nn3, PersistentDataType.STRING));}
-		if(pdc.has(nn4, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_4, pdc.get(nn4, PersistentDataType.STRING));}
-		if(pdc.has(nn5, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_5, pdc.get(nn5, PersistentDataType.STRING));}
-		if(pdc.has(nn6, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_6, pdc.get(nn6, PersistentDataType.STRING));}
-		if(pdc.has(nn7, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_7, pdc.get(nn7, PersistentDataType.STRING));}
-		if(pdc.has(nn8, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_8, pdc.get(nn8, PersistentDataType.STRING));}
-		if(pdc.has(nn9, PersistentDataType.STRING)){map.put(ClickFunctionType.NUMPAD_9, pdc.get(nn9, PersistentDataType.STRING));}
+		if(pdc.has(nl, PersistentDataType.STRING)){map.put(ClickType.LEFT, pdc.get(nl, PersistentDataType.STRING));}
+		if(pdc.has(nr, PersistentDataType.STRING)){map.put(ClickType.RIGHT, pdc.get(nr, PersistentDataType.STRING));}
+		if(pdc.has(nd, PersistentDataType.STRING)){map.put(ClickType.DROP, pdc.get(nd, PersistentDataType.STRING));}
+		if(pdc.has(nsl, PersistentDataType.STRING)){map.put(ClickType.SHIFT_LEFT, pdc.get(nsl, PersistentDataType.STRING));}
+		if(pdc.has(nsr, PersistentDataType.STRING)){map.put(ClickType.SHIFT_RIGHT, pdc.get(nsr, PersistentDataType.STRING));}
+		if(pdc.has(nsd, PersistentDataType.STRING)){map.put(ClickType.CTRL_DROP, pdc.get(nsd, PersistentDataType.STRING));}
+		if(pdc.has(ns, PersistentDataType.STRING)){map.put(ClickType.SWAP, pdc.get(ns, PersistentDataType.STRING));}
+		if(pdc.has(nn1, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_1, pdc.get(nn1, PersistentDataType.STRING));}
+		if(pdc.has(nn2, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_2, pdc.get(nn2, PersistentDataType.STRING));}
+		if(pdc.has(nn3, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_3, pdc.get(nn3, PersistentDataType.STRING));}
+		if(pdc.has(nn4, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_4, pdc.get(nn4, PersistentDataType.STRING));}
+		if(pdc.has(nn5, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_5, pdc.get(nn5, PersistentDataType.STRING));}
+		if(pdc.has(nn6, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_6, pdc.get(nn6, PersistentDataType.STRING));}
+		if(pdc.has(nn7, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_7, pdc.get(nn7, PersistentDataType.STRING));}
+		if(pdc.has(nn8, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_8, pdc.get(nn8, PersistentDataType.STRING));}
+		if(pdc.has(nn9, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_9, pdc.get(nn9, PersistentDataType.STRING));}
 		return map;
 	}
 }

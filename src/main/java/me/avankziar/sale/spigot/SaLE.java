@@ -40,7 +40,12 @@ import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlSetup;
 import main.java.me.avankziar.sale.spigot.database.YamlHandler;
 import main.java.me.avankziar.sale.spigot.database.YamlManager;
+import main.java.me.avankziar.sale.spigot.gui.listener.GuiPreListener;
+import main.java.me.avankziar.sale.spigot.gui.listener.UpperListener;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
+import main.java.me.avankziar.sale.spigot.handler.EnchantmentHandler;
+import main.java.me.avankziar.sale.spigot.listener.PlayerInteractListener;
+import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
 public class SaLE extends JavaPlugin
@@ -65,7 +70,6 @@ public class SaLE extends JavaPlugin
 	private Administration administrationConsumer;
 	private MessageToBungee mtbConsumer;
 	private Economy ecoConsumer;
-	private net.milkbowl.vault.economy.Economy ecoVault;
 	private BonusMalus bonusMalusConsumer;
 	
 	public void onEnable()
@@ -107,6 +111,8 @@ public class SaLE extends JavaPlugin
 		setupCommandTree();
 		setupListeners();
 		setupIFH();
+		//MaterialHandler.init(plugin);
+		EnchantmentHandler.init(plugin);
 	}
 	
 	public void onDisable()
@@ -168,7 +174,7 @@ public class SaLE extends JavaPlugin
 		
 		TabCompletion tab = new TabCompletion(plugin);
 		
-		CommandConstructor base = new CommandConstructor(CommandExecuteType.BASEMAIN, "base", false);
+		CommandConstructor base = new CommandConstructor(CommandExecuteType.SALE, "base", false);
 		registerCommand(base.getPath(), base.getName());
 		getCommand(base.getName()).setExecutor(new BaseCommandExecutor(plugin, base));
 		getCommand(base.getName()).setTabCompleter(tab);
@@ -323,7 +329,10 @@ public class SaLE extends JavaPlugin
 	public void setupListeners()
 	{
 		PluginManager pm = getServer().getPluginManager();
-		//pm.registerEvents(new BackListener(plugin), plugin);
+		pm.registerEvents(new SignChangeListener(plugin), plugin);
+		pm.registerEvents(new PlayerInteractListener(plugin), plugin);
+		pm.registerEvents(new GuiPreListener(plugin), plugin);
+		pm.registerEvents(new UpperListener(plugin), plugin);
 	}
 	
 	public boolean reload() throws IOException
@@ -380,14 +389,6 @@ public class SaLE extends JavaPlugin
 	{
 		setupMessageToBungee();
 		setupIFHEconomy();
-		setupVaultEconomy();
-		if(ecoConsumer == null && ecoVault == null)
-		{
-			log.severe("A economy plugin which supported InterfaceHub or Vault Economy is missing!");
-			log.severe("Disable "+pluginName+"!");
-			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
-			return;
-		}
 		setupBonusMalus();
 	}
 	
@@ -444,7 +445,10 @@ public class SaLE extends JavaPlugin
                 getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) 
 		{
-		   return;
+			log.severe("A economy plugin which supported InterfaceHub is missing!");
+			log.severe("Disable "+pluginName+"!");
+			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
+			return;
 		}
 		ecoConsumer = rsp.getProvider();
 		log.info(pluginName + " detected InterfaceHub >>> Economy.class is consumed!");
@@ -454,33 +458,6 @@ public class SaLE extends JavaPlugin
 	public Economy getIFHEco()
 	{
 		return this.ecoConsumer;
-	}
-	
-	private boolean setupVaultEconomy()
-    {
-        if (Bukkit.getPluginManager().getPlugin("Vault") == null) 
-        {
-            return false;
-        }
-
-        RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> rsp = getServer()
-        		.getServicesManager()
-        		.getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (rsp == null) 
-        {
-            return false;
-        }
-        ecoVault = rsp.getProvider();
-        if(ecoVault != null)
-        {
-    		log.info(pluginName + " detected Vault. Hooking!");
-        }
-        return ecoVault != null;
-    }
-	
-	public net.milkbowl.vault.economy.Economy getVaultEco()
-	{
-		return this.ecoVault;
 	}
 	
 	private void setupBonusMalus() 
@@ -575,13 +552,14 @@ public class SaLE extends JavaPlugin
 							}
 							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
 							getBonusMalus().register(
-									pluginName.toLowerCase()+":"+ept.toString().toLowerCase(),
+									ept.getBonusMalus(),
 									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
 									false,
 									bmt, MultiplicationCalculationType.MULTIPLICATION,
 									lar.toArray(new String[lar.size()]));
 						}
 					}
+					//TODO BonusMalus Class
 				}
 			}
         }.runTaskTimer(plugin, 20L, 20*2);

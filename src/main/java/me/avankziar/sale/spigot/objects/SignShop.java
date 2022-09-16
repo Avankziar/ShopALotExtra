@@ -49,6 +49,12 @@ public class SignShop implements MysqlHandable
 	private int z;
 	//Ash
 	private int storageID; //ID of the distributionchest
+	//admin
+	private boolean unlimitedBuy;
+	private boolean unlimitedSell;
+	private boolean canBuy;
+	private boolean canSell;
+	private String numText; //Input all number for sell/buy etc.
 	
 	public SignShop(){}
 	
@@ -58,7 +64,9 @@ public class SignShop implements MysqlHandable
 			Double buyAmount, Double sellAmount, long possibleBuy, long possibleSell,
 			long discountStart, long discountEnd, Double discountBuyAmount, Double discountSellAmount,
 			long discountPossibleBuy, long discountPossibleSell,
-			String server, String world, int x, int y, int z, int storageId)
+			String server, String world, int x, int y, int z, int storageId,
+			boolean unlimitedBuy, boolean unlimitedSell,
+			boolean canBuy, boolean canSell, String numText)
 	{
 		setId(id);
 		setOwner(owner);
@@ -86,6 +94,11 @@ public class SignShop implements MysqlHandable
 		setY(y);
 		setZ(z);
 		setStorageID(storageId);
+		setUnlimitedBuy(unlimitedBuy);
+		setUnlimitedSell(unlimitedSell);
+		setCanBuy(canBuy);
+		setCanSell(canSell);
+		setNumText(numText);
 	}
 	
 	private SignShop(int id, UUID owner, String signShopName, int accountId, long creationDateTime,
@@ -94,7 +107,9 @@ public class SignShop implements MysqlHandable
 			Double buyAmount, Double sellAmount, long possibleBuy, long possibleSell,
 			long discountStart, long discountEnd, Double discountBuyAmount, Double discountSellAmount,
 			long discountPossibleBuy, long discountPossibleSell,
-			String server, String world, int x, int y, int z, int storageId)
+			String server, String world, int x, int y, int z, int storageId,
+			boolean unlimitedBuy, boolean unlimitedSell,
+			boolean canBuy, boolean canSell, String numText)
 	{
 		setId(id);
 		setOwner(owner);
@@ -122,6 +137,11 @@ public class SignShop implements MysqlHandable
 		setY(y);
 		setZ(z);
 		setStorageID(storageId);
+		setUnlimitedBuy(unlimitedBuy);
+		setUnlimitedSell(unlimitedSell);
+		setCanBuy(canBuy);
+		setCanSell(canSell);
+		setNumText(numText);
 	}
 	
 	public int getId()
@@ -384,6 +404,56 @@ public class SignShop implements MysqlHandable
 		this.storageID = storageID;
 	}
 
+	public boolean isUnlimitedBuy()
+	{
+		return unlimitedBuy;
+	}
+
+	public void setUnlimitedBuy(boolean unlimitedBuy)
+	{
+		this.unlimitedBuy = unlimitedBuy;
+	}
+
+	public boolean isUnlimitedSell()
+	{
+		return unlimitedSell;
+	}
+
+	public void setUnlimitedSell(boolean unlimitedSell)
+	{
+		this.unlimitedSell = unlimitedSell;
+	}
+
+	public boolean canBuy()
+	{
+		return canBuy;
+	}
+
+	public void setCanBuy(boolean canBuy)
+	{
+		this.canBuy = canBuy;
+	}
+
+	public boolean canSell()
+	{
+		return canSell;
+	}
+
+	public void setCanSell(boolean canSell)
+	{
+		this.canSell = canSell;
+	}
+
+	public String getNumText()
+	{
+		return numText;
+	}
+
+	public void setNumText(String numText)
+	{
+		this.numText = numText;
+	}
+
 	@Override
 	public boolean create(Connection conn, String tablename)
 	{
@@ -397,7 +467,10 @@ public class SignShop implements MysqlHandable
 					+ "`discount_start`, `discount_end`, `discount_buy_amount`, `discount_sell_amount`, "
 					+ "`discount_possible_buy`, `discount_possible_sell`, "
 					+ "`server_name`, `world`, `x`, `y`, `z`,"
-					+ "`storage_id`) " 
+					+ "`storage_id`,"
+					+ "`unlimited_buy`, `unlimited_sell`,"
+					+ "`can_buy`, `can_sell`,"
+					+ "`num_text`) " 
 					+ "VALUES("
 					+ "?, ?, ?, ?, "
 					+ "?, ?, ?, "
@@ -406,6 +479,9 @@ public class SignShop implements MysqlHandable
 					+ "?, ?, ?, ?, "
 					+ "?, ?, "
 					+ "?, ?, ?, ?, ?, "
+					+ "?,"
+					+ "?, ?,"
+					+ "?, ?, "
 					+ "?"
 					+ ")";
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -434,6 +510,11 @@ public class SignShop implements MysqlHandable
 	        ps.setInt(23, getY());
 	        ps.setInt(24, getZ());
 	        ps.setInt(25, getStorageID());
+	        ps.setBoolean(26, isUnlimitedBuy());
+	        ps.setBoolean(27, isUnlimitedSell());
+	        ps.setBoolean(28, canBuy());
+	        ps.setBoolean(29, canSell());
+	        ps.setString(30, getNumText());
 	        
 	        int i = ps.executeUpdate();
 	        MysqlHandler.addRows(MysqlHandler.QueryType.INSERT, i);
@@ -458,7 +539,8 @@ public class SignShop implements MysqlHandable
 				+ "`discount_start` = ?, `discount_end` = ?, `discount_buy_amount` = ?, `discount_sell_amount` = ?, "
 				+ "`discount_possible_buy` = ?, `discount_possible_sell` = ?, "
 				+ "`server_name` = ?, `world` = ?, `x` = ?, `y` = ?, `z` = ?,"
-				+ "`storage_id` = ?" 
+				+ "`storage_id` = ?, `unlimited_buy` = ?, `unlimited_sell` = ?,"
+				+ " `can_buy` = ?, `can_sell` = ?, `num_text` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, getOwner().toString());
@@ -486,7 +568,12 @@ public class SignShop implements MysqlHandable
 	        ps.setInt(23, getY());
 	        ps.setInt(24, getZ());
 	        ps.setInt(25, getStorageID());
-			int i = 26;
+	        ps.setBoolean(26, isUnlimitedBuy());
+	        ps.setBoolean(27, isUnlimitedSell());
+	        ps.setBoolean(28, canBuy());
+	        ps.setBoolean(29, canSell());
+	        ps.setString(30, getNumText());
+			int i = 31;
 			for(Object o : whereObject)
 			{
 				ps.setObject(i, o);
@@ -547,7 +634,12 @@ public class SignShop implements MysqlHandable
 						rs.getInt("x"),
 						rs.getInt("y"),
 						rs.getInt("z"),
-						rs.getInt("storage_id")));
+						rs.getInt("storage_id"),
+						rs.getBoolean("unlimited_buy"),
+						rs.getBoolean("unlimited_sell"),
+						rs.getBoolean("can_buy"),
+						rs.getBoolean("can_sell"),
+						rs.getString("num_text")));
 			}
 			return al;
 		} catch (SQLException e)

@@ -25,4 +25,33 @@ public class ConfigHandler
 	{
 		return plugin.getYamlHandler().getConfig().getBoolean("EnableMechanic.BonusMalus", false);
 	}
+	
+	public String getSignShopInitLine()
+	{
+		return plugin.getYamlHandler().getConfig().getString("SignShop.SignInitializationLine", "[SaleShop]");
+	}
+	
+	public enum CountType
+	{
+		HIGHEST, ADDUP;
+	}
+	
+	public CountType getCountPermType()
+	{
+		String s = plugin.getYamlHandler().getConfig().getString("Mechanic.CountPerm", "HIGHEST");
+		CountType ct;
+		try
+		{
+			ct = CountType.valueOf(s);
+		} catch (Exception e)
+		{
+			ct = CountType.HIGHEST;
+		}
+		return ct;
+	}
+	
+	public long getDefaulStartItemStorage()
+	{
+		return plugin.getYamlHandler().getConfig().getLong("SignShop.SignInitializationLine", 3456);
+	}
 }

@@ -185,7 +185,12 @@ public class MysqlSetup
 		+ " x int,"
 		+ " y int,"
 		+ " z int,"
-		+ " storage_id int);";
+		+ " storage_id int,"
+		+ " unlimited_buy boolean,"
+		+ " unlimited_sell boolean,"
+		+ " can_buy boolean,"
+		+ " can_sell boolean,"
+		+ " num_text text);";
 		baseSetup(data);
 		return true;
 	}

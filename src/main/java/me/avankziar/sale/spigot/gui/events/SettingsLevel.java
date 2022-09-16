@@ -6,7 +6,19 @@ package main.java.me.avankziar.sale.spigot.gui.events;
  */
 public enum SettingsLevel
 {
-	NOLEVEL, BASE, ADVANCED, EXPERT, MASTER;
+	NOLEVEL(0), BASE(1), ADVANCED(2), EXPERT(3), MASTER(4);
+	
+	private int ordinal;
+	
+	SettingsLevel(int ordinal)
+	{
+		this.ordinal = ordinal;
+	}
+	
+	public int getOrdinal()
+	{
+		return this.ordinal;
+	}
 	
 	public String getName()
 	{
