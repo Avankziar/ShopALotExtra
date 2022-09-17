@@ -39,7 +39,7 @@ public class GuiHandler
 	public static void openAdministration(SignShop ssh, Player player, SettingsLevel settingsLevel, boolean closeInv)
 	{
 		GuiType gt = GuiType.ADMINISTRATION;
-		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, ssh.getSignShopName(), 
+		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, "Shop: "+ssh.getSignShopName(), 
 				settingsLevel == null ? SettingsLevel.BASE : settingsLevel);
 		SignShop ssh2 = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssh.getId());
 		openGui(ssh2, player, gt, gui, settingsLevel, closeInv);
@@ -105,20 +105,26 @@ public class GuiHandler
 		YamlConfiguration y = plugin.getYamlHandler().getGui(gt);
 		for(int i = 0; i < 54; i++)
 		{
-			if(y.get(i+".IsInfoItem") == null)
+			if(y.get(i+".IsInfoItem") != null && y.getBoolean(i+".IsInfoItem"))
 			{
-				if(y.get(i+".Material") == null)
-				{
-					continue;
-				}
+				ItemStack is = ssh.getItemStack();
+				LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
+				map.put(SIGNSHOP_ID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, ssh.getId()));
+				gui.add(i, is, SettingsLevel.BASE, true, map, getClickFunction(y, String.valueOf(i)));
+				continue;
 			}
-			SettingsLevel itemSL = SettingsLevel.valueOf(y.getString(i+".SettingsLevel"));
+			if(y.get(i+".Material") == null)
+			{
+				continue;
+			}			
+			SettingsLevel itemSL = SettingsLevel.valueOf(y.getString(i+".SettingLevel"));
+			if(y.get(i+".SettingLevel") == null)
+			{
+				itemSL = SettingsLevel.NOLEVEL;
+			}
 			if(settingsLevel.getOrdinal() < itemSL.getOrdinal())
 			{
-				if(SettingsLevel.NOLEVEL != itemSL)
-				{
-					continue;
-				}
+				continue;
 			}
 			if(y.get(i+".Permission") != null)
 			{
@@ -127,7 +133,7 @@ public class GuiHandler
 					continue;
 				}
 			}
-			if(y.get(i+".canBuy") != null)
+			if(y.get(i+".CanBuy") != null)
 			{
 				if(y.getBoolean(i+".CanBuy"))
 				{
@@ -137,7 +143,7 @@ public class GuiHandler
 					}
 				}
 			}
-			if(y.get(i+".canSell") != null)
+			if(y.get(i+".CanSell") != null)
 			{
 				if(y.getBoolean(i+".CanSell"))
 				{
@@ -154,12 +160,6 @@ public class GuiHandler
 					//TODO ASH IFH abfrage
 					continue;
 				}
-			}
-			if(y.get(i+".IsInfoItem") != null && y.getBoolean(i+".IsInfoItem"))
-			{
-				ItemStack is = ssh.getItemStack();
-				gui.add(i, is, itemSL, true, null, getClickFunction(y, String.valueOf(i)));
-				continue;
 			}
 			Material mat = null;
 			if(y.get(i+".Material."+settingsLevel.toString()) != null)
@@ -196,9 +196,16 @@ public class GuiHandler
 					}
 				}
 			}
-			lore = getLorePlaceHolder(ssh, player, lore, ac, dg, useSI, useSy, ts, ds);
+			if(lore != null)
+			{
+				lore = getLorePlaceHolder(ssh, player, lore, ac, dg, useSI, useSy, ts, ds);
+			}
 			if(il != null)
 			{
+				if(lore == null)
+				{
+					lore = new ArrayList<>();
+				}
 				lore.add(il);
 				for(Entry<Enchantment, Integer> en : ssh.getItemStack().getEnchantments().entrySet())
 				{
@@ -324,7 +331,7 @@ public class GuiHandler
 		}
 		if(text.contains("%storageid%"))
 		{
-			s = s.replace("%storageid%", String.valueOf(ssh.getStorageID()));
+			s = s.replace("%storageid%", ssh.getStorageID() == 0 ? "/" : String.valueOf(ssh.getStorageID()));
 		}
 		if(text.contains("%creationdate%"))
 		{
@@ -332,27 +339,27 @@ public class GuiHandler
 		}
 		if(text.contains("%discountstart%"))
 		{
-			s = s.replace("%discountstart%", TimeHandler.getDateTime(ssh.getDiscountStart()));
+			s = s.replace("%discountstart%", ssh.getDiscountStart() == 0 ? "/" : TimeHandler.getDateTime(ssh.getDiscountStart()));
 		}
 		if(text.contains("%discountend%"))
 		{
-			s = s.replace("%discountend%", TimeHandler.getDateTime(ssh.getDiscountEnd()));
+			s = s.replace("%discountend%", ssh.getDiscountEnd() == 0 ? "/" :TimeHandler.getDateTime(ssh.getDiscountEnd()));
 		}
 		if(text.contains("%possiblebuy%"))
 		{
-			s = s.replace("%possiblebuy%", String.valueOf(ssh.getPossibleBuy()));
+			s = s.replace("%possiblebuy%", ssh.getPossibleBuy() < 0 ? "/" : String.valueOf(ssh.getPossibleBuy()));
 		}
 		if(text.contains("%possiblesell%"))
 		{
-			s = s.replace("%possiblesell%", String.valueOf(ssh.getPossibleSell()));
+			s = s.replace("%possiblesell%", ssh.getPossibleSell() < 0 ? "/" : String.valueOf(ssh.getPossibleSell()));
 		}
 		if(text.contains("%discountpossiblebuy%"))
 		{
-			s = s.replace("%discountpossiblebuy%", String.valueOf(ssh.getDiscountPossibleBuy()));
+			s = s.replace("%discountpossiblebuy%", ssh.getDiscountPossibleBuy() < 0 ? "/" : String.valueOf(ssh.getDiscountPossibleBuy()));
 		}
 		if(text.contains("%discountpossiblesell%"))
 		{
-			s = s.replace("%discountpossiblesell%", String.valueOf(ssh.getDiscountPossibleSell()));
+			s = s.replace("%discountpossiblesell%", ssh.getDiscountPossibleSell() < 0 ? "/" : String.valueOf(ssh.getDiscountPossibleSell()));
 		}
 		if(text.contains("%itemstoragecurrent%"))
 		{
@@ -380,23 +387,23 @@ public class GuiHandler
 		}
 		if(text.contains("%buyraw1%"))
 		{
-			s = s.replace("%buyraw1%", ssh.getBuyAmount() == null ? "/" : 
+			s = s.replace("%buyraw1%", (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getBuyAmount(), ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%sellraw1%"))
 		{
-			s = s.replace("%sellraw1%", ssh.getSellAmount() == null ? "/" : 
+			s = s.replace("%sellraw1%", (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getSellAmount(), ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));		
 		}
 		if(text.contains("%buy1%"))
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%buy1%", ssh.getBuyAmount() == null ? "/" : 
+				s = s.replace("%buy1%", (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getBuyAmount(), ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%buy1%", ssh.getDiscountBuyAmount() == null ? "/" : 
+				s = s.replace("%buy1%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountBuyAmount(), ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 			}
 		}
@@ -404,11 +411,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%buy16%", ssh.getBuyAmount() == null ? "/" : 
+				s = s.replace("%buy16%", (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getBuyAmount()*16, ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%buy16%", ssh.getDiscountBuyAmount() == null ? "/" : 
+				s = s.replace("%buy16%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*16, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 			}
 		}
@@ -416,11 +423,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%buy32%", ssh.getBuyAmount() == null ? "/" : 
+				s = s.replace("%buy32%", (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getBuyAmount()*32, ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%buy32%", ssh.getDiscountBuyAmount() == null ? "/" : 
+				s = s.replace("%buy32%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*32, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 			}
 		}
@@ -428,11 +435,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%buy64%", ssh.getBuyAmount() == null ? "/" : 
+				s = s.replace("%buy64%", (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getBuyAmount()*64, ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%buy64%", ssh.getDiscountBuyAmount() == null ? "/" : 
+				s = s.replace("%buy64%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*64, ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			}
 		}
@@ -440,11 +447,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%buy576%", ssh.getBuyAmount() == null ? "/" : 
+				s = s.replace("%buy576%", (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getBuyAmount()*576, ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%buy576%", ssh.getDiscountBuyAmount() == null ? "/" : 
+				s = s.replace("%buy576%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*576, ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			}			
 		}
@@ -452,11 +459,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%buy2304%", ssh.getBuyAmount() == null ? "/" : 
+				s = s.replace("%buy2304%", (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getBuyAmount()*2304, ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%buy2304%", ssh.getDiscountBuyAmount() == null ? "/" : 
+				s = s.replace("%buy2304%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*2304, ac.getCurrency(), dg, buyFrac, useSI, useSy, text, text));
 			}			
 		}
@@ -464,11 +471,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%sell1%", ssh.getSellAmount() == null ? "/" : 
+				s = s.replace("%sell1%", (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getSellAmount(), ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%sell1%", ssh.getDiscountSellAmount() == null ? "/" : 
+				s = s.replace("%sell1%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountSellAmount(), ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			}			
 		}
@@ -476,11 +483,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%sell16%", ssh.getSellAmount() == null ? "/" : 
+				s = s.replace("%sell16%", (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getSellAmount()*16, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%sell16%", ssh.getDiscountSellAmount() == null ? "/" : 
+				s = s.replace("%sell16%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*16, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			}			
 		}
@@ -488,11 +495,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%sell32%", ssh.getSellAmount() == null ? "/" : 
+				s = s.replace("%sell32%", (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getSellAmount()*32, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%sell32%", ssh.getDiscountSellAmount() == null ? "/" : 
+				s = s.replace("%sell32%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*32, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			}			
 		}
@@ -500,11 +507,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%sell64%", ssh.getSellAmount() == null ? "/" : 
+				s = s.replace("%sell64%", (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getSellAmount()*64, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%sell64%", ssh.getDiscountSellAmount() == null ? "/" : 
+				s = s.replace("%sell64%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*64, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			}			
 		}
@@ -512,11 +519,11 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%sell576%", ssh.getSellAmount() == null ? "/" : 
+				s = s.replace("%sell576%", (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getSellAmount()*576, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%sell576%", ssh.getDiscountSellAmount() == null ? "/" : 
+				s = s.replace("%sell576%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*576, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			}			
 		}
@@ -524,72 +531,72 @@ public class GuiHandler
 		{
 			if(!inDiscount)
 			{
-				s = s.replace("%sell2304%", ssh.getSellAmount() == null ? "/" : 
+				s = s.replace("%sell2304%", (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getSellAmount()*2304, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			} else
 			{
-				s = s.replace("%sell2304%", ssh.getDiscountSellAmount() == null ? "/" : 
+				s = s.replace("%sell2304%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*2304, ac.getCurrency(), dg, sellFrac, useSI, useSy, text, text));
 			}			
 		}
 		if(text.contains("%discountbuy1%"))
 		{
-			s = s.replace("%discountbuy1%", ssh.getDiscountBuyAmount() == null ? "/" : 
+			s = s.replace("%discountbuy1%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountBuyAmount(), ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountbuy16%"))
 		{
-			s = s.replace("%discountbuy16%", ssh.getDiscountBuyAmount() == null ? "/" : 
+			s = s.replace("%discountbuy16%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*16, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountbuy32%"))
 		{
-			s = s.replace("%discountbuy32%", ssh.getDiscountBuyAmount() == null ? "/" : 
+			s = s.replace("%discountbuy32%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*32, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountbuy64%"))
 		{
-			s = s.replace("%discountbuy64%", ssh.getDiscountBuyAmount() == null ? "/" : 
+			s = s.replace("%discountbuy64%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*64, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountbuy576%"))
 		{
-			s = s.replace("%discountbuy576%", ssh.getDiscountBuyAmount() == null ? "/" : 
+			s = s.replace("%discountbuy576%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*576, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountbuy2304%"))
 		{
-			s = s.replace("%discountbuy2304%", ssh.getDiscountBuyAmount() == null ? "/" : 
+			s = s.replace("%discountbuy2304%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*2304, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountsell1%"))
 		{
-			s = s.replace("%discountsell1%", ssh.getDiscountSellAmount() == null ? "/" : 
+			s = s.replace("%discountsell1%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountSellAmount(), ac.getCurrency(), dg, dsellFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountsell16%"))
 		{
-			s = s.replace("%discountsell16%", ssh.getDiscountSellAmount() == null ? "/" : 
+			s = s.replace("%discountsell16%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountSellAmount()*16, ac.getCurrency(), dg, dsellFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountsell32%"))
 		{
-			s = s.replace("%discountsell32%", ssh.getDiscountSellAmount() == null ? "/" : 
+			s = s.replace("%discountsell32%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountSellAmount()*32, ac.getCurrency(), dg, dsellFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountsell64%"))
 		{
-			s = s.replace("%discountsell64%", ssh.getDiscountSellAmount() == null ? "/" : 
+			s = s.replace("%discountsell64%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountSellAmount()*64, ac.getCurrency(), dg, dsellFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountsell576%"))
 		{
-			s = s.replace("%discountsell576%", ssh.getDiscountSellAmount() == null ? "/" : 
+			s = s.replace("%discountsell576%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountSellAmount()*576, ac.getCurrency(), dg, dsellFrac, useSI, useSy, text, text));
 		}
 		if(text.contains("%discountsell2304%"))
 		{
-			s = s.replace("%discountsell2304%", ssh.getDiscountSellAmount() == null ? "/" : 
+			s = s.replace("%discountsell2304%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
 				plugin.getIFHEco().format(ssh.getDiscountSellAmount()*2304, ac.getCurrency(), dg, dsellFrac, useSI, useSy, text, text));
 		}
 		return ChatApi.tl(s);

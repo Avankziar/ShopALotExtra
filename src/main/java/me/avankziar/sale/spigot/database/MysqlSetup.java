@@ -161,7 +161,7 @@ public class MysqlSetup
 	{
 		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.SIGNSHOP.getValue()
 		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
-		+ " player_uuid char(36) NOT NULL UNIQUE,"
+		+ " player_uuid char(36) NOT NULL,"
 		+ " sign_shop_name text,"
 		+ " account_id int,"
 		+ " creation_date_time BIGINT,"
@@ -219,8 +219,8 @@ public class MysqlSetup
 		+ " dates BIGINT,"
 		+ " buy_amount double,"
 		+ " sell_amount double,"
-		+ " buy_item_amount,"
-		+ " sell_item_amount);";
+		+ " buy_item_amount BIGINT,"
+		+ " sell_item_amount BIGINT);";
 		baseSetup(data);
 		return true;
 	}
@@ -249,8 +249,8 @@ public class MysqlSetup
 		+ " dates BIGINT,"
 		+ " buy_amount double,"
 		+ " sell_amount double,"
-		+ " buy_item_amount,"
-		+ " sell_item_amount);";
+		+ " buy_item_amount BIGINT,"
+		+ " sell_item_amount BIGINT);";
 		baseSetup(data);
 		return true;
 	}

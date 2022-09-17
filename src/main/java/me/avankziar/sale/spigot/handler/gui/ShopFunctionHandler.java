@@ -18,6 +18,7 @@ import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
+import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -48,6 +49,7 @@ public class ShopFunctionHandler
 		case SHOP_SELL_2304: sell(player, ssh, 2304, openInv, settingsLevel); break;
 		case SHOP_TOGGLE_SUBSCRIBE: subscribe(player, ssh, openInv, settingsLevel); break;
 		}
+		SignHandler.updateSign(player, ssh);
 	}
 	
 	private static boolean isDiscount(SignShop ssh, long now)
@@ -134,7 +136,7 @@ public class ShopFunctionHandler
 		if(isDiscount(ssh, System.currentTimeMillis()))
 		{
 			d = ssh.getDiscountBuyAmount();
-			if(d == null && ssh.getBuyAmount() == null)
+			if((d == null && ssh.getBuyAmount() == null) || (d < 0.0 && ssh.getBuyAmount() < 0.0))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NotInit")));
 				return;
@@ -150,7 +152,7 @@ public class ShopFunctionHandler
 		} else
 		{
 			d = ssh.getBuyAmount();
-			if(d == null)
+			if(d == null || d < 0.0)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NotInit")));
 				return;
@@ -246,7 +248,7 @@ public class ShopFunctionHandler
 		if(isDiscount(ssh, System.currentTimeMillis()))
 		{
 			d = ssh.getDiscountSellAmount();
-			if(d == null && ssh.getBuyAmount() == null)
+			if((d == null && ssh.getSellAmount() == null) || (d < 0.0 && ssh.getSellAmount() < 0.0))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.NotInit")));
 				return;
@@ -262,7 +264,7 @@ public class ShopFunctionHandler
 		} else
 		{
 			d = ssh.getSellAmount();
-			if(d == null)
+			if(d == null || d < 0.0)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.NotInit")));
 				return;

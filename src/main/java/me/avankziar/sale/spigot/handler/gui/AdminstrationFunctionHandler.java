@@ -1,4 +1,4 @@
-package main.java.me.avankziar.sale.spigot.handler;
+package main.java.me.avankziar.sale.spigot.handler.gui;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,6 +25,9 @@ import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandSuggest;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
+import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
+import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
+import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -106,6 +109,7 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_UNLIMITED_TOGGLE_BUY: setToggle(player, ssh, "UBUY", openInv, settingsLevel); break;
 		case ADMINISTRATION_UNLIMITED_TOGGLE_SELL: setToggle(player, ssh, "USELL", openInv, settingsLevel); break;
 		}
+		SignHandler.updateSign(player, ssh);
 	}
 	
 	private static boolean isTooMuchShop(Player player, SignShop ssh)
@@ -334,13 +338,13 @@ public class AdminstrationFunctionHandler
 		{
 		default: break;
 		case "NUMTEXT": ssh.setNumText("");
-		case "BUY": ssh.setBuyAmount(null); break;
-		case "SELL": ssh.setSellAmount(null); break;
+		case "BUY": ssh.setBuyAmount(-1.0); break;
+		case "SELL": ssh.setSellAmount(-1.0); break;
 		case "POSSIBLEBUY": ssh.setPossibleBuy(-1); break;
 		case "POSSIBLESELL": ssh.setPossibleSell(-1); break;
 		case "DISCOUNT": ssh.setDiscountStart(0); ssh.setDiscountEnd(0); break;
-		case "DISCOUNTBUY": ssh.setDiscountBuyAmount(null); break;
-		case "DISCOUNTSELL": ssh.setDiscountSellAmount(null); break;
+		case "DISCOUNTBUY": ssh.setDiscountBuyAmount(-1.0); break;
+		case "DISCOUNTSELL": ssh.setDiscountSellAmount(-1.0); break;
 		case "DISCOUNTPOSSIBLEBUY": ssh.setDiscountPossibleBuy(-1); break;
 		case "DISCOUNTPOSSIBLESELL": ssh.setDiscountPossibleSell(-1); break;
 		}

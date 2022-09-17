@@ -102,7 +102,7 @@ public class YamlHandler
 			Language languageObject = keyMap.get(key);
 			if(languageObject.languageValues.containsKey(plugin.getYamlManager().getLanguageType()) == true)
 			{
-				plugin.getYamlManager().setFileInput(yml, keyMap, key, plugin.getYamlManager().getLanguageType());
+				plugin.getYamlManager().setFileInput(yml, keyMap, key,plugin.getYamlManager().getLanguageType());
 			} else if(languageObject.languageValues.containsKey(plugin.getYamlManager().getDefaultLanguageType()) == true)
 			{
 				plugin.getYamlManager().setFileInput(yml, keyMap, key, plugin.getYamlManager().getDefaultLanguageType());
@@ -198,7 +198,7 @@ public class YamlHandler
 			try(InputStream in = plugin.getResource("default.yml"))
 			{
 				//Erstellung einer "leere" config.yml
-				Files.copy(in, config.toPath());
+				Files.copy(in, commands.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -324,7 +324,7 @@ public class YamlHandler
 		writeFile(matlanguage, matlang, plugin.getYamlManager().getMaterialLanguageKey());
 		
 		enchlanguage = new File(directory.getPath(), languageString+"_enchantment.yml");
-		if(!matlanguage.exists()) 
+		if(!enchlanguage.exists()) 
 		{
 			SaLE.log.info("Create %lang%_enchantment.yml...".replace("%lang%", languageString));
 			try(InputStream in = plugin.getResource("default.yml"))
@@ -373,6 +373,7 @@ public class YamlHandler
 				return false;
 			}
 			writeFile(gf, gui, plugin.getYamlManager().getGuiKey(g));
+			this.gui.put(g, gui);
 		}
 		return true;
 	}

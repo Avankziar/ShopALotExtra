@@ -2,14 +2,15 @@ package main.java.me.avankziar.sale.spigot.listener;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
@@ -29,7 +30,6 @@ public class PlayerInteractListener implements Listener
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		Player player = event.getPlayer();
 		if(event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK)
 		{
 			return;
@@ -39,18 +39,18 @@ public class PlayerInteractListener implements Listener
 		{
 			return;
 		}
-		BlockData bd = b.getBlockData();
-		if(!(bd instanceof Sign))
+		BlockState bs = b.getState();
+		if(!(bs instanceof Sign))
 		{
 			return;
 		}
+		Player player = event.getPlayer();
 		SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
-				"`server` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				plugin.getServername(), player.getWorld().getName(),
-				event.getClickedBlock().getX(), event.getClickedBlock().getY(), event.getClickedBlock().getZ());
+				b.getX(), b.getY(), b.getZ());
 		if(ssh == null)
 		{
-			event.setCancelled(true);
 			return;
 		}
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK)
@@ -69,6 +69,12 @@ public class PlayerInteractListener implements Listener
 			{
 				if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 				{
+					if(ssh.getItemStack() == null || ssh.getItemStack().getType() == Material.AIR)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.ShopItemIsNull")
+								.replace("%name%", ssh.getDisplayName())));
+						return;
+					}
 					GuiHandler.openAdministration(ssh, player, SettingsLevel.BASE, true);
 					return;
 				} else

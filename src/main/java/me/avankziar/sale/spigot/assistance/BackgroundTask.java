@@ -17,7 +17,7 @@ public class BackgroundTask
 	public BackgroundTask(SaLE plugin)
 	{
 		BackgroundTask.plugin = plugin;
-		initBackgroundTask();
+		//initBackgroundTask();
 	}
 	
 	public boolean initBackgroundTask()
@@ -123,7 +123,7 @@ public class BackgroundTask
 			return;
 		}
 		final long olderThanAtLeast = System.currentTimeMillis()
-				-1000L*60*60*24*plugin.getYamlHandler().getConfig().getInt("CleanUpTask.ShopLog.DeleteAfterXDays");
+				-1000L*60*60*24*plugin.getYamlHandler().getConfig().getInt("CleanUpTask.ShopLog.DeleteAfterXDays"); //TODO Fehler?
 		new BukkitRunnable()
 		{
 			@Override

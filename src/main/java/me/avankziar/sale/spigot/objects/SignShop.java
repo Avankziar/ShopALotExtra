@@ -130,7 +130,7 @@ public class SignShop implements MysqlHandable
 		setDiscountBuyAmount(discountBuyAmount);
 		setDiscountSellAmount(discountSellAmount);
 		setDiscountPossibleBuy(discountPossibleBuy);
-		setDiscountSellAmount(discountSellAmount);
+		setDiscountPossibleSell(discountPossibleSell);
 		setServer(server);
 		setWorld(world);
 		setX(x);
@@ -532,7 +532,7 @@ public class SignShop implements MysqlHandable
 		try
 		{
 			String sql = "UPDATE `" + tablename
-				+ "` SET `player_uuid` = ?, `player_name` = ?, `account_id` = ?, `creation_date_time` = ?,"
+				+ "` SET `player_uuid` = ?, `sign_shop_name` = ?, `account_id` = ?, `creation_date_time` = ?,"
 				+ "`itemstack_base64` = ?, `display_name` = ?, `material` = ?, "
 				+ "`item_storage_total` = ?, `item_storage_current` = ?, "
 				+ "`buy_amount` = ?, `sell_amount` = ?, `possible_buy` = ?, `possible_sell` = ?, "

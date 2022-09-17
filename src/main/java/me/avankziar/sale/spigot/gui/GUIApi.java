@@ -144,13 +144,13 @@ public class GUIApi
 			for(String key : values.keySet())
 			{
 				Entry<Type, Object> value = values.get(key);
-				String fullkey = key+":::"+value.getKey();
+				String fullkey = key+"---"+value.getKey().toString();
 				switch(value.getKey())
 				{
 				case BYTE:
 					if(value.getValue() instanceof Byte)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.BYTE, (Byte) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.BYTE, (byte) value.getValue());
 					}
 					break;
 				case BYTE_ARRAY:
@@ -162,19 +162,19 @@ public class GUIApi
 				case DOUBLE:
 					if(value.getValue() instanceof Double)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.DOUBLE, (Double) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.DOUBLE, (double) value.getValue());
 					}
 					break;
 				case FLOAT:
 					if(value.getValue() instanceof Float)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.FLOAT, (Float) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.FLOAT, (float) value.getValue());
 					}
 					break;
 				case INTEGER:
 					if(value.getValue() instanceof Integer)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.INTEGER, (Integer) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.INTEGER, (int) value.getValue());
 					}
 					break;
 				case INTEGER_ARRAY: 
@@ -186,7 +186,7 @@ public class GUIApi
 				case LONG:
 					if(value.getValue() instanceof Long)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.LONG, (Long) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.LONG, (long) value.getValue());
 					}
 					break;
 				case LONG_ARRAY:
@@ -198,7 +198,7 @@ public class GUIApi
 				case SHORT:
 					if(value.getValue() instanceof Short)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.SHORT, (Short) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.SHORT, (short) value.getValue());
 					}
 					break;
 				case STRING:
@@ -226,10 +226,6 @@ public class GUIApi
 		pdc.set(new NamespacedKey(plugin, INVENTORYIDENTIFIER), PersistentDataType.STRING, this.inventoryIdentifier);
 		pdc.set(new NamespacedKey(plugin, CLICKEVENTCANCEL), PersistentDataType.STRING, String.valueOf(clickEventCancel));
 		pdc.set(new NamespacedKey(plugin, SETTINGLEVEL), PersistentDataType.STRING, settingsLevel.getName());
-		if(clickFunction == null || clickFunction.length <= 0)
-		{
-			return;
-		}
 		for(ClickFunction cf : clickFunction)
 		{
 			switch(cf.getClickType())
@@ -273,13 +269,13 @@ public class GUIApi
 			for(String key : values.keySet())
 			{
 				Entry<Type, Object> value = values.get(key);
-				String fullkey = key+":::"+value.getKey();
+				String fullkey = key+"---"+value.getKey().toString();
 				switch(value.getKey())
 				{
 				case BYTE:
 					if(value.getValue() instanceof Byte)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.BYTE, (Byte) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.BYTE, (byte) value.getValue());
 					}
 					break;
 				case BYTE_ARRAY:
@@ -291,19 +287,19 @@ public class GUIApi
 				case DOUBLE:
 					if(value.getValue() instanceof Double)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.DOUBLE, (Double) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.DOUBLE, (double) value.getValue());
 					}
 					break;
 				case FLOAT:
 					if(value.getValue() instanceof Float)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.FLOAT, (Float) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.FLOAT, (float) value.getValue());
 					}
 					break;
 				case INTEGER:
 					if(value.getValue() instanceof Integer)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.INTEGER, (Integer) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.INTEGER, (int) value.getValue());
 					}
 					break;
 				case INTEGER_ARRAY: 
@@ -315,7 +311,7 @@ public class GUIApi
 				case LONG:
 					if(value.getValue() instanceof Long)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.LONG, (Long) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.LONG, (long) value.getValue());
 					}
 					break;
 				case LONG_ARRAY:
@@ -327,7 +323,7 @@ public class GUIApi
 				case SHORT:
 					if(value.getValue() instanceof Short)
 					{
-						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.SHORT, (Short) value.getValue());
+						pdc.set(new NamespacedKey(plugin, fullkey), PersistentDataType.SHORT, (short) value.getValue());
 					}
 					break;
 				case STRING:

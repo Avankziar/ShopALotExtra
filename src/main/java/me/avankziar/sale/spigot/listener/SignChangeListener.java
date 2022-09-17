@@ -35,7 +35,7 @@ public class SignChangeListener implements Listener
 			return;
 		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.SIGNSHOP,
-				"`server` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				plugin.getServername(), event.getBlock().getWorld().getName(),
 				event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ()))
 		{
@@ -73,8 +73,8 @@ public class SignChangeListener implements Listener
 				0, player.getUniqueId(),
 				"Shop_"+lastnumber, ac.getID(), System.currentTimeMillis(), null, "Shop_"+lastnumber, Material.AIR,
 				defaultStartItemStorage, 0,
-				null, null, -1, -1,
-				0, 0, null, null, -1, -1, 
+				-1.0, -1.0, -1, -1,
+				0, 0, -1.0, -1.0, -1, -1, 
 				plugin.getServername(), player.getWorld().getName(),
 				event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), 
 				0, false, false, true, true, "");

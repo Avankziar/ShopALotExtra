@@ -6,7 +6,9 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,32 +38,67 @@ public class SignHandler
 		return (Sign) b;
 	}
 	
+	private static boolean isDiscount(SignShop ssh, long now)
+	{
+		return now >= ssh.getDiscountStart() && now < ssh.getDiscountEnd();
+	}
+	
 	public static String getSignLine(int index, SignShop ssh)
 	{
 		switch(index)
 		{
 		default:
 		case 0:
+			if(ssh.getMaterial() == Material.AIR)
+			{
+				return plugin.getYamlHandler().getLang().getString("SignChangeListener.MaterialIsAir");
+			}
 			return MaterialHandler.getMaterial(ssh.getMaterial());
 		case 1:
-			if(ssh.getBuyAmount() == null)
+			if(isDiscount(ssh, System.currentTimeMillis()))
+			{ 
+				if(ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+				{
+					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", "/");
+				}
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", String.valueOf(ssh.getDiscountBuyAmount()));
+			} else
 			{
-				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", "/");
-			}
-			return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", String.valueOf(ssh.getBuyAmount()));
+				if(ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0)
+				{
+					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", "/");
+				}
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", String.valueOf(ssh.getBuyAmount()));
+			}			
 		case 2:
-			if(ssh.getSellAmount() == null)
+			if(isDiscount(ssh, System.currentTimeMillis()))
 			{
-				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", "/");
+				if(ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+				{
+					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", "/");
+				}
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", String.valueOf(ssh.getDiscountSellAmount()));
+			} else
+			{
+				if(ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0)
+				{
+					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", "/");
+				}
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", String.valueOf(ssh.getSellAmount()));
 			}
-			return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", String.valueOf(ssh.getSellAmount()));
 		case 3:
 			StringBuilder sb = new StringBuilder();
 			String colorB = "";
 			String colorS = "";
+			boolean calInStack = plugin.getYamlHandler().getConfig().getBoolean("SignShop.Sign.Line4CalculateInStack", false);
 			long now = System.currentTimeMillis();
 			long buy = ssh.getItemStorageCurrent();
 			long sell = ssh.getItemStorageTotal()-ssh.getItemStorageCurrent();
+			if(calInStack)
+			{
+				buy = buy/64;
+				sell = sell/64;
+			}
 			if(ssh.getDiscountStart() < now && ssh.getDiscountEnd() > now)
 			{
 				//DiscountpossibleBuy/sell
@@ -269,6 +306,7 @@ public class SignHandler
 				.replace("%amount%", String.valueOf(amount))
 				.replace("%now%", String.valueOf(ssh.getItemStorageCurrent())+" / "+String.valueOf(ssh.getItemStorageTotal()))));
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+		updateSign(player, ssh);
 		return true;
 	}
 	
@@ -312,6 +350,7 @@ public class SignHandler
 				.replace("%amount%", String.valueOf(amount))
 				.replace("%now%", String.valueOf(ssh.getItemStorageCurrent())+" / "+String.valueOf(ssh.getItemStorageTotal()))));
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+		updateSign(player, ssh);
 	}
 	
 	public static boolean inCheck(UUID uuid)
@@ -330,9 +369,30 @@ public class SignHandler
 		toCheckMap.remove(uuid);
 	}
 	
-	public static void updateSign()
+	public static void updateSign(Player player, SignShop ssh)
 	{
 		//TODO Wenn update, dann auch den MaxStorageItem, falls VIP etc. ausläuft, nach jedem kauf.
 		//TODO Beim Schließen des Administration GUI prüfen, ob ASH System dem Spieler gehört. Wenn nicht auf 0 setzten und dem Spieler benachrichtigen.
+		World w = Bukkit.getWorld(ssh.getWorld());
+		if(w == null)
+		{
+			return;
+		}
+		Block b = w.getBlockAt(ssh.getX(), ssh.getY(), ssh.getZ());
+		if(b == null)
+		{
+			return;
+		}
+		BlockState bs = b.getState();
+		if(!(bs instanceof Sign))
+		{
+			return;
+		}
+		Sign sign = (Sign) bs;
+		sign.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh)));
+		sign.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh)));
+		sign.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh)));
+		sign.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh)));
+		sign.update();
 	}
 }

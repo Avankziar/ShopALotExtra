@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -23,8 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus;
-import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalusType;
-import main.java.me.avankziar.ifh.general.bonusmalus.MultiplicationCalculationType;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
@@ -42,9 +39,10 @@ import main.java.me.avankziar.sale.spigot.database.YamlHandler;
 import main.java.me.avankziar.sale.spigot.database.YamlManager;
 import main.java.me.avankziar.sale.spigot.gui.listener.GuiPreListener;
 import main.java.me.avankziar.sale.spigot.gui.listener.UpperListener;
-import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.EnchantmentHandler;
+import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerInteractListener;
+import main.java.me.avankziar.sale.spigot.listener.PlayerJoinListener;
 import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
@@ -180,7 +178,7 @@ public class SaLE extends JavaPlugin
 		getCommand(base.getName()).setTabCompleter(tab);
 	}
 	
-	public void setupBypassPerm()
+	private void setupBypassPerm()
 	{
 		String path = "Count.";
 		for(Bypass.CountPermission bypass : new ArrayList<Bypass.CountPermission>(EnumSet.allOf(Bypass.CountPermission.class)))
@@ -330,7 +328,9 @@ public class SaLE extends JavaPlugin
 	{
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new SignChangeListener(plugin), plugin);
+		pm.registerEvents(new PlayerJoinListener(plugin), plugin);
 		pm.registerEvents(new PlayerInteractListener(plugin), plugin);
+		pm.registerEvents(new BlockBreakListener(plugin), plugin);
 		pm.registerEvents(new GuiPreListener(plugin), plugin);
 		pm.registerEvents(new UpperListener(plugin), plugin);
 	}
@@ -494,7 +494,7 @@ public class SaLE extends JavaPlugin
 				{
 					cancel();
 				}
-				if(getBonusMalus() != null)
+				/*if(getBonusMalus() != null)
 				{
 					for(BaseConstructor bc : getCommandHelpList())
 					{
@@ -560,7 +560,7 @@ public class SaLE extends JavaPlugin
 						}
 					}
 					//TODO BonusMalus Class
-				}
+				}*/
 			}
         }.runTaskTimer(plugin, 20L, 20*2);
 	}

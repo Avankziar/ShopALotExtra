@@ -122,13 +122,13 @@ public class GuiPreListener implements Listener
 				functionMap);
 		for(NamespacedKey key : pdc.getKeys())
 		{
-			if(!key.getKey().contains(":::"))
+			if(!key.getKey().contains("---"))
 			{
 				continue;
 			}
-			String[] split = key.getKey().split(":::");
+			String[] split = key.getKey().split("---");
 			String purekey = split[0];
-			GUIApi.Type type = GUIApi.Type.valueOf(split[1]);
+			GUIApi.Type type = GUIApi.Type.valueOf(split[1].toUpperCase());
 			switch(type)
 			{
 			case BYTE:

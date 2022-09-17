@@ -9,7 +9,6 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 
 import main.java.me.avankziar.sale.spigot.database.Language.ISO639_2B;
 import main.java.me.avankziar.sale.spigot.gui.events.ClickType;
@@ -41,6 +40,8 @@ public class YamlManager
 		initBonusMalusLanguage();
 		initMaterialLanguage();
 		initGuiAdministration();
+		initGuiNumpad();
+		initGuiShop();
 	}
 	
 	public ISO639_2B getLanguageType()
@@ -148,7 +149,7 @@ public class YamlManager
 				true}));
 		configSpigotKeys.put("IFHAdministrationPath"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"bm"}));
+				"sale"}));
 		/*
 		 * The normale single path. In the config make it no sense to add other language as English
 		 * But the ISO639_2B is here the default language from this plugin!
@@ -242,6 +243,9 @@ public class YamlManager
 		configSpigotKeys.put("SignShop.DiscountTimePattern"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"yyyy.MM.dd.HH:mm:ss"}));
+		configSpigotKeys.put("SignShop.Sign.Line4CalculateInStack"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
 		configSpigotKeys.put("SignShop.Tax.BuyInPercent"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				1.0}));
@@ -250,12 +254,11 @@ public class YamlManager
 				1.1}));
 	}
 	
-	@SuppressWarnings("unused") //INFO:Commands
+	//INFO:Commands
 	public void initCommands()
 	{
 		comBypass();
-		String path = "";
-		commandsInput("path", "base", "perm.command.perm", 
+		commandsInput("base", "base", "perm.command.perm", 
 				"/base [pagenumber]", "/base ", false,
 				"&c/base &f| Infoseite für alle Befehle.",
 				"&c/base &f| Info page for all commands.",
@@ -279,7 +282,7 @@ public class YamlManager
 		List<Bypass.Permission> list = new ArrayList<Bypass.Permission>(EnumSet.allOf(Bypass.Permission.class));
 		for(Bypass.Permission ept : list)
 		{
-			commandsKeys.put("Bypass."+ept.toString().replace("_", ".")
+			commandsKeys.put("Bypass."+ept.toString()
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"sale."+ept.toString().toLowerCase().replace("_", ".")}));
 		}
@@ -287,7 +290,7 @@ public class YamlManager
 		List<Bypass.CountPermission> list2 = new ArrayList<Bypass.CountPermission>(EnumSet.allOf(Bypass.CountPermission.class));
 		for(Bypass.CountPermission ept : list2)
 		{
-			commandsKeys.put("Count."+ept.toString().replace("_", ".")
+			commandsKeys.put("Count."+ept.toString()
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"sale."+ept.toString().toLowerCase().replace("_", ".")}));
 		}
@@ -449,14 +452,24 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bDer Shop &f%shop% &bhat &r%item% &rx &e%amount% &bankauft.",
 						"&bThe shop &f%shop% &bhad &r%item% &rx &e%amount% &bpurchased."}));
+		languageKeys.put("PlayerInteractListener.ShopItemIsNull", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst das Administrationsgui nicht aufrufen, da der Shop noch kein Item gesetzt hat!",
+						"&cYou can not call the administration gui, because the store has not set an item yet!"}));
+		languageKeys.put("SignChangeListener.MaterialIsAir", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Leer",
+						"Empty"}));
 		languageKeys.put("SignChangeListener.AlreadyHaveMaximalSignShop", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon die maximale Anzahl von SignShops erstellt. Lösche zuerst SignShops bevor neue erstellt werden! Aktuelle &f%actual% &cvon %max%",
 						"&cYou have already created the maximum number of SignShops. First delete SignShops before creating new ones! Current &f%actual% &cof %max%"}));
 		languageKeys.put("SignChangeListener.ShopCreated", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu hast den Shop &f%name% &eerstellt! &bDu kommst durch einen &fLinksklick &bins Einstellungsmenu um dort den Shop nach Belieben einzustellen.",
-						"&eYou have created the shop &f%name%! &bYou come by a &fleft-click &bin the settings menu to set there the store as desired."}));
+						"&eDu hast den Shop &f%name% &eerstellt! &bStelle mit einem &fItem in der Hand &bund einem &fRechtsklick &bauf das Shopschild das Item ein, "
+						+ "danach kommst du durch einen &fLinksklick &bins Einstellungsmenu um dort den Shop nach Belieben einzustellen.",
+						"&eYou have created the store &f%name%! &bSet the item with an &f item in your hand &band a &fright click &bon the store sign, "
+						+ "then you come by a &fleft click &bin the settings menu to set the store as desired."}));
 		languageKeys.put("SignHandler.Line1", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"VK: %amount%",
@@ -627,7 +640,7 @@ public class YamlManager
 	public void initMaterialLanguage() //INFO:MaterialLanguages
 	{
 		List<Material> list = new ArrayList<Material>(EnumSet.allOf(Material.class)); //TODO
-		for(Material m : list)
+		/*for(Material m : list)
 		{
 			String ger = "";
 			String eng = "";
@@ -801,7 +814,7 @@ public class YamlManager
 					new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 							ger,
 							eng}));
-		}
+		}*/
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -837,58 +850,120 @@ public class YamlManager
 						"&cInfo from Shop &f%displayname%"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&c: &f%owner%",
-						"&c: &f%signshopname%",
-						"&c: &f%itemstoragecurrent% / %itemstoragetotal%",
-						"&c: &f%buyraw1%",
-						"&c: &f%sellraw1%"}));
+						"&cEigentümer: &f%owner%",
+						"&cShopname: &f%signshopname%",
+						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
+						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
+						"&cVerkaufpreis: &f%buyraw1%",
+						"&cAnkaufpreis: &f%sellraw1%",
+						
+						"&cOwner: &f%owner%",
+						"&cShopname: &f%signshopname%",
+						"&cStorage Items Actual: &f%itemstoragecurrent%",
+						"&cStorage Items Total: &f%itemstoragetotal%",
+						"&cBuyprice: &f%buyraw1%",
+						"&cSellprice: &f%sellraw1%"}));
 		admin.put(path+".Lore."+SettingsLevel.ADVANCED.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&c: &f%owner%",
-						"&c: &f%signshopname%",
-						"&c: &f%creationdate%",
-						"&c: &f%itemstoragecurrent% / %itemstoragetotal%",
-						"&c: &f%buytoggle%",
-						"&c: &f%selltoggle%",
-						"&c: &f%buyraw1%",
-						"&c: &f%sellraw1%",
-						"&c: &f%possiblebuy% <> %possiblesell%"}));
+						"&cEigentümer: &f%owner%",
+						"&cShopname: &f%signshopname%",
+						"&cErstellungsdatum: &f%creationdate%",
+						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
+						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
+						"&cVerkauf Aktiv: &f%buytoggle%",
+						"&cAnkauf Aktiv: &f%selltoggle%",
+						"&cVerkaufpreis: &f%buyraw1%",
+						"&cAnkaufpreis: &f%sellraw1%",
+						"&cMöglicher Verkauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
+						
+						"&cOwner: &f%owner%",
+						"&cShopname: &f%signshopname%",
+						"&cCreationdatum: &f%creationdate%",
+						"&cStorage Items Actual: &f%itemstoragecurrent%",
+						"&cStorage Items Total: &f%itemstoragetotal%",
+						"&cBuy Active: &f%buytoggle%",
+						"&cSell Active: &f%selltoggle%",
+						"&cBuyprice: &f%buyraw1%",
+						"&cSellprice: &f%sellraw1%",
+						"&cPossible Buy/Sell: &f%possiblebuy% <> %possiblesell%"}));
 		admin.put(path+".Lore."+SettingsLevel.EXPERT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&c: &f%owner%",
-						"&c: &f%signshopname%",
-						"&c: &f%creationdate%",
-						"&c: &f%itemstoragecurrent% / %itemstoragetotal%",
-						"&c: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
-						"&c: &f%accountid% - %accountname%",
-						"&c: &f%buytoggle%",
-						"&c: &f%selltoggle%",
-						"&c: &f%buyraw1%",
-						"&c: &f%sellraw1%",
-						"&c: &f%possiblebuy% <> %possiblesell%",
-						"&c: &f%unlimitedbuy%",
-						"&c: &f%unlimitedsell%"}));
+						"&cEigentümer: &f%owner%",
+						"&cShopname: &f%signshopname%",
+						"&cErstellungsdatum: &f%creationdate%",
+						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
+						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
+						"&cLocation: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
+						"&cAccount: &f%accountid% - %accountname%",
+						"&cVerkauf Aktiv: &f%buytoggle%",
+						"&cAnkauf Aktiv: &f%selltoggle%",
+						"&cVerkaufpreis: &f%buyraw1%",
+						"&cAnkaufpreis: &f%sellraw1%",
+						"&cMöglicher Verkauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
+						"&cUnlimitierter Verkauf: &f%unlimitedbuy%",
+						"&cUnlimitierter Ankauf: &f%unlimitedsell%",
+						
+						"&cOwner: &f%owner%",
+						"&cShopname: &f%signshopname%",
+						"&cCreationdatum: &f%creationdate%",
+						"&cStorage Items Actual: &f%itemstoragecurrent%",
+						"&cStorage Items Total: &f%itemstoragetotal%",
+						"&cLocation: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
+						"&cAccount: &f%accountid% - %accountname%",
+						"&cBuy Active: &f%buytoggle%",
+						"&cSell Active: &f%selltoggle%",
+						"&cBuyprice: &f%buyraw1%",
+						"&cSellprice: &f%sellraw1%",
+						"&cPossible Buy/Sell: &f%possiblebuy% <> %possiblesell%",
+						"&cUnlimited Buy: &f%unlimitedbuy%",
+						"&cUnlimited Sell: &f%unlimitedsell%"}));
 		admin.put(path+".Lore."+SettingsLevel.MASTER.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&c: &f%id%",
-						"&c: &f%owner%",
-						"&c: &f%signshopname%",
-						"&c: &f%creationdate%",
-						"&c: &f%itemstoragecurrent% / %itemstoragetotal%",
-						"&c: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
-						"&c: &f%accountid% - %accountname%",
-						"&c: &f%buytoggle%",
-						"&c: &f%selltoggle%",
-						"&c: &f%buyraw1%",
-						"&c: &f%sellraw1%",
-						"&c: &f%possiblebuy% <> %possiblesell%",
-						"&c: &f%discountstart% >> %discountend%",
-						"&c: &f%discountbuy1%",
-						"&c: &f%discountsell1%",
-						"&c: &f%discountpossiblebuy% <> %discountpossiblesell%",
-						"&c: &f%storageid%",
-						"&c: &f%unlimitedbuy%",
-						"&c: &f%unlimitedsell%"}));
+						"&cId: &f%id%",
+						"&cEigentümer: &f%owner%",
+						"&cShopname: &f%signshopname%",
+						"&cErstellungsdatum: &f%creationdate%",
+						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
+						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
+						"&cLocation: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
+						"&cAccount: &f%accountid% - %accountname%",
+						"&cVerkauf Aktiv: &f%buytoggle%",
+						"&cAnkauf Aktiv: &f%selltoggle%",
+						"&cVerkaufpreis: &f%buyraw1%",
+						"&cAnkaufpreis: &f%sellraw1%",
+						"&cMöglicher Verkauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
+						"&cRabatt Start: &f%discountstart%",
+						"&cRabatt Ende: %discountend%",
+						"&cRabattverkaufpreis: &f%discountbuy1%",
+						"&cRabattankaufpreis: &f%discountsell1%",
+						"&cMöglicher Rabatt Verkauf: &f%discountpossiblebuy%",
+						"&cMöglicher Rabatt Ankauf: &f%discountpossiblesell%",
+						"&cLagersystemID: &f%storageid%",
+						"&cUnlimitierter Verkauf: &f%unlimitedbuy%",
+						"&cUnlimitierter Ankauf: &f%unlimitedsell%",
+						
+						"&cId: &f%id%",
+						"&cOwner: &f%owner%",
+						"&cShopname: &f%signshopname%",
+						"&cCreationdatum: &f%creationdate%",
+						"&cStorage Items Actual: &f%itemstoragecurrent%",
+						"&cStorage Items Total: &f%itemstoragetotal%",
+						"&cLocation: &f%server%>%world%>&7%x%&f/&7%y%&f/&7%z%",
+						"&cAccount: &f%accountid% - %accountname%",
+						"&cBuy Active: &f%buytoggle%",
+						"&cSell Active: &f%selltoggle%",
+						"&cBuyprice: &f%buyraw1%",
+						"&cSellprice: &f%sellraw1%",
+						"&cPossible Buy/Sell: &f%possiblebuy% <> %possiblesell%",
+						"&cDiscount Start: &f%discountstart%",
+						"&cDiscount Ende: &f%discountend%",
+						"&cDiscountbuyprice: &f%discountbuy1%",
+						"&cDiscountsellprice: &f%discountsell1%",
+						"&cPossible Discount Buy: &f%discountpossiblebuy%",
+						"&cPossible Discount Sell: &f%discountpossiblesell%",
+						"&cStoragesystemID: &f%storageid%",
+						"&cUnlimited Buy: &f%unlimitedbuy%",
+						"&cUnlimited Sell: &f%unlimitedsell%"}));
 		path = "6"; //ItemStack clear
 		admin.put(path+".SettingLevel",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -903,10 +978,12 @@ public class YamlManager
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&dSetzt das Item des Shop zurück.",
-						"&bFunktioniert nur, wenn alle Items aus dem Lagerraum entfernt worden sind.",
+						"&bFunktioniert nur, wenn alle Items",
+						"&baus dem Lagerraum entfernt worden sind.",
 						"&bDanach kann man ein neues Item setzen.",
 						"&bResets the item of the shio.",
-						"&bWorks only when all items have been removed from the storage room.",
+						"&bWorks only when all items have been",
+						"&bremoved from the storage room.",
 						"&bAfter that you can set a new item."}));
 		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -928,9 +1005,11 @@ public class YamlManager
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bToggelt den Verkauf.",
-						"&bSollte der Verkauf ausgeschaltet sein, ist der Verkauf nicht mehr möglich.",
+						"&bSollte der Verkauf ausgeschaltet sein,",
+						"&bist der Verkauf nicht mehr möglich.",
 						"&bToggles the buying",
-						"&bIf the buying is turned off, the buying is no longer possible."}));
+						"&bIf the buying is turned off,",
+						"&bthe buying is no longer possible."}));
 		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_TOGGLE_BUY.toString()}));
@@ -951,9 +1030,11 @@ public class YamlManager
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bToggelt den Ankauf.",
-						"&bSollte der Ankauf ausgeschaltet sein, ist der Ankauf nicht mehr möglich.",
+						"&bSollte der Ankauf ausgeschaltet sein,",
+						"&bist der Ankauf nicht mehr möglich.",
 						"&bToggles the selling",
-						"&bIf the seling is turned off, the selling is no longer possible."}));
+						"&bIf the seling is turned off,",
+						"&bthe selling is no longer possible."}));
 		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_TOGGLE_BUY.toString()}));
@@ -976,10 +1057,10 @@ public class YamlManager
 						"&dEnter the buy value for 1 item"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%buyraw1%",
+						"&bZz.: &f%buyraw1%",
 						"&cQ &bfür das Entfernen des Preises.",
 						"&cLinks-/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &r%buyraw1%",
+						"&bAtm.: &f%buyraw1%",
 						"&cQ &bfor removing the price.",
 						"&cLinks-/Rechtsklick &bto open the numpad gui."}));
 		admin.put(path+".ClickFunction."+ClickType.DROP.toString(),
@@ -1007,10 +1088,10 @@ public class YamlManager
 						"&dEnter the sell value for 1 item"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%sellraw1%",
+						"&bZz.: &f%sellraw1%",
 						"&cQ &bzum entfernen des Preises.",
 						"&cLinks-/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &r%sell1%",
+						"&bAtm.: &f%sell1%",
 						"&cQ &bfor removing the price.",
 						"&cLinks-/Rechtsklick &bto open the numpad gui."}));
 		admin.put(path+".ClickFunction."+ClickType.DROP.toString(),
@@ -1077,11 +1158,10 @@ public class YamlManager
 						"&dEnter the economyaccount per ID"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%accountid%",
+						"&bZz.: &f%accountid% - %accountname%",
 						"&cQ &bzum stellen auf den Default Account.",
 						"&cLinks-/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &r%accountid%",
-						"&bAfter leaving the gui, this input is checked.",
+						"&bAtm.: &f%accountid% - %accountname%",
 						"&cQ &bto set to the default account.",
 						"&cLeft/right click &to open the Numpad Gui."}));
 		admin.put(path+".ClickFunction."+ClickType.DROP.toString(),
@@ -1106,12 +1186,12 @@ public class YamlManager
 						"&dSwitch the Gui level view"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Zz.: %itemstoragetotal%",
+						"&bZz.: &f%itemstoragetotal%",
 						"&cLinksklick &berhöht den Lagerraum um 1 Item.",
 						"&cRechtsklick &berhöht den Lagerraum um 16 Items.",
 						"&cShift Linksklick &berhöht den Lagerraum um 64 Items.",
 						"&cShift Rechtsklick &berhögt den Lagerraum um 576 Items",
-						"Atm.: %itemstoragetotal%",
+						"&bAtm.: &f%itemstoragetotal%",
 						"&cLeftclick &bincreases the storage space by 1 item.",
 						"&cRightclick &bincreases the storage space by 16 items.",
 						"&cShift-Leftclick  &bincreases the storage space by 64 items.",
@@ -1167,11 +1247,13 @@ public class YamlManager
 						"&dEnter the distributionsystem from ASH per ID"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%storageid%",
-						"&cQ &bstellt das Lagersystemverlinkung auf 0. Und somit außer Betrieb.",
+						"&bZz.: &f%storageid%",
+						"&cQ &bstellt das Lagersystemverlinkung auf 0.",
+						"&bUnd somit außer Betrieb.",
 						"&cLinks-/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &r%storageid%",
-						"&cQ &bsets the storage system link to 0. and thus out of operation.",
+						"&bAtm.: &f%storageid%",
+						"&cQ &bsets the storage system link to 0.",
+						"&bAnd thus out of operation.",
 						"&cLeft/right click &to open the Numpad Gui."}));
 		admin.put(path+".ClickFunction."+ClickType.DROP.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -1194,8 +1276,8 @@ public class YamlManager
 						Material.GOLD_BLOCK.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dToggel Unlimitierter Verkauf (zz. &r%unlimitedbuy%d)",
-						"&dToggle unlimited Buying (atm. &r%unlimitedbuy%&d)"}));
+						"&dToggel Unlimitierter Verkauf (zz. &f%unlimitedbuy%&d)",
+						"&dToggle unlimited Buying (atm. &f%unlimitedbuy%&d)"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bToggelt den unlimitierten Verkauf.",
@@ -1222,16 +1304,18 @@ public class YamlManager
 						Material.GOLD_BLOCK.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dToggel Unlimitierter Ankauf (zz. &r%unlimitedsell%d)",
+						"&dToggel Unlimitierter Ankauf (zz. &r%unlimitedsell%&d)",
 						"&dToggle unlimited Selling (atm. &r%unlimitedsell%&d)"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bToggelt den unlimitierten Ankauf.",
 						"&bSollte der unlimitierter Ankauf angeschaltet sein,",
-						"&bkönnen unbegrenzt Items ankauft werden, ohne jedweden Platz im Lagerraum.",
+						"&bkönnen unbegrenzt Items ankauft werden,",
+						"&bohne jedweden Platz im Lagerraum.",
 						"&bToggles the unlimited selling",
 						"&bIf the unlimited selling is turned on,",
-						"&bunlimited number of items can be purchased without any space in the storeroom."}));
+						"&bunlimited number of items can be purchased",
+						"&bwithout any space in the storeroom."}));
 		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_UNLIMITED_TOGGLE_SELL.toString()}));
@@ -1251,14 +1335,16 @@ public class YamlManager
 						"&dEnter the number of buying remaining"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%possiblebuy%",
-						"&bVerbleibene Verkäufe, sind die Anzahl an Verkäufe die noch getätig werden können.",
+						"&bZz.: &f%possiblebuy%",
+						"&bVerbleibene Verkäufe, sind die Anzahl",
+						"&ban Verkäufe die noch getätig werden können.",
 						"&bIst die Zahl auf 0 können keine Items mehr verkauft werden.",
 						"&b-1 bedeutet die Mechanik ist ausgeschaltet.",
 						"&cQ &bfür das Zurücksetzten auf -1.",
 						"&cLinks/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &r%possiblebuy%",
-						"&bRemaining sales, are the number of sales that can still be made.",
+						"&bAtm.: &f%possiblebuy%",
+						"&bRemaining sales, are the number of sales",
+						"&bthat can still be made.",
 						"&bIf the number is 0, no more items can be sold.",
 						"&b-1 means the mechanics is switched off.",
 						"&cQ &bfor resetting to -1.",
@@ -1285,13 +1371,16 @@ public class YamlManager
 						"&dEnter the number of purchase remaining"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%possiblesell%",
-						"&bVerbleibene Ankäufe, sind die Anzahl an Ankäufe die noch getätig werden können.",
+						"&bZz.: &f%possiblesell%",
+						"&bVerbleibene Ankäufe, sind die Anzahl an",
+						"&bAnkäufe die noch getätig werden können.",
 						"&bIst die Zahl auf 0 können keine Items mehr ankauft werden.",
+						"&b-1 bedeutet die Mechanik ist ausgeschaltet.",
 						"&cQ &bfür das Zurücksetzten auf -1.",
 						"&cLinks/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &r%possiblesell%",
-						"&bRemaining purchase, are the number of purchase that can still be made.",
+						"&bAtm.: &f%possiblesell%",
+						"&bRemaining purchase, are the number of",
+						"&bpurchase that can still be made.",
 						"&bIf the number is 0, no more items can be purchase.",
 						"&b-1 means the mechanics is switched off.",
 						"&cQ &bfor resetting to -1.",
@@ -1397,17 +1486,21 @@ public class YamlManager
 						"&dEnter the number of discount sales remaining"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%discountpossiblebuy%",
-						"&bVerbleibene Verkäufe, sind die Anzahl an Rabattverkäufe die noch getätig werden können.",
-						"&bIst die Zahl auf 0 können keine Items mehr verkauft werden solange die Rabattaktion läuft.",
+						"&bZz.: &f%discountpossiblebuy%",
+						"&bVerbleibene Verkäufe, sind die Anzahl an",
+						"&bRabattverkäufe die noch getätig werden können.",
+						"&bIst die Zahl auf 0 können keine Items mehr",
+						"&bverkauft werden solange die Rabattaktion läuft.",
 						"&b-1 bedeutet die Mechanik ist ausgeschaltet.",
 						"&cQ &bfür das Zurücksetzten auf -1.",
 						"&cLinks/Rechtsklick &böffnet das Numpad Gui.",
-						"&bAtm.: &r%discountpossiblebuy%",
-						"&bRemaining sales, are the number of discountsales that can still be made.",
-						"&bIf the number is 0, no more items can be sold as long as the discount promotion is running.",
+						
+						"&bAtm.: &f%discountpossiblebuy%",
+						"&bRemaining sales, are the number of discountsales",
+						"&bthat can still be made.",
+						"&bIf the number is 0, no more items can be sold as",
+						"&blong as the discount promotion is running.",
 						"&b-1 means the mechanics is switched off.",
-						"&bAfter leaving the gui, this input is checked.",
 						"&cQ &bfor resetting to -1.",
 						"&cLeft/right click &opens the Numpad Gui."}));
 		admin.put(path+".ClickFunction."+ClickType.DROP.toString(),
@@ -1432,15 +1525,19 @@ public class YamlManager
 						"&dEnter the number of discount purchase remaining"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%discountpossiblesell%",
-						"&bVerbleibene Ankäufe, sind die Anzahl an Ankäufe die noch getätig werden können.",
-						"&bIst die Zahl auf 0 können keine Items mehr ankauft werden solange die Rabattaktion läuft.",
+						"&bZz.: &f%discountpossiblesell%",
+						"&bVerbleibene Ankäufe, sind die Anzahl an",
+						"&bAnkäufe die noch getätig werden können.",
+						"&bIst die Zahl auf 0 können keine Items mehr",
+						"&bankauft werden solange die Rabattaktion läuft.",
 						"&b-1 bedeutet die Mechanik ist ausgeschaltet.",
 						"&cQ &bfür das Zurücksetzten auf -1.",
 						"&cLinks/Rechtsklick &böffnet das Numpad Gui.",
-						"&bAtm.: &r%discountpossiblesell%",
-						"&bRemaining purchase, are the number of purchase that can still be made.",
-						"&bIf the number is 0, no more items can be purchased as long as the discount campaign is running.",
+						"&bAtm.: &f%discountpossiblesell%",
+						"&bRemaining purchase, are the number of purchase",
+						"&bthat can still be made.",
+						"&bIf the number is 0, no more items can be",
+						"&bpurchased as long as the discount campaign is running.",
 						"&b-1 means the mechanics is switched off.",
 						"&cQ &bfor resetting to -1.",
 						"&cLeft/right click &opens the Numpad Gui."}));
@@ -1469,10 +1566,10 @@ public class YamlManager
 						"&dEnter the discount sale value for 1 item"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%discountbuy1%",
+						"&bZz.: &f%discountbuy1%",
 						"&cQ &bfür das Entfernen des Preises.",
 						"&cLinks-/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &r%discountbuy1%",
+						"&bAtm.: &f%discountbuy1%",
 						"&cQ &bfor removing the price.",
 						"&cLinks-/Rechtsklick &bto open the numpad gui."}));
 		admin.put(path+".ClickFunction."+ClickType.DROP.toString(),
@@ -1490,20 +1587,21 @@ public class YamlManager
 						true}));
 		admin.put(path+".SettingLevel",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
+						SettingsLevel.MASTER.toString()}));
 		admin.put(path+".Material",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.IRON_INGOT.toString()}));
+						Material.REDSTONE.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&dEingabe des Rabattankaufswertes für 1 Item",
 						"&dEnter the discount purchase value for 1 item"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &r%sellraw1%",
+						"&bZz.: &f%discountsell1%",
 						"&cQ &bfür das Entfernen des Preises.",
 						"&cLinks-/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &r%discountsell1%",
+						
+						"&bAtm.: &f%discountsell1%",
 						"&cQ &bfor removing the price.",
 						"&cLinks-/Rechtsklick &bto open the numpad gui."}));
 		admin.put(path+".ClickFunction."+ClickType.DROP.toString(),
@@ -1518,7 +1616,7 @@ public class YamlManager
 		guiKeys.put(GuiType.ADMINISTRATION, admin);
 		
 		//------------------------------------
-		admin.put(path+".IsInfoItem",
+		/*admin.put(path+".IsInfoItem",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						true}));
 		admin.put(path+".Permission",
@@ -1569,7 +1667,7 @@ public class YamlManager
 						""}));
 		admin.put(path+".ClickFunction."+ClickType.SWAP.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						""}));
+						""}));*/
 	}
 	
 	public void initGuiNumpad() //INFO:GuiAdministration
