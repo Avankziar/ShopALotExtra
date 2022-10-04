@@ -372,6 +372,10 @@ public class YamlHandler
 			{
 				return false;
 			}
+			if(plugin.getYamlManager().getGuiKey(g) == null)
+			{
+				return false;
+			}
 			writeFile(gf, gui, plugin.getYamlManager().getGuiKey(g));
 			this.gui.put(g, gui);
 		}

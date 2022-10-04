@@ -14,6 +14,7 @@ import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
+import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
@@ -47,6 +48,7 @@ public class SignChangeListener implements Listener
 			return;
 		}
 		Player player = event.getPlayer();
+		//TODO Shop Welt ausschließbar machen per config
 		if(!BonusMalusPermission.hasPermission(player, Bypass.Permission.SHOP_CREATION))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
@@ -71,18 +73,18 @@ public class SignChangeListener implements Listener
 		long defaultStartItemStorage = new ConfigHandler().getDefaulStartItemStorage();
 		SignShop ssh = new SignShop(
 				0, player.getUniqueId(),
-				"Shop_"+lastnumber, ac.getID(), System.currentTimeMillis(), null, "Shop_"+lastnumber, Material.AIR,
+				"Shop_"+lastnumber, ac.getID(), System.currentTimeMillis(), null, null, Material.AIR,
 				defaultStartItemStorage, 0,
 				-1.0, -1.0, -1, -1,
 				0, 0, -1.0, -1.0, -1, -1, 
 				plugin.getServername(), player.getWorld().getName(),
 				event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), 
-				0, false, false, true, true, "");
+				0, false, false, true, true, "", false, ListedType.ALL, false);
 		plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOP, ssh);
-		event.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh)));
-		event.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh)));
-		event.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh)));
-		event.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh)));
+		event.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh, event.getBlock())));
+		event.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, event.getBlock())));
+		event.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh, event.getBlock())));
+		event.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, event.getBlock())));
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.ShopCreated")
 				.replace("%name%", ssh.getDisplayName())
 				));

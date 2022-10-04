@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
+import main.java.me.avankziar.sale.spigot.objects.ShopAccessType;
 import main.java.me.avankziar.sale.spigot.objects.ShoppingDailyLog;
 import main.java.me.avankziar.sale.spigot.objects.ShoppingLog;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -29,8 +30,9 @@ public class MysqlHandler
 		//Player Shopping Log
 		SHOPPINGLOG("saleShoppingLog", new ShoppingLog()),
 		SHOPPINGDAILYLOG("saleShoppingDailyLog", new ShoppingDailyLog()),
-		//
-		SUBSCRIBEDSHOP("saleSubscribedShop", new SubscribedShop())
+		//Sonstiges
+		SUBSCRIBEDSHOP("saleSubscribedShop", new SubscribedShop()),
+		SHOPACCESSTYPE("saleShopAccesType", new ShopAccessType())
 		;
 		
 		private Type(String value, Object object)

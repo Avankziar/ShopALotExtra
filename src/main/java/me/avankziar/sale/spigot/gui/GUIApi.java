@@ -18,8 +18,11 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.events.ClickFunction;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
+import main.java.me.avankziar.sale.spigot.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class GUIApi
 {
@@ -342,15 +345,17 @@ public class GUIApi
 		}
 	}
 
-	public void open(Player player) 
+	public void open(Player player, GuiType gt, int sshid) 
 	{
 		if(this.inventory != null) player.openInventory(this.inventory);
-		addInGui(player.getUniqueId(), inventoryIdentifier, settingsLevel);
+		addInGui(player.getUniqueId(), inventoryIdentifier, gt, settingsLevel, sshid);
 	}
 	
 	//Key == playeruuid
 	//Value == InventoryIdentifier
 	private static LinkedHashMap<UUID, String> playerInGui = new LinkedHashMap<>();
+	private static LinkedHashMap<UUID, GuiType> playerInGuiType = new LinkedHashMap<>();
+	private static LinkedHashMap<UUID, Integer> playerInGuiSSHID = new LinkedHashMap<>();
 	//Key == playeruuid
 	//Value == Player actual SettingsLevel
 	private static LinkedHashMap<UUID, SettingsLevel> playerGuiSettingsLevel = new LinkedHashMap<>();
@@ -365,20 +370,35 @@ public class GUIApi
 		return playerInGui.get(uuid);
 	}
 	
+	public static GuiType getGuiType(UUID uuid)
+	{
+		return playerInGuiType.get(uuid);
+	}
+	
+	public static SignShop getGuiSSH(UUID uuid)
+	{
+		int sshID = playerInGuiSSHID.get(uuid);
+		return (SignShop) SaLE.getPlugin().getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", sshID);
+	}
+	
 	public static SettingsLevel getSettingsLevel(UUID uuid)
 	{
 		return playerGuiSettingsLevel.get(uuid);
 	}
     
-	public static void addInGui(UUID uuid, String inventoryIdentifier, SettingsLevel settingsLevel)
+	public static void addInGui(UUID uuid, String inventoryIdentifier, GuiType gt, SettingsLevel settingsLevel, int sshid)
     {
 		playerInGui.put(uuid, inventoryIdentifier);
+		playerInGuiType.put(uuid, gt);
+		playerInGuiSSHID.put(uuid, sshid);
 		playerGuiSettingsLevel.put(uuid, settingsLevel);
     }
     
 	public static void removeInGui(UUID uuid)
     {
 		playerInGui.remove(uuid);
+		playerInGuiType.remove(uuid);
+		playerInGuiSSHID.remove(uuid);
 		playerGuiSettingsLevel.remove(uuid);
     }
 }

@@ -52,6 +52,12 @@ public class TimeHandler
 				.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 	}
 	
+	public static String getDateTime(long l, String pattern)
+	{
+		return LocalDateTime.ofInstant(Instant.ofEpochMilli(l), ZoneId.systemDefault())
+				.format(DateTimeFormatter.ofPattern(pattern));
+	}
+	
 	public static String getDate(long l)
 	{
 		Date date = new Date(l);

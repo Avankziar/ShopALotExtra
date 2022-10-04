@@ -10,22 +10,25 @@ import java.util.logging.Level;
 
 import main.java.me.avankziar.sale.spigot.database.MysqlHandable;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 
 public class PlayerData implements MysqlHandable
 {
 	private int id;
 	private UUID uuid;
 	private String name;
+	private SettingsLevel lastSettingLevel;
 	private long lastLogin;
 	
 	public PlayerData(){}
 	
 	public PlayerData(int id, UUID uuid, String name,
-			long lastLogin)
+			SettingsLevel lastSettingLevel, long lastLogin)
 	{
 		setId(id);
 		setUUID(uuid);
 		setName(name);
+		setLastSettingLevel(lastSettingLevel);
 		setLastLogin(lastLogin);
 	}
 
@@ -59,6 +62,16 @@ public class PlayerData implements MysqlHandable
 		this.name = name;
 	}
 
+	public SettingsLevel getLastSettingLevel()
+	{
+		return lastSettingLevel;
+	}
+
+	public void setLastSettingLevel(SettingsLevel lastSettingLevel)
+	{
+		this.lastSettingLevel = lastSettingLevel;
+	}
+
 	public long getLastLogin()
 	{
 		return lastLogin;
@@ -75,12 +88,13 @@ public class PlayerData implements MysqlHandable
 		try
 		{
 			String sql = "INSERT INTO `" + tablename
-					+ "`(`player_uuid`, `player_name`, `last_login`) " 
+					+ "`(`player_uuid`, `player_name`, `last_setting_level`, `last_login`) " 
 					+ "VALUES(?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 	        ps.setString(1, getUUID().toString());
 	        ps.setString(2, getName());
-	        ps.setLong(3, getLastLogin());
+	        ps.setString(3, getLastSettingLevel().toString());
+	        ps.setLong(4, getLastLogin());
 	        int i = ps.executeUpdate();
 	        MysqlHandler.addRows(MysqlHandler.QueryType.INSERT, i);
 	        return true;
@@ -97,13 +111,14 @@ public class PlayerData implements MysqlHandable
 		try
 		{
 			String sql = "UPDATE `" + tablename
-				+ "` SET `player_uuid` = ?, `player_name` = ?, `last_login` = ?" 
+				+ "` SET `player_uuid` = ?, `player_name` = ?, `last_setting_level` = ?, `last_login` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, getUUID().toString());
 			ps.setString(2, getName());
-			ps.setLong(3, getLastLogin());
-			int i = 4;
+			ps.setString(3, getLastSettingLevel().toString());
+			ps.setLong(4, getLastLogin());
+			int i = 5;
 			for(Object o : whereObject)
 			{
 				ps.setObject(i, o);
@@ -142,6 +157,7 @@ public class PlayerData implements MysqlHandable
 				al.add(new PlayerData(rs.getInt("id"),
 						UUID.fromString(rs.getString("player_uuid")),
 						rs.getString("player_name"),
+						SettingsLevel.valueOf(rs.getString("last_setting_level")),
 						rs.getLong("last_login")));
 			}
 			return al;

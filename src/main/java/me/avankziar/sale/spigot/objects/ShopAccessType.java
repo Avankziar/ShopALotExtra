@@ -11,21 +11,24 @@ import java.util.logging.Level;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandable;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 
-public class SubscribedShop implements MysqlHandable
+public class ShopAccessType implements MysqlHandable
 {
 	private int id;
-	private UUID player;
-	private int signShopId;
-	private long subscribedDateTime;
+	private int signShopID;
+	private UUID uUID;
+	private ListedType listedType;
 	
-	public SubscribedShop(){}
+	public ShopAccessType()
+	{
+		
+	}
 	
-	public SubscribedShop(int id, UUID player, int signShopId, long subscribedDateTime)
+	public ShopAccessType(int id, int signShopID, UUID uUID, ListedType listedType)
 	{
 		setId(id);
-		setPlayer(player);
-		setSignShopId(signShopId);
-		setSubscribedDateTime(subscribedDateTime);
+		setSignShopID(signShopID);
+		setUUID(uUID);
+		setListedType(listedType);
 	}
 
 	public int getId()
@@ -38,34 +41,34 @@ public class SubscribedShop implements MysqlHandable
 		this.id = id;
 	}
 
-	public UUID getPlayer()
+	public int getSignShopID()
 	{
-		return player;
+		return signShopID;
 	}
 
-	public void setPlayer(UUID player)
+	public void setSignShopID(int signShopID)
 	{
-		this.player = player;
+		this.signShopID = signShopID;
 	}
 
-	public int getSignShopId()
+	public UUID getUUID()
 	{
-		return signShopId;
+		return uUID;
 	}
 
-	public void setSignShopId(int signShopId)
+	public void setUUID(UUID uUID)
 	{
-		this.signShopId = signShopId;
+		this.uUID = uUID;
 	}
 
-	public long getSubscribedDateTime()
+	public ListedType getListedType()
 	{
-		return subscribedDateTime;
+		return listedType;
 	}
 
-	public void setSubscribedDateTime(long subscribedDateTime)
+	public void setListedType(ListedType listedType)
 	{
-		this.subscribedDateTime = subscribedDateTime;
+		this.listedType = listedType;
 	}
 	
 	@Override
@@ -74,14 +77,14 @@ public class SubscribedShop implements MysqlHandable
 		try
 		{
 			String sql = "INSERT INTO `" + tablename
-					+ "`(`player_uuid`, `sign_shop_id`, `subscribed_date_time`) " 
+					+ "`(`player_uuid`, `sign_shop_id`, `listed_type`) " 
 					+ "VALUES("
 					+ "?, ?, ?"
 					+ ")";
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, getPlayer().toString());
-	        ps.setInt(2, getSignShopId());
-	        ps.setLong(3, getSubscribedDateTime());
+	        ps.setString(1, getUUID().toString());
+	        ps.setInt(2, getSignShopID());
+	        ps.setString(3, getListedType().toString());
 	        
 	        int i = ps.executeUpdate();
 	        MysqlHandler.addRows(MysqlHandler.QueryType.INSERT, i);
@@ -99,12 +102,12 @@ public class SubscribedShop implements MysqlHandable
 		try
 		{
 			String sql = "UPDATE `" + tablename
-				+ "` SET `player_uuid` = ?, `sign_shop_id` = ?, `subscribed_date_time` = ?" 
+				+ "` SET `player_uuid` = ?, `sign_shop_id` = ?, `listed_type` = ?"
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, getPlayer().toString());
-	        ps.setInt(2, getSignShopId());
-	        ps.setLong(3, getSubscribedDateTime());
+		    ps.setString(1, getUUID().toString());
+		    ps.setInt(2, getSignShopID());
+		    ps.setString(3, getListedType().toString());
 			int i = 4;
 			for(Object o : whereObject)
 			{
@@ -141,11 +144,10 @@ public class SubscribedShop implements MysqlHandable
 			ArrayList<Object> al = new ArrayList<>();
 			while (rs.next()) 
 			{
-				al.add(new SubscribedShop(
-						rs.getInt("id"),
-						UUID.fromString(rs.getString("player_uuid")),
+				al.add(new ShopAccessType(rs.getInt("id"),
 						rs.getInt("sign_shop_id"),
-						rs.getLong("subscribed_date_time")));
+						UUID.fromString(rs.getString("player_uuid")),
+						ListedType.valueOf(rs.getString("listed_type"))));
 			}
 			return al;
 		} catch (SQLException e)
@@ -155,14 +157,14 @@ public class SubscribedShop implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
-	public static ArrayList<SubscribedShop> convert(ArrayList<Object> arrayList)
+	public static ArrayList<ShopAccessType> convert(ArrayList<Object> arrayList)
 	{
-		ArrayList<SubscribedShop> l = new ArrayList<>();
+		ArrayList<ShopAccessType> l = new ArrayList<>();
 		for(Object o : arrayList)
 		{
-			if(o instanceof SubscribedShop)
+			if(o instanceof ShopAccessType)
 			{
-				l.add((SubscribedShop) o);
+				l.add((ShopAccessType) o);
 			}
 		}
 		return l;

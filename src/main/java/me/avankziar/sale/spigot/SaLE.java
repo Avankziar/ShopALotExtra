@@ -17,6 +17,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,10 +25,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
-import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
+import main.java.me.avankziar.ifh.spigot.storage.PhysicalChestStorage;
 import main.java.me.avankziar.sale.spigot.assistance.BackgroundTask;
 import main.java.me.avankziar.sale.spigot.assistance.Utility;
-import main.java.me.avankziar.sale.spigot.cmd.BaseCommandExecutor;
+import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
 import main.java.me.avankziar.sale.spigot.cmd.TabCompletion;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
@@ -37,10 +38,14 @@ import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlSetup;
 import main.java.me.avankziar.sale.spigot.database.YamlHandler;
 import main.java.me.avankziar.sale.spigot.database.YamlManager;
+import main.java.me.avankziar.sale.spigot.gui.listener.BottomListener;
 import main.java.me.avankziar.sale.spigot.gui.listener.GuiPreListener;
 import main.java.me.avankziar.sale.spigot.gui.listener.UpperListener;
 import main.java.me.avankziar.sale.spigot.handler.EnchantmentHandler;
+import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
+import main.java.me.avankziar.sale.spigot.ifh.SignShopProvider;
 import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
+import main.java.me.avankziar.sale.spigot.listener.PlayerArmorStandManipulateListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerInteractListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerJoinListener;
 import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
@@ -65,8 +70,10 @@ public class SaLE extends JavaPlugin
 	
 	public static String infoCommand = "/";
 	
+	private main.java.me.avankziar.ifh.spigot.shop.SignShop signShopProvider;
+	
 	private Administration administrationConsumer;
-	private MessageToBungee mtbConsumer;
+	private PhysicalChestStorage pcsConsumer;
 	private Economy ecoConsumer;
 	private BonusMalus bonusMalusConsumer;
 	
@@ -109,7 +116,7 @@ public class SaLE extends JavaPlugin
 		setupCommandTree();
 		setupListeners();
 		setupIFH();
-		//MaterialHandler.init(plugin);
+		MaterialHandler.init(plugin);
 		EnchantmentHandler.init(plugin);
 	}
 	
@@ -174,7 +181,7 @@ public class SaLE extends JavaPlugin
 		
 		CommandConstructor base = new CommandConstructor(CommandExecuteType.SALE, "base", false);
 		registerCommand(base.getPath(), base.getName());
-		getCommand(base.getName()).setExecutor(new BaseCommandExecutor(plugin, base));
+		getCommand(base.getName()).setExecutor(new SaLECommandExecutor(plugin, base));
 		getCommand(base.getName()).setTabCompleter(tab);
 	}
 	
@@ -331,7 +338,9 @@ public class SaLE extends JavaPlugin
 		pm.registerEvents(new PlayerJoinListener(plugin), plugin);
 		pm.registerEvents(new PlayerInteractListener(plugin), plugin);
 		pm.registerEvents(new BlockBreakListener(plugin), plugin);
+		pm.registerEvents(new PlayerArmorStandManipulateListener(), plugin);
 		pm.registerEvents(new GuiPreListener(plugin), plugin);
+		pm.registerEvents(new BottomListener(plugin), plugin);
 		pm.registerEvents(new UpperListener(plugin), plugin);
 	}
 	
@@ -387,12 +396,31 @@ public class SaLE extends JavaPlugin
 	
 	private void setupIFH()
 	{
-		setupMessageToBungee();
+		setupShop();
+		setupIFHPhysicalChestStorage();
 		setupIFHEconomy();
 		setupBonusMalus();
 	}
 	
-	private void setupMessageToBungee() 
+	private boolean setupShop()
+	{
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+			log.severe("IFH is not set in the Plugin " + pluginName + "! Disable plugin!");
+			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(this);
+	    	return false;
+	    }
+		signShopProvider = new SignShopProvider(plugin);
+    	plugin.getServer().getServicesManager().register(
+    			main.java.me.avankziar.ifh.spigot.shop.SignShop.class,
+    	signShopProvider,
+        this,
+        ServicePriority.Normal);
+    	log.info(pluginName + " detected InterfaceHub >>> SignShop.class is provided!");
+		return false;
+	}
+	
+	private void setupIFHPhysicalChestStorage() 
 	{
         if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
         {
@@ -411,16 +439,16 @@ public class SaLE extends JavaPlugin
 						cancel();
 						return;
 				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee> rsp = 
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.storage.PhysicalChestStorage> rsp = 
 		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee.class);
+		                            		 main.java.me.avankziar.ifh.spigot.storage.PhysicalChestStorage.class);
 				    if(rsp == null) 
 				    {
-				    	//Check up to 20 seconds after the start, to connect with the provider
 				    	i++;
 				        return;
 				    }
-				    mtbConsumer = rsp.getProvider();
+				    pcsConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> PhysicalChestStorage.class is consumed!");
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
@@ -430,9 +458,9 @@ public class SaLE extends JavaPlugin
         }.runTaskTimer(plugin, 20L, 20*2);
 	}
 	
-	public MessageToBungee getMtB()
+	public PhysicalChestStorage getPCS()
 	{
-		return mtbConsumer;
+		return pcsConsumer;
 	}
 	
 	private void setupIFHEconomy()

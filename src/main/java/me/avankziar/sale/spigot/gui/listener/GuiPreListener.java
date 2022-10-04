@@ -16,13 +16,12 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.gui.GUIApi;
-import main.java.me.avankziar.sale.spigot.gui.GuiValues;
 import main.java.me.avankziar.sale.spigot.gui.events.BottomGuiClickEvent;
 import main.java.me.avankziar.sale.spigot.gui.events.ClickType;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.gui.events.UpperGuiClickEvent;
-import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 
 public class GuiPreListener implements Listener
 {
@@ -66,10 +65,6 @@ public class GuiPreListener implements Listener
 		{
 			GUIApi.removeInGui(uuid);
 		}
-		if(SignHandler.inCheck(uuid))
-		{
-			SignHandler.checkAfterAdministration(uuid);
-		}
 	}
 	
 	private void getBottomGuiEvent(InventoryClickEvent event)
@@ -83,7 +78,7 @@ public class GuiPreListener implements Listener
 		event.setResult(Result.DENY);
 		BottomGuiClickEvent gce = new BottomGuiClickEvent(
 				event, 
-				GuiValues.PLUGINNAME,
+				SaLE.getPlugin().pluginName,
 				GUIApi.getGui(uuid));
 		Bukkit.getPluginManager().callEvent(gce);
 	}
@@ -108,7 +103,7 @@ public class GuiPreListener implements Listener
 			return;
 		}
 		boolean clickEventCancel = Boolean.parseBoolean(pdc.get(nclickEventCancel, PersistentDataType.STRING));
-		if(!clickEventCancel)
+		if(clickEventCancel)
 		{
 			event.setCancelled(true);
 			event.setResult(Result.DENY);

@@ -75,6 +75,8 @@ public class UpperListener implements Listener
 		}
 		switch(gt)
 		{
+		case ITEM_INPUT:
+			break;
 		case ADMINISTRATION:
 		case NUMPAD_ACCOUNT:
 		case NUMPAD_ASH:

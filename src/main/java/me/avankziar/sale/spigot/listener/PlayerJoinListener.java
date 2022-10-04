@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 
 public class PlayerJoinListener implements Listener
@@ -25,7 +26,7 @@ public class PlayerJoinListener implements Listener
 		PlayerData pd = (PlayerData) plugin.getMysqlHandler().getData(MysqlHandler.Type.PLAYERDATA, "`player_uuid` = ?", player.getUniqueId().toString());
 		if(pd == null)
 		{
-			pd = new PlayerData(0, player.getUniqueId(), player.getName(), System.currentTimeMillis());
+			pd = new PlayerData(0, player.getUniqueId(), player.getName(), SettingsLevel.BASE, System.currentTimeMillis());
 			plugin.getMysqlHandler().create(MysqlHandler.Type.PLAYERDATA, pd);
 		} else
 		{

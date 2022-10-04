@@ -143,6 +143,10 @@ public class MysqlSetup
 		{
 			return false;
 		}
+		if(!setupDatabaseVIII())
+		{
+			return false;
+		}
 		return true;
 	}
 	
@@ -152,6 +156,7 @@ public class MysqlSetup
 		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		+ " player_uuid char(36) NOT NULL UNIQUE,"
 		+ " player_name varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,"
+		+ " last_setting_level text,"
 		+ " last_login BIGINT);";
 		baseSetup(data);
 		return true;
@@ -190,7 +195,10 @@ public class MysqlSetup
 		+ " unlimited_sell boolean,"
 		+ " can_buy boolean,"
 		+ " can_sell boolean,"
-		+ " num_text text);";
+		+ " num_text text,"
+		+ " sign_glowing boolean,"
+		+ " listed_type text,"
+		+ " item_hover boolean);";
 		baseSetup(data);
 		return true;
 	}
@@ -262,6 +270,17 @@ public class MysqlSetup
 		+ " player_uuid char(36) NOT NULL,"
 		+ " sign_shop_id int,"
 		+ " subscribed_date_time BIGINT);";
+		baseSetup(data);
+		return true;
+	}
+	
+	public boolean setupDatabaseVIII() 
+	{
+		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.SHOPACCESSTYPE.getValue()
+		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
+		+ " player_uuid char(36) NOT NULL,"
+		+ " sign_shop_id int,"
+		+ " listed_type text);";
 		baseSetup(data);
 		return true;
 	}

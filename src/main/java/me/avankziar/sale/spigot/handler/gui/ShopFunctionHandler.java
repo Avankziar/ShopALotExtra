@@ -23,7 +23,6 @@ import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SubscribedShop;
-import main.java.me.avankziar.sale.spigot.permission.BonusMalus;
 
 public class ShopFunctionHandler
 {
@@ -36,20 +35,24 @@ public class ShopFunctionHandler
 		{
 		default: return;
 		case SHOP_BUY_1: buy(player, ssh, 1, openInv, settingsLevel); break;
+		case SHOP_BUY_8: buy(player, ssh, 8, openInv, settingsLevel); break;
 		case SHOP_BUY_16: buy(player, ssh, 16, openInv, settingsLevel); break;
 		case SHOP_BUY_32: buy(player, ssh, 32, openInv, settingsLevel); break;
 		case SHOP_BUY_64: buy(player, ssh, 64, openInv, settingsLevel); break;
 		case SHOP_BUY_576: buy(player, ssh, 576, openInv, settingsLevel); break;
+		case SHOP_BUY_1728: buy(player, ssh, 1728, openInv, settingsLevel); break;
 		case SHOP_BUY_2304: buy(player, ssh, 2304, openInv, settingsLevel); break;
 		case SHOP_SELL_1: sell(player, ssh, 1, openInv, settingsLevel); break;
+		case SHOP_SELL_8: sell(player, ssh, 8, openInv, settingsLevel); break;
 		case SHOP_SELL_16: sell(player, ssh, 16, openInv, settingsLevel); break;
 		case SHOP_SELL_32: sell(player, ssh, 32, openInv, settingsLevel); break;
 		case SHOP_SELL_64: sell(player, ssh, 64, openInv, settingsLevel); break;
 		case SHOP_SELL_576: sell(player, ssh, 576, openInv, settingsLevel); break;
+		case SHOP_SELL_1728: sell(player, ssh, 1728, openInv, settingsLevel); break;
 		case SHOP_SELL_2304: sell(player, ssh, 2304, openInv, settingsLevel); break;
 		case SHOP_TOGGLE_SUBSCRIBE: subscribe(player, ssh, openInv, settingsLevel); break;
 		}
-		SignHandler.updateSign(player, ssh);
+		SignHandler.updateSign(ssh);
 	}
 	
 	private static boolean isDiscount(SignShop ssh, long now)
@@ -76,12 +79,12 @@ public class ShopFunctionHandler
 	{
 		Account tax = plugin.getIFHEco().getDefaultAccount(from.getOwner().getUUID(), AccountCategory.TAX, ec);
 		EconomyAction ea = null;
-		if(tax == null && category != null)
+		if(taxation == null && category != null)
 		{
 			ea = plugin.getIFHEco().transaction(from, to, amount, OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 		} else
 		{
-			boolean taxAreExclusive = true;
+			boolean taxAreExclusive = false;
 			ea = plugin.getIFHEco().transaction(from, to, amount, taxation, taxAreExclusive, tax, 
 					OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 		}
@@ -123,14 +126,6 @@ public class ShopFunctionHandler
 			//TODO Nachricht am eigentümer, dass shop ist leer
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NoGoodsInStock")));
 			return;
-		}
-		long quantity = amount;
-		if(quantity > ssh.getItemStorageCurrent())
-		{
-			if(!ssh.isUnlimitedBuy())
-			{
-				quantity = ssh.getItemStorageCurrent();
-			}
 		}
 		Double d = 0.0;
 		if(isDiscount(ssh, System.currentTimeMillis()))
@@ -179,43 +174,56 @@ public class ShopFunctionHandler
 		}
 		ArrayList<ItemStack> islist = new ArrayList<>();
 		int emptySlot = emtpySlots(player);
-		int amo = 0;
+		long postc = ssh.getItemStorageCurrent();
+		long quantity = amount;
+		if(quantity > ssh.getItemStorageCurrent())
+		{
+			if(!ssh.isUnlimitedBuy())
+			{
+				quantity = ssh.getItemStorageCurrent();
+			}
+		}
+		long samo = quantity;
 		while(emptySlot > 0)
 		{
 			ItemStack is = ssh.getItemStack().clone();
-			long a = quantity - is.getMaxStackSize();
-			if(a >= 0)
+			if(quantity > is.getMaxStackSize())
 			{
 				is.setAmount(is.getMaxStackSize());
-				amo += is.getMaxStackSize();
-			} else
+				islist.add(is);
+				postc = postc - is.getMaxStackSize();
+				quantity =  quantity - is.getMaxStackSize();
+			} else if(is.getMaxStackSize() >= quantity)
 			{
-				a = quantity;
-				amo += a;
-				is.setAmount((int) a);
+				is.setAmount((int) quantity);
+				islist.add(is);
+				postc = postc - quantity;
+				quantity = 0;
 				break;
 			}
-			islist.add(is);
-			quantity = a;
 			emptySlot--;
+		}
+		if(quantity != 0)
+		{
+			samo = samo - quantity;
 		}
 		String category = plugin.getYamlHandler().getLang().getString("Economy.Buy.Category");
 		String comment = plugin.getYamlHandler().getLang().getString("Economy.Buy.Comment")
-				.replace("%amount%", String.valueOf(amo))
+				.replace("%amount%", String.valueOf(samo))
 				.replace("%item%", ssh.getItemStack().getItemMeta().hasDisplayName() 
 						? ssh.getItemStack().getItemMeta().getDisplayName() : MaterialHandler.getMaterial(ssh.getItemStack().getType()))
 				.replace("%shop%", ssh.getSignShopName());
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.BuyInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.BuyInPercent") : null;
-		if(plugin.getBonusMalus() != null)
+		/*if(plugin.getBonusMalus() != null) //TODO
 		{
 			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BonusMalus.SHOP_BUYING_TAX.getBonusMalus());
-		}
-		if(!doTransaction(player, from, to, amount, to.getCurrency(), category, comment, taxation))
+		}*/
+		if(!doTransaction(player, from, to, samo*d, to.getCurrency(), category, comment, taxation))
 		{
 			return;
 		}
-		ssh.setItemStorageCurrent(amo);
+		ssh.setItemStorageCurrent(postc);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		for(ItemStack is : islist)
 		{
@@ -235,14 +243,6 @@ public class ShopFunctionHandler
 			//TODO nachricht an owner, shop ist voll
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopIsFull")));
 			return;
-		}
-		long quantity = amount;
-		if(quantity > ssh.getItemStorageTotal() - ssh.getItemStorageCurrent())
-		{
-			if(!ssh.isUnlimitedSell())
-			{
-				quantity = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent();
-			}
 		}
 		Double d = 0.0;
 		if(isDiscount(ssh, System.currentTimeMillis()))
@@ -290,16 +290,25 @@ public class ShopFunctionHandler
 			return;
 		}
 		ArrayList<ItemStack> islist = new ArrayList<>();
-		int amo = 0;
+		long postc = ssh.getItemStorageCurrent();
+		long quantity = amount;
+		if(quantity > ssh.getItemStorageTotal() - ssh.getItemStorageCurrent())
+		{
+			if(!ssh.isUnlimitedSell())
+			{
+				quantity = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent();
+			}
+		}
+		long samo = quantity;
 		for(int i = 0; i < player.getInventory().getStorageContents().length; i++)
 		{
 			ItemStack is = player.getInventory().getStorageContents()[i];
-			ItemStack c = is.clone();
-			c.setAmount(1);
 			if(is == null || is.getType() == Material.AIR)
 			{
 				continue;
 			}
+			ItemStack c = is.clone();
+			c.setAmount(1);
 			if(!ssh.getItemStack().toString().equals(c.toString()))
 			{
 				continue;
@@ -308,39 +317,51 @@ public class ShopFunctionHandler
 			{
 				break;
 			}
-			if(quantity <= is.getAmount())
+			//TODO Fehler
+			if(quantity > is.getAmount())
 			{
-				is.setAmount((int) quantity);
-				amo += quantity;
+				postc = postc + is.getAmount();
+				quantity = quantity - is.getAmount();
+				ItemStack cc = is.clone();
+				islist.add(cc);
+				is.setAmount(0);
+			} else if(quantity <= is.getAmount())
+			{
+				postc = postc + quantity;
+				ItemStack cc = is.clone();
+				cc.setAmount((int) quantity);
+				islist.add(cc);
+				is.setAmount(is.getAmount() - (int) quantity);
 				quantity = 0;
-			} else
-			{
-				amo += is.getAmount();
-				is = null;
-			}	
+				break;
+			}
+		}
+		if(quantity != 0)
+		{
+			samo = samo - quantity;
 		}
 		String category = plugin.getYamlHandler().getLang().getString("Economy.Sell.Category");
 		String comment = plugin.getYamlHandler().getLang().getString("Economy.Sell.Comment")
-				.replace("%amount%", String.valueOf(amo))
+				.replace("%amount%", String.valueOf(samo))
 				.replace("%item%", ssh.getItemStack().getItemMeta().hasDisplayName() 
 						? ssh.getItemStack().getItemMeta().getDisplayName() : MaterialHandler.getMaterial(ssh.getItemStack().getType()))
 				.replace("%shop%", ssh.getSignShopName());
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.SellInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.SellInPercent") : null;
-		if(plugin.getBonusMalus() != null)
+		/*if(plugin.getBonusMalus() != null)
 		{
 			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BonusMalus.SHOP_SELLING_TAX.getBonusMalus());
-		}
-		if(!doTransaction(player, from, to, amount, to.getCurrency(), category, comment, taxation))
+		}*/
+		if(!doTransaction(player, from, to, d*samo, to.getCurrency(), category, comment, taxation))
 		{
+			for(ItemStack is : islist)
+			{
+				player.getInventory().addItem(is);
+			}
 			return;
 		}
-		ssh.setItemStorageCurrent(amo);
+		ssh.setItemStorageCurrent(postc);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		for(ItemStack is : islist)
-		{
-			player.getInventory().addItem(is);
-		}
 		GuiHandler.openShop(ssh, player, settingsLevel, inv, false);
 	}
 	

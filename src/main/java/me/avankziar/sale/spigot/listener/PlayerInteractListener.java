@@ -13,9 +13,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
-import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
+import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
+import main.java.me.avankziar.sale.spigot.objects.ListedType;
+import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class PlayerInteractListener implements Listener
@@ -53,39 +55,92 @@ public class PlayerInteractListener implements Listener
 		{
 			return;
 		}
+		PlayerData pd = (PlayerData) plugin.getMysqlHandler().getData(
+				MysqlHandler.Type.PLAYERDATA, "`player_uuid` = ?", player.getUniqueId().toString());
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK)
 		{
-			if(ssh.getOwner().equals(player.getUniqueId()) || SignHandler.isMember(ssh, player.getUniqueId()))
+			if(SignHandler.isOwner(ssh, player.getUniqueId()) || SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
 			{
 				if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 				{
 					SignHandler.takeOutItemFromShop(ssh, player);
+					event.setCancelled(true);
 					return;
 				}
 			}
+			if(player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.AIR)
+			{
+				if(ssh.isItemHover())
+				{
+					ItemHologramHandler.spawnHologram(ssh);
+				}				
+				event.setCancelled(true);
+				return;
+			}
 		} else if(event.getAction() == Action.RIGHT_CLICK_BLOCK)
 		{
-			if(ssh.getOwner().equals(player.getUniqueId()) || SignHandler.isMember(ssh, player.getUniqueId()))
+			if(SignHandler.isOwner(ssh, player.getUniqueId())
+					|| SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId())
+					|| SignHandler.isBypassToggle(player.getUniqueId()))
 			{
-				if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
+				if(ssh.getItemStack() != null)
 				{
-					if(ssh.getItemStack() == null || ssh.getItemStack().getType() == Material.AIR)
+					if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.ShopItemIsNull")
-								.replace("%name%", ssh.getDisplayName())));
+						if(ssh.getItemStack() == null || ssh.getItemStack().getType() == Material.AIR)
+						{
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.ShopItemIsNull")
+									.replace("%name%", ssh.getDisplayName())));
+							event.setCancelled(true);
+							return;
+						}
+						GuiHandler.openAdministration(ssh, player, pd.getLastSettingLevel(), true);
+						SignHandler.updateSign(ssh);
+						event.setCancelled(true);
 						return;
-					}
-					GuiHandler.openAdministration(ssh, player, SettingsLevel.BASE, true);
-					return;
-				} else
-				{
-					if(SignHandler.putInItemIntoShop(ssh, player, player.getInventory().getItemInMainHand()))
+					} else
 					{
-						return;
+						if(SignHandler.putInItemIntoShop(ssh, player, player.getInventory().getItemInMainHand()))
+						{
+							event.setCancelled(true);
+							return;
+						}
 					}
 				}
 			}
 		}
-		GuiHandler.openShop(ssh, player, SettingsLevel.BASE, false);
+		if(((ssh.getListedType() == ListedType.BLACKLIST || ssh.getListedType() == ListedType.ALL)  
+				&& SignHandler.isListed(ListedType.BLACKLIST, ssh, player.getUniqueId()))
+				
+				|| (ssh.getListedType() == ListedType.WHITELIST && !SignHandler.isListed(ListedType.WHITELIST, ssh, player.getUniqueId()))
+				|| (ssh.getListedType() == ListedType.MEMBER && !SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
+				|| (ssh.getListedType() == ListedType.CUSTOM && !SignHandler.isListed(ListedType.CUSTOM, ssh, player.getUniqueId()))
+			)
+		{
+			switch(ssh.getListedType())
+			{
+			case ALL:
+			case BLACKLIST:
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsBlackList")
+						.replace("%name%", ssh.getSignShopName())));
+				break;
+			case WHITELIST:
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotWhiteList")
+						.replace("%name%", ssh.getSignShopName())));
+				break;
+			case CUSTOM:
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotCustomList")
+						.replace("%name%", ssh.getSignShopName())));
+				break;
+			case MEMBER:
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotMember")
+						.replace("%name%", ssh.getSignShopName())));
+				break;
+			}
+			event.setCancelled(true);
+			return;
+		}
+		GuiHandler.openShop(ssh, player, pd.getLastSettingLevel(), false);
+		SignHandler.updateSign(ssh);
 	}
 }

@@ -1,7 +1,6 @@
 package main.java.me.avankziar.sale.spigot.handler;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -12,17 +11,17 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class SignHandler
 {
 	private static SaLE plugin = SaLE.getPlugin();
-	private static LinkedHashMap<UUID, Integer> toCheckMap = new LinkedHashMap<>(); //player, sshid
+	private static ArrayList<UUID> bypassToggle = new ArrayList<>();
 	
 	public static Sign getSign(SignShop ssh)
 	{
@@ -38,12 +37,12 @@ public class SignHandler
 		return (Sign) b;
 	}
 	
-	private static boolean isDiscount(SignShop ssh, long now)
+	public static boolean isDiscount(SignShop ssh, long now)
 	{
 		return now >= ssh.getDiscountStart() && now < ssh.getDiscountEnd();
 	}
 	
-	public static String getSignLine(int index, SignShop ssh)
+	public static String getSignLine(int index, SignShop ssh, Block b)
 	{
 		switch(index)
 		{
@@ -53,38 +52,56 @@ public class SignHandler
 			{
 				return plugin.getYamlHandler().getLang().getString("SignChangeListener.MaterialIsAir");
 			}
-			return MaterialHandler.getMaterial(ssh.getMaterial());
+			return MaterialHandler.getMaterial(ssh.getMaterial(), b != null ? b.getType() : Material.ACACIA_BOAT);
 		case 1:
 			if(isDiscount(ssh, System.currentTimeMillis()))
 			{ 
 				if(ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
 				{
-					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", "/");
+					if(ssh.getBuyAmount() != null)
+					{
+						return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
+								.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getBuyAmount()));
+					}
+					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
+							.replace("%amount%", MaterialHandler.getSignColor(b.getType())+"/");
 				}
-				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", String.valueOf(ssh.getDiscountBuyAmount()));
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1Discount")
+						.replace("%amount%", String.valueOf(ssh.getDiscountBuyAmount()));
 			} else
 			{
 				if(ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0)
 				{
-					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", "/");
+					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
+							.replace("%amount%", MaterialHandler.getSignColor(b.getType())+"/");
 				}
-				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1").replace("%amount%", String.valueOf(ssh.getBuyAmount()));
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
+						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getBuyAmount()));
 			}			
 		case 2:
 			if(isDiscount(ssh, System.currentTimeMillis()))
 			{
 				if(ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
 				{
-					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", "/");
+					if(ssh.getSellAmount() != null)
+					{
+						return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
+								.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getSellAmount()));
+					}
+					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
+							.replace("%amount%", MaterialHandler.getSignColor(b.getType())+"/");
 				}
-				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", String.valueOf(ssh.getDiscountSellAmount()));
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2Discount")
+						.replace("%amount%", String.valueOf(ssh.getDiscountSellAmount()));
 			} else
 			{
 				if(ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0)
 				{
-					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", "/");
+					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
+							.replace("%amount%", MaterialHandler.getSignColor(b.getType())+"/");
 				}
-				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2").replace("%amount%", String.valueOf(ssh.getSellAmount()));
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
+						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getSellAmount()));
 			}
 		case 3:
 			StringBuilder sb = new StringBuilder();
@@ -102,53 +119,22 @@ public class SignHandler
 			if(ssh.getDiscountStart() < now && ssh.getDiscountEnd() > now)
 			{
 				//DiscountpossibleBuy/sell
-				if(ssh.getDiscountPossibleBuy() >= 0 || ssh.getDiscountPossibleSell() >= 0)
+				if(ssh.getDiscountPossibleBuy() >= 0)
 				{
-					if(ssh.getDiscountPossibleBuy() >= 0)
+					colorB = getPercentColor(
+							Math.max(buy, ssh.getDiscountPossibleBuy()),
+							Math.min(buy, ssh.getDiscountPossibleBuy()));
+					buy = Math.min(buy, ssh.getDiscountPossibleBuy());
+					if(buy > 99999)
 					{
-						colorB = getPercentColor(ssh.getItemStorageTotal(), ssh.getPossibleBuy());
-						if(ssh.getDiscountPossibleBuy() > 99999)
-						{
-							sb.append(colorB+"99999+");
-						} else
-						{
-							sb.append(colorB+String.valueOf(ssh.getDiscountPossibleBuy()));
-						}
+						sb.append(colorB+"99999+");
 					} else
 					{
-						if(buy > 99999)
-						{
-							sb.append(colorB+"99999+");
-						} else
-						{
-							sb.append(colorB+buy);
-						}
+						sb.append(colorB+String.valueOf(buy));
 					}
-					sb.append(" &r/ ");
-					if(ssh.getDiscountPossibleSell() >= 0)
-					{
-						colorS = getPercentColor(ssh.getItemStorageTotal(), ssh.getPossibleSell());
-						if(ssh.getDiscountPossibleSell() > 99999)
-						{
-							sb.append(colorS+"99999+");
-						} else
-						{
-							sb.append(colorS+String.valueOf(ssh.getDiscountPossibleSell()));
-						}
-					} else
-					{
-						if(sell > 99999)
-						{
-							sb.append(colorS+"99999+");
-						} else
-						{
-							sb.append(colorS+sell);
-						}
-					}
-					return sb.toString();
 				} else
 				{
-					//Discount without possibleBuy/Sell
+					colorB = getPercentColor(ssh.getItemStorageTotal(), buy);
 					if(buy > 99999)
 					{
 						sb.append(colorB+"99999+");
@@ -156,7 +142,24 @@ public class SignHandler
 					{
 						sb.append(colorB+buy);
 					}
-					sb.append(" &r/ ");
+				}
+				sb.append(" &r/ ");
+				if(ssh.getDiscountPossibleSell() >= 0)
+				{
+					colorS = getPercentColor(
+							Math.max(sell, ssh.getDiscountPossibleSell()),
+							Math.min(sell, ssh.getDiscountPossibleSell()));
+					sell = Math.min(sell, ssh.getDiscountPossibleSell());
+					if(sell > 99999)
+					{
+						sb.append(colorS+"99999+");
+					} else
+					{
+						sb.append(colorS+String.valueOf(sell));
+					}
+				} else
+				{
+					colorS = getPercentColor(ssh.getItemStorageTotal(), sell);
 					if(sell > 99999)
 					{
 						sb.append(colorS+"99999+");
@@ -165,50 +168,26 @@ public class SignHandler
 						sb.append(colorS+sell);
 					}
 				}
+				return sb.toString();
 			} else
 			{
 				//normal possibleBuy/sell
-				if(ssh.getPossibleBuy() >= 0 || ssh.getPossibleSell() >= 0)
+				if(ssh.getPossibleBuy() >= 0)
 				{
-					colorB = getPercentColor(ssh.getItemStorageTotal(), ssh.getPossibleBuy());
-					if(ssh.getPossibleBuy() >= 0)
+					colorB = getPercentColor(
+							Math.max(buy, ssh.getPossibleBuy()),
+							Math.min(buy, ssh.getPossibleBuy()));
+					buy = Math.min(buy, ssh.getPossibleBuy());
+					if(buy > 99999)
 					{
-						if(ssh.getPossibleBuy() > 99999)
-						{
-							sb.append(colorB+"99999+");
-						} else
-						{
-							sb.append(colorB+String.valueOf(ssh.getPossibleBuy()));
-						}
+						sb.append(colorB+"99999+");
 					} else
 					{
-						
+						sb.append(colorB+String.valueOf(buy));
 					}
-					sb.append(" &r/ ");
-					if(ssh.getPossibleSell() >= 0)
-					{
-						colorS = getPercentColor(ssh.getItemStorageTotal(), ssh.getPossibleSell());
-						if(ssh.getPossibleSell() > 99999)
-						{
-							sb.append(colorS+"99999+");
-						} else
-						{
-							sb.append(colorS+String.valueOf(ssh.getPossibleSell()));
-						}
-					} else
-					{
-						if(sell > 99999)
-						{
-							sb.append(colorS+"99999+");
-						} else
-						{
-							sb.append(colorS+sell);
-						}
-					}
-					return sb.toString();
 				} else
 				{
-					//normal without possibleBuy/Sell
+					colorB = getPercentColor(ssh.getItemStorageTotal(), buy);
 					if(buy > 99999)
 					{
 						sb.append(colorB+"99999+");
@@ -216,7 +195,24 @@ public class SignHandler
 					{
 						sb.append(colorB+buy);
 					}
-					sb.append(" &r/ ");
+				}
+				sb.append(" &r/ ");
+				if(ssh.getPossibleSell() >= 0)
+				{
+					colorS = getPercentColor(
+							Math.max(sell, ssh.getPossibleSell()),
+							Math.min(sell, ssh.getPossibleSell()));
+					sell = Math.min(sell, ssh.getPossibleSell());
+					if(sell > 99999)
+					{
+						sb.append(colorS+"99999+");
+					} else
+					{
+						sb.append(colorS+String.valueOf(sell));
+					}
+				} else
+				{
+					colorS = getPercentColor(ssh.getItemStorageTotal(), sell);
 					if(sell > 99999)
 					{
 						sb.append(colorS+"99999+");
@@ -225,26 +221,38 @@ public class SignHandler
 						sb.append(colorS+sell);
 					}
 				}
+				return sb.toString();
 			}
-			return sb.toString();
 		}
 	}
 	
 	public static String getPercentColor(long max, long actual)
 	{
 		double perc = ((double) actual)/((double) max) * 100.0;
-		if(perc >= 100.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.100AndAbove")+actual;}
-		else if(perc < 100.0 && perc >= 75.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between100And75")+actual;}
-		else if(perc < 75.0 && perc >= 50.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between75And50")+actual;}
-		else if(perc < 50.0 && perc >= 25.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between50And25")+actual;}
-		else if(perc < 25.0 && perc >= 10.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between25And10")+actual;}
-		else if(perc < 10.0 && perc > 0.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between10And0")+actual;}
-		else {return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.0AndLess")+actual;}
+		if(perc >= 100.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.100AndAbove");}
+		else if(perc < 100.0 && perc >= 75.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between100And75");}
+		else if(perc < 75.0 && perc >= 50.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between75And50");}
+		else if(perc < 50.0 && perc >= 25.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between50And25");}
+		else if(perc < 25.0 && perc >= 10.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between25And10");}
+		else if(perc < 10.0 && perc > 0.0){return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.Between10And0");}
+		else {return plugin.getYamlHandler().getLang().getString("SignHandler.PercentColor.0AndLess");}
 	}
 	
-	public static boolean isMember(SignShop ssh, UUID member)
+	public static boolean isOwner(SignShop ssh, UUID uuid)
 	{
-		return false; //TODO
+		return ssh != null ? ssh.getOwner().toString().equals(uuid.toString()) : false;
+	}
+	
+	public static boolean isBypassToggle(UUID uuid)
+	{
+		return bypassToggle.contains(uuid);
+	}
+	
+	public static boolean isListed(ListedType listedType, SignShop ssh, UUID uuid)
+	{
+		return plugin.getMysqlHandler().exist(MysqlHandler.Type.SHOPACCESSTYPE, 
+				"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+				uuid.toString(), ssh.getId(), listedType.toString());
 	}
 	
 	public static boolean putInItemIntoShop(SignShop ssh, Player player, ItemStack toPutIn)
@@ -252,23 +260,6 @@ public class SignHandler
 		final boolean isShift = player.isSneaking();
 		ItemStack c = toPutIn.clone();
 		c.setAmount(1);
-		if(ssh.getItemStack() == null || ssh.getItemStack().getType() == Material.AIR)
-		{
-			ssh.setItemStack(c);
-			ItemMeta im = c.getItemMeta();
-			if(im.hasDisplayName())
-			{
-				ssh.setDisplayName(im.getDisplayName());
-			} else
-			{
-				ssh.setDisplayName(MaterialHandler.getMaterial(toPutIn.getType()));
-			}
-			ssh.setMaterial(c.getType());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.AttachedNewItemStackToShop")
-					.replace("%name%", ssh.getItemStack().getItemMeta().hasDisplayName() 
-							? ssh.getItemStack().getItemMeta().getDisplayName() : MaterialHandler.getMaterial(ssh.getItemStack().getType()))
-					.replace("%signshop%", ssh.getDisplayName())));
-		}
 		int amount = 0;
 		if(isShift)
 		{
@@ -279,19 +270,27 @@ public class SignHandler
 			for(int i = 0; i < player.getInventory().getStorageContents().length; i++)
 			{
 				ItemStack is = player.getInventory().getStorageContents()[i];
-				ItemStack cc = is.clone();
-				cc.setAmount(1);
 				if(is == null || is.getType() == Material.AIR)
 				{
 					continue;
 				}
+				ItemStack cc = is.clone();
+				cc.setAmount(1);
 				if(!ssh.getItemStack().toString().equals(cc.toString()))
 				{
 					continue;
 				}
+				if(ssh.getItemStorageTotal() < ssh.getItemStorageCurrent() + amount + is.getAmount())
+				{
+					long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent() - amount;
+					amount += v;
+					is.setAmount(is.getAmount() - (int) v);
+					break;
+				}
 				amount += is.getAmount();
-				is = null;
+				is.setAmount(0);
 			}
+			
 		} else
 		{
 			if(!ssh.getItemStack().toString().equals(c.toString()))
@@ -299,14 +298,14 @@ public class SignHandler
 				return false;
 			}
 			amount = toPutIn.getAmount();
-			toPutIn = null;
-			ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()+((long) amount));
+			player.getInventory().setItemInMainHand(null);
 		}
+		ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()+((long) amount));
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ItemsAddedToShop")
 				.replace("%amount%", String.valueOf(amount))
 				.replace("%now%", String.valueOf(ssh.getItemStorageCurrent())+" / "+String.valueOf(ssh.getItemStorageTotal()))));
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		updateSign(player, ssh);
+		updateSign(ssh);
 		return true;
 	}
 	
@@ -330,9 +329,22 @@ public class SignHandler
 					continue;
 				}
 				ItemStack out = ssh.getItemStack().clone();
-				out.setAmount(out.getMaxStackSize());
-				amount += out.getMaxStackSize();
-				ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-((long) out.getMaxStackSize()));
+				int amo = out.getMaxStackSize();
+				if(out.getMaxStackSize() > ssh.getItemStorageCurrent())
+				{
+					amo = (int) ssh.getItemStorageCurrent();
+					out.setAmount(amo);
+					amount += amo;
+					ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-amo);
+					list.add(out);
+					break;
+				} else
+				{
+					out.setAmount(amo);
+					amount += amo;
+					ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-amo);
+					list.add(out);
+				}
 			}
 			for(ItemStack is : list)
 			{
@@ -340,39 +352,30 @@ public class SignHandler
 			}
 		} else
 		{
+			//TODO Fehler
 			ItemStack out = ssh.getItemStack().clone();
-			out.setAmount(out.getMaxStackSize());
 			amount = out.getMaxStackSize();
-			ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-((long) out.getMaxStackSize()));
+			if(amount > ssh.getItemStorageCurrent())
+			{
+				amount = (int) ssh.getItemStorageCurrent();
+				out.setAmount(amount);
+				ssh.setItemStorageCurrent(0);
+			} else
+			{
+				out.setAmount(amount);
+				ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-amount);
+			}
 			player.getInventory().setItemInMainHand(out);
 		}
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ItemsRemovedToShop")
 				.replace("%amount%", String.valueOf(amount))
 				.replace("%now%", String.valueOf(ssh.getItemStorageCurrent())+" / "+String.valueOf(ssh.getItemStorageTotal()))));
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		updateSign(player, ssh);
+		updateSign(ssh);
 	}
 	
-	public static boolean inCheck(UUID uuid)
+	public static void updateSign(SignShop ssh)
 	{
-		return toCheckMap.containsKey(uuid);
-	}
-	
-	public static void putToCheck(UUID uuid, int sshid)
-	{
-		toCheckMap.put(uuid, sshid);
-	}
-	
-	public static void checkAfterAdministration(UUID uuid)
-	{
-		//TODO AccountID, ASHID
-		toCheckMap.remove(uuid);
-	}
-	
-	public static void updateSign(Player player, SignShop ssh)
-	{
-		//TODO Wenn update, dann auch den MaxStorageItem, falls VIP etc. ausläuft, nach jedem kauf.
-		//TODO Beim Schließen des Administration GUI prüfen, ob ASH System dem Spieler gehört. Wenn nicht auf 0 setzten und dem Spieler benachrichtigen.
 		World w = Bukkit.getWorld(ssh.getWorld());
 		if(w == null)
 		{
@@ -389,10 +392,26 @@ public class SignHandler
 			return;
 		}
 		Sign sign = (Sign) bs;
-		sign.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh)));
-		sign.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh)));
-		sign.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh)));
-		sign.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh)));
+		sign.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh, b)));
+		sign.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, b)));
+		sign.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh, b)));
+		sign.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, b)));
+		sign.setGlowingText(ssh.isSignGlowing());
+		sign.update();
+	}
+	
+	public static void clearSign(SignShop ssh)
+	{
+		Sign sign = getSign(ssh);
+		if(sign == null)
+		{
+			return;
+		}
+		sign.setLine(0, "");
+		sign.setLine(1, "");
+		sign.setLine(2, "");
+		sign.setLine(3, "");
+		sign.setGlowingText(false);
 		sign.update();
 	}
 }

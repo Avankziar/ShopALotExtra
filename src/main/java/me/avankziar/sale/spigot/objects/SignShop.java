@@ -55,6 +55,9 @@ public class SignShop implements MysqlHandable
 	private boolean canBuy;
 	private boolean canSell;
 	private String numText; //Input all number for sell/buy etc.
+	private boolean signGlowing;
+	private ListedType listedType;
+	private boolean itemHover;
 	
 	public SignShop(){}
 	
@@ -66,7 +69,8 @@ public class SignShop implements MysqlHandable
 			long discountPossibleBuy, long discountPossibleSell,
 			String server, String world, int x, int y, int z, int storageId,
 			boolean unlimitedBuy, boolean unlimitedSell,
-			boolean canBuy, boolean canSell, String numText)
+			boolean canBuy, boolean canSell, String numText, boolean signGlowing, ListedType listedType,
+			boolean itemHover)
 	{
 		setId(id);
 		setOwner(owner);
@@ -99,6 +103,9 @@ public class SignShop implements MysqlHandable
 		setCanBuy(canBuy);
 		setCanSell(canSell);
 		setNumText(numText);
+		setSignGlowing(signGlowing);
+		setListedType(listedType);
+		setItemHover(itemHover);
 	}
 	
 	private SignShop(int id, UUID owner, String signShopName, int accountId, long creationDateTime,
@@ -109,7 +116,8 @@ public class SignShop implements MysqlHandable
 			long discountPossibleBuy, long discountPossibleSell,
 			String server, String world, int x, int y, int z, int storageId,
 			boolean unlimitedBuy, boolean unlimitedSell,
-			boolean canBuy, boolean canSell, String numText)
+			boolean canBuy, boolean canSell, String numText, boolean signGlowing, String listedType,
+			boolean itemHover)
 	{
 		setId(id);
 		setOwner(owner);
@@ -142,6 +150,9 @@ public class SignShop implements MysqlHandable
 		setCanBuy(canBuy);
 		setCanSell(canSell);
 		setNumText(numText);
+		setSignGlowing(signGlowing);
+		setListedType(ListedType.valueOf(listedType));
+		setItemHover(itemHover);
 	}
 	
 	public int getId()
@@ -454,6 +465,36 @@ public class SignShop implements MysqlHandable
 		this.numText = numText;
 	}
 
+	public boolean isSignGlowing()
+	{
+		return signGlowing;
+	}
+
+	public void setSignGlowing(boolean signGlowing)
+	{
+		this.signGlowing = signGlowing;
+	}
+
+	public ListedType getListedType()
+	{
+		return listedType;
+	}
+
+	public void setListedType(ListedType listedType)
+	{
+		this.listedType = listedType;
+	}
+
+	public boolean isItemHover()
+	{
+		return itemHover;
+	}
+
+	public void setItemHover(boolean itemHover)
+	{
+		this.itemHover = itemHover;
+	}
+
 	@Override
 	public boolean create(Connection conn, String tablename)
 	{
@@ -470,7 +511,7 @@ public class SignShop implements MysqlHandable
 					+ "`storage_id`,"
 					+ "`unlimited_buy`, `unlimited_sell`,"
 					+ "`can_buy`, `can_sell`,"
-					+ "`num_text`) " 
+					+ "`num_text`, `sign_glowing`, `listed_type`, `item_hover`) " 
 					+ "VALUES("
 					+ "?, ?, ?, ?, "
 					+ "?, ?, ?, "
@@ -482,7 +523,7 @@ public class SignShop implements MysqlHandable
 					+ "?,"
 					+ "?, ?,"
 					+ "?, ?, "
-					+ "?"
+					+ "?, ?, ?, ?"
 					+ ")";
 			PreparedStatement ps = conn.prepareStatement(sql);
 	        ps.setString(1, getOwner().toString());
@@ -515,7 +556,9 @@ public class SignShop implements MysqlHandable
 	        ps.setBoolean(28, canBuy());
 	        ps.setBoolean(29, canSell());
 	        ps.setString(30, getNumText());
-	        
+	        ps.setBoolean(31, isSignGlowing());
+	        ps.setString(32, getListedType().toString());
+	        ps.setBoolean(33, isItemHover());
 	        int i = ps.executeUpdate();
 	        MysqlHandler.addRows(MysqlHandler.QueryType.INSERT, i);
 	        return true;
@@ -538,9 +581,10 @@ public class SignShop implements MysqlHandable
 				+ "`buy_amount` = ?, `sell_amount` = ?, `possible_buy` = ?, `possible_sell` = ?, "
 				+ "`discount_start` = ?, `discount_end` = ?, `discount_buy_amount` = ?, `discount_sell_amount` = ?, "
 				+ "`discount_possible_buy` = ?, `discount_possible_sell` = ?, "
-				+ "`server_name` = ?, `world` = ?, `x` = ?, `y` = ?, `z` = ?,"
-				+ "`storage_id` = ?, `unlimited_buy` = ?, `unlimited_sell` = ?,"
-				+ " `can_buy` = ?, `can_sell` = ?, `num_text` = ?" 
+				+ "`server_name` = ?, `world` = ?, `x` = ?, `y` = ?, `z` = ?, "
+				+ "`storage_id` = ?, `unlimited_buy` = ?, `unlimited_sell` = ?, "
+				+ "`can_buy` = ?, `can_sell` = ?, `num_text` = ?, `sign_glowing` = ?, `listed_type` = ?, "
+				+ "`item_hover` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, getOwner().toString());
@@ -573,7 +617,10 @@ public class SignShop implements MysqlHandable
 	        ps.setBoolean(28, canBuy());
 	        ps.setBoolean(29, canSell());
 	        ps.setString(30, getNumText());
-			int i = 31;
+	        ps.setBoolean(31, isSignGlowing());
+	        ps.setString(32, getListedType().toString());
+	        ps.setBoolean(33, isItemHover());
+			int i = 34;
 			for(Object o : whereObject)
 			{
 				ps.setObject(i, o);
@@ -639,7 +686,10 @@ public class SignShop implements MysqlHandable
 						rs.getBoolean("unlimited_sell"),
 						rs.getBoolean("can_buy"),
 						rs.getBoolean("can_sell"),
-						rs.getString("num_text")));
+						rs.getString("num_text"),
+						rs.getBoolean("sign_glowing"),
+						rs.getString("listed_type"),
+						rs.getBoolean("item_hover")));
 			}
 			return al;
 		} catch (SQLException e)

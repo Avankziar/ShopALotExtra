@@ -1,12 +1,15 @@
 package main.java.me.avankziar.sale.spigot.assistance;
 
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
+import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
@@ -27,7 +30,11 @@ public class BackgroundTask
 		cleanUpSignShopDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShopDailyLog.Active", false));
 		cleanUpShoppingLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingLog.Active", false));
 		cleanUpShoppingDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingDailyLog.Active", false));
+		removeShopItemHologram();
 		//TODO Steuern pro Woche pro Shop
+		//TODO Timer für 5 min um kurz nachricht zu geben für einen kauf pro spieler+Hover was gekauft wurde pro item
+		//TODO Timer für 15 min um alle Shoplog für den moneylog zusammenzufassen.
+		
 		return true;
 	}
 	
@@ -123,7 +130,7 @@ public class BackgroundTask
 			return;
 		}
 		final long olderThanAtLeast = System.currentTimeMillis()
-				-1000L*60*60*24*plugin.getYamlHandler().getConfig().getInt("CleanUpTask.ShopLog.DeleteAfterXDays"); //TODO Fehler?
+				-1000L*60*60*24*plugin.getYamlHandler().getConfig().getInt("CleanUpTask.ShopLog.DeleteAfterXDays", 365); //TODO Fehler?
 		new BukkitRunnable()
 		{
 			@Override
@@ -226,5 +233,31 @@ public class BackgroundTask
 				plugin.getLogger().info("===========================================");
 			}
 		}.runTaskLaterAsynchronously(plugin, 20L*9);
+	}
+	
+	public void removeShopItemHologram()
+	{
+		final long runEveryXSeconds = plugin.getYamlHandler().getConfig().getInt("ShopItemHover.ShoppingDailyLog.DeleteAfterXDays");
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				long now = System.currentTimeMillis();
+				ArrayList<Long> toDelete = new ArrayList<>();
+				for(Entry<Long, ItemHologram> e : ItemHologramHandler.taskMap.entrySet())
+				{
+					if(e.getKey() < now)
+					{
+						e.getValue().despawn();
+					}
+					toDelete.add(e.getKey());
+				}
+				for(Long l : toDelete)
+				{
+					ItemHologramHandler.taskMap.remove(l);
+				}
+			}
+		}.runTaskTimer(plugin, 20L*5, runEveryXSeconds*20L);
 	}
 }

@@ -29,7 +29,7 @@ public class BlockBreakListener implements Listener
 			return;
 		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.SIGNSHOP,
-				"`server` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				plugin.getServername(), player.getWorld().getName(),
 				event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ()))
 		{
