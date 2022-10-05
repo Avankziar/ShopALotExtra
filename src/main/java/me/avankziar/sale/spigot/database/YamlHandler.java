@@ -356,16 +356,17 @@ public class YamlHandler
 		for(GuiType g : list)
 		{
 			File gf = new File(directory.getPath(), languageString+"_"+g.toString()+".yml");
-			if(!gf.exists()) 
+			if(gf.exists()) 
 			{
-				SaLE.log.info("Create %lang%.yml...".replace("%lang%", languageString+"_"+g.toString()));
-				try(InputStream in = plugin.getResource("default.yml"))
-				{
-					Files.copy(in, gf.toPath());
-				} catch (IOException e)
-				{
-					e.printStackTrace();
-				}
+				continue;
+			}
+			SaLE.log.info("Create %lang%.yml...".replace("%lang%", languageString+"_"+g.toString()));
+			try(InputStream in = plugin.getResource("default.yml"))
+			{
+				Files.copy(in, gf.toPath());
+			} catch (IOException e)
+			{
+				e.printStackTrace();
 			}
 			YamlConfiguration gui = loadYamlTask(gf, new YamlConfiguration());
 			if (gui == null)

@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -35,7 +32,9 @@ import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
+import main.java.me.avankziar.sale.spigot.objects.ShopAccessType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
@@ -45,7 +44,7 @@ public class AdminstrationFunctionHandler
 	private static SaLE plugin = SaLE.getPlugin();
 	
 	public static void doClickFunktion(GuiType guiType, ClickFunctionType cft, Player player, SignShop ssh,
-			Inventory openInv, SettingsLevel settingsLevel)
+			Inventory openInv, SettingsLevel settingsLevel, UUID otheruuid)
 	{
 		switch(cft)
 		{
@@ -121,13 +120,15 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_TOGGLE_SELL: setToggle(player, ssh, "SELL", openInv, settingsLevel); break;
 		case ADMINISTRATION_UNLIMITED_TOGGLE_BUY: setToggle(player, ssh, "UBUY", openInv, settingsLevel); break;
 		case ADMINISTRATION_UNLIMITED_TOGGLE_SELL: setToggle(player, ssh, "USELL", openInv, settingsLevel); break;
-		case ADMINISTRATION_SETGLOWING: setGlowing(player, ssh, openInv, settingsLevel, true);
-		case ADMINISTRATION_SETUNGLOWING: setGlowing(player, ssh, openInv, settingsLevel, false);
-		case ADMINISTRATION_SETLISTEDTYPE_ALL:
-		case ADMINISTRATION_SETLISTEDTYPE_WHITELIST:
-		case ADMINISTRATION_SETLISTEDTYPE_BLACKLIST:
-		case ADMINISTRATION_SETLISTEDTYPE_MEMBER:
-		case ADMINISTRATION_SETLISTEDTYPE_CUSTOM:
+		case ADMINISTRATION_SETGLOWING: setGlowing(player, ssh, openInv, settingsLevel, true); break;
+		case ADMINISTRATION_SETUNGLOWING: setGlowing(player, ssh, openInv, settingsLevel, false); break;
+		case ADMINISTRATION_SETITEMHOLOGRAM_ACTIVE: setItemHover(player, ssh, openInv, settingsLevel, true); break;
+		case ADMINISTRATION_SETITEMHOLOGRAM_DEACTIVE: setItemHover(player, ssh, openInv, settingsLevel, false); break;
+		case ADMINISTRATION_SETLISTEDTYPE_ALL: switchListType(player, ssh, null, openInv, settingsLevel, ListedType.ALL); break;
+		case ADMINISTRATION_SETLISTEDTYPE_WHITELIST: switchListType(player, ssh, null, openInv, settingsLevel, ListedType.WHITELIST); break;
+		case ADMINISTRATION_SETLISTEDTYPE_BLACKLIST: switchListType(player, ssh, null, openInv, settingsLevel, ListedType.BLACKLIST); break;
+		case ADMINISTRATION_SETLISTEDTYPE_MEMBER: switchListType(player, ssh, null, openInv, settingsLevel, ListedType.MEMBER); break;
+		case ADMINISTRATION_SETLISTEDTYPE_CUSTOM: switchListType(player, ssh, null, openInv, settingsLevel, ListedType.CUSTOM); break;
 		case ADMINISTRATION_KEYBOARD_0: keyboard(player, ssh, "0", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD_1: keyboard(player, ssh, "1", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD_2: keyboard(player, ssh, "2", guiType, openInv, settingsLevel); break;
@@ -191,34 +192,32 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_KEYBOARD_Z_CAPITAL: keyboard(player, ssh, "Z", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD_Z_SMALL: keyboard(player, ssh, "z", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD__: keyboard(player, ssh, "_", guiType, openInv, settingsLevel); break;
-		case ADMINISTRATION_KEYBOARD_REMOVEONCE: keyboardRemoveOnce(player, ssh, guiType, openInv, settingsLevel);
-		case ADMINISTRATION_KEYBOARD_CLEAR: setKeyboardClear(player, ssh, guiType, openInv, settingsLevel);
-		case ADMINISTRATION_KEYBOARD_CANCEL: cancelKeyboard(player, ssh, openInv, settingsLevel);
-		case ADMINISTRATION_SETSIGNSHOPNAME_OPENKEYBOARD:
-		case ADMINISTRATION_SETSIGNSHOPNAME_TAKEOVER:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_BLACKLIST:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_WHITELIST:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_MEMBER:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_CUSTOM:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_WORLD:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE_WORLD:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_WORLD:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE_WORLD:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_WORLD:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE_WORLD:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_WORLD:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE:
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE_WORLD:
+		case ADMINISTRATION_KEYBOARD_REMOVEONCE: keyboardRemoveOnce(player, ssh, guiType, openInv, settingsLevel); break;
+		case ADMINISTRATION_KEYBOARD_CLEAR: setKeyboardClear(player, ssh, guiType, openInv, settingsLevel); break;
+		case ADMINISTRATION_KEYBOARD_CANCEL: cancelKeyboard(player, ssh, openInv, settingsLevel); break;
+		case ADMINISTRATION_SETSIGNSHOPNAME_OPENKEYBOARD: openKeyboard(player, ssh, GuiType.KEYBOARD_SIGNSHOPNAME, openInv, settingsLevel); break;
+		case ADMINISTRATION_SETSIGNSHOPNAME_TAKEOVER: takeOver(player, ssh, GuiType.KEYBOARD_SIGNSHOPNAME, openInv, settingsLevel); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_BLACKLIST: openKeyboard(player, ssh, GuiType.KEYBOARD_BLACKLIST, openInv, settingsLevel); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_WHITELIST: openKeyboard(player, ssh, GuiType.KEYBOARD_WHITELIST, openInv, settingsLevel); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_MEMBER: openKeyboard(player, ssh, GuiType.KEYBOARD_MEMBER, openInv, settingsLevel); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_CUSTOM: openKeyboard(player, ssh, GuiType.KEYBOARD_CUSTOM, openInv, settingsLevel); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, false, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, false, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, true, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, true, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, false, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, false, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, true, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, true, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.MEMBER, otheruuid, false, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.MEMBER, otheruuid, false, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.MEMBER, otheruuid, true, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.MEMBER, otheruuid, true, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, false, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, false, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, true); break;
 		}
-		//TODO hologram für das Item machen, dass durch einen boolean & button einstellen und per ansicht auf dem Schild
-		//das hologram dann über dem schild anzeigen. Auch per button kosten verlangen.
 		SignHandler.updateSign(ssh);
 	}
 	
@@ -495,6 +494,13 @@ public class AdminstrationFunctionHandler
 		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
 	}
 	
+	private static void switchListType(Player player, SignShop ssh, String type, Inventory inv, SettingsLevel settingsLevel, ListedType listedType)
+	{
+		ssh.setListedType(listedType);
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
+	}
+	
 	private static void setToggle(Player player, SignShop ssh, String type, Inventory inv, SettingsLevel settingsLevel)
 	{
 		switch(type)
@@ -512,6 +518,13 @@ public class AdminstrationFunctionHandler
 	private static void setGlowing(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel, boolean glow)
 	{
 		ssh.setSignGlowing(glow);
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
+	}
+	
+	private static void setItemHover(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel, boolean itemhover)
+	{
+		ssh.setItemHologram(itemhover);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
 	}
@@ -547,7 +560,7 @@ public class AdminstrationFunctionHandler
 			}
 			break;
 		}
-		GuiHandler.openNumpad(ssh, player, gt, settingsLevel, true);
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, true);
 	}
 	
 	private static void takeOver(Player player, SignShop ssh, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
@@ -711,6 +724,15 @@ public class AdminstrationFunctionHandler
 			}
 			ssh.setDiscountPossibleSell(Long.parseLong(ssh.getNumText()));
 			break;
+		case KEYBOARD_SIGNSHOPNAME:
+			if(ssh.getNumText().isBlank() || ssh.getNumText().isEmpty())
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("InputIsEmpty")
+						.replace("%value%", ssh.getNumText())));
+				break;
+			}
+			ssh.setSignShopName(ssh.getNumText());
+			break;
 		}
 		ssh.setNumText("");
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
@@ -730,7 +752,7 @@ public class AdminstrationFunctionHandler
 		}
 		ssh.setNumText("");
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		GuiHandler.openNumpad(ssh, player, gt, settingsLevel, false);
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, false);
 	}
 	
 	private static void numpadRemoveOnce(Player player, SignShop ssh, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
@@ -748,11 +770,11 @@ public class AdminstrationFunctionHandler
 		{
 			ssh.setNumText(ssh.getNumText().substring(0, ssh.getNumText().length()-1));
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-			GuiHandler.openNumpad(ssh, player, gt, settingsLevel, false);
+			GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, false);
 		}
 	}
 	
-	private static void numpad(Player player, SignShop ssh, String type, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
+	private static void numpad(Player player, SignShop ssh, String num, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
 	{
 		if(isTooMuchShop(player, ssh))
 		{
@@ -763,9 +785,9 @@ public class AdminstrationFunctionHandler
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
 		}
-		ssh.setNumText(ssh.getNumText()+type);
+		ssh.setNumText(ssh.getNumText()+num);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		GuiHandler.openNumpad(ssh, player, gt, settingsLevel, false);
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, false);
 	}
 	
 	private static void cancelNumpad(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
@@ -785,13 +807,93 @@ public class AdminstrationFunctionHandler
 		numpadRemoveOnce(player, ssh, gt, inv, settingsLevel);
 	}
 	
-	private static void keyboard(Player player, SignShop ssh, String type, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
+	private static void keyboard(Player player, SignShop ssh, String key, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
 	{
-		numpad(player, ssh, type, gt, inv, settingsLevel);
+		numpad(player, ssh, key, gt, inv, settingsLevel);
 	}
 	
 	private static void cancelKeyboard(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
 	{
 		cancelNumpad(player, ssh, inv, settingsLevel);
+	}
+	
+	private static void openKeyboard(Player player, SignShop ssh, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
+	{
+		if(isTooMuchShop(player, ssh))
+		{
+			return;
+		}
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
+			return;
+		}
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, true);
+	}
+	
+	private static void addPlayerToList(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel,
+			ListedType listType, UUID otheruuid, boolean remove, boolean world)
+	{
+		if(otheruuid == null)
+		{
+			return;
+		}
+		int a = 0;
+		if(world)
+		{
+			ArrayList<SignShop> sshAL = SignShop.convert(plugin.getMysqlHandler().getFullList(
+					MysqlHandler.Type.SIGNSHOP, "`player_uuid` = ? AND `server_name` = ? AND `world` = ?",
+					ssh.getOwner().toString(), plugin.getServername(), player.getWorld().getName()));
+			for(SignShop ss : sshAL)
+			{
+				if(remove)
+				{
+					plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SHOPACCESSTYPE,
+							"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+							otheruuid.toString(), ss.getId(), listType.toString());
+				} else
+				{
+					if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.SHOPACCESSTYPE,
+							"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+							otheruuid.toString(), ss.getId(), listType.toString()))
+					{
+						plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPACCESSTYPE,
+								new ShopAccessType(0, ss.getId(), otheruuid, listType));
+					}
+				}
+				a++;
+			}
+		} else
+		{
+			if(remove)
+			{
+				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SHOPACCESSTYPE,
+						"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+						otheruuid.toString(), ssh.getId(), listType.toString());
+			} else
+			{
+				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.SHOPACCESSTYPE,
+						"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+						otheruuid.toString(), ssh.getId(), listType.toString()))
+				{
+					plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPACCESSTYPE,
+							new ShopAccessType(0, ssh.getId(), otheruuid, listType));
+				}
+			}
+			a++;
+		}
+		if(remove)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.Listed.Remove")
+					.replace("%amount%", String.valueOf(a))
+					.replace("%list%", 
+							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+ssh.getListedType().toString()))));
+		} else
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.Listed.Add")
+					.replace("%amount%", String.valueOf(a))
+					.replace("%list%", 
+							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+ssh.getListedType().toString()))));
+		}
 	}
 }

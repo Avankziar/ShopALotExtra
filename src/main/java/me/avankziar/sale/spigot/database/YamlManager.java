@@ -388,6 +388,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Spieler existiert nicht!",
 						"&cThe player does not exist!"}));
+		languageKeys.put("InputIsEmpty",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDie Eingabe darf nicht leer sein!",
+						"&cThe input must not be empty!"}));
 		languageKeys.put("NoNumber",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDas Argument &f%value% &cmuss eine ganze Zahl sein.",
@@ -647,6 +651,14 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&dBenutzerdefiniert",
 						"&dCustom"}));
+		languageKeys.put("AdminstrationFunctionHandler.Listed.Add"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast %amount% Spieler zum Liste %list% &ehinzugefügt.",
+						"&eYou have added %amount% players to the %list% &elist."}));
+		languageKeys.put("AdminstrationFunctionHandler.Listed.Remove"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast das Item des Shop zurückgesetzt. Nun kann ein neues Item in den Shop eingetragen werden.",
+						"&eYou have reset the item of the store. Now you can add a new item to the store."}));
 		
 		languageKeys.put("ShopFunctionHandler.Buy.NoGoodsInStock"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -2134,6 +2146,7 @@ public class YamlManager
 						"&cEigentümer: &f%owner%",
 						"&cShopname: &f%signshopname%",
 						"&cErstellungsdatum: &f%creationdate%",
+						"&cLeuchtendes Schild: &f%glow%",
 						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
 						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
 						"&cVerkauf Aktiv: &f%buytoggle%",
@@ -2145,6 +2158,7 @@ public class YamlManager
 						"&cOwner: &f%owner%",
 						"&cShopname: &f%signshopname%",
 						"&cCreationdatum: &f%creationdate%",
+						"&cLuminous shield: &f%glow%",
 						"&cStorage Items Actual: &f%itemstoragecurrent%",
 						"&cStorage Items Total: &f%itemstoragetotal%",
 						"&cBuy Active: &f%buytoggle%",
@@ -2157,6 +2171,9 @@ public class YamlManager
 						"&cEigentümer: &f%owner%",
 						"&cShopname: &f%signshopname%",
 						"&cErstellungsdatum: &f%creationdate%",
+						"&cLeuchtendes Schild: &f%glow%",
+						"&cListenTyp: &f%listtype%",
+						"&cItemHologram: &f%hologram%",
 						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
 						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
 						"&cLocation: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
@@ -2172,6 +2189,9 @@ public class YamlManager
 						"&cOwner: &f%owner%",
 						"&cShopname: &f%signshopname%",
 						"&cCreationdatum: &f%creationdate%",
+						"&cLuminous shield: &f%glow%",
+						"&cListType: &f%listtype%",
+						"&cItemHologram: &f%hologram%",
 						"&cStorage Items Actual: &f%itemstoragecurrent%",
 						"&cStorage Items Total: &f%itemstoragetotal%",
 						"&cLocation: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
@@ -2189,6 +2209,9 @@ public class YamlManager
 						"&cEigentümer: &f%owner%",
 						"&cShopname: &f%signshopname%",
 						"&cErstellungsdatum: &f%creationdate%",
+						"&cLeuchtendes Schild: &f%glow%",
+						"&cListenTyp: &f%listtype%",
+						"&cItemHologram: &f%hologram%",
 						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
 						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
 						"&cLocation: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
@@ -2212,6 +2235,9 @@ public class YamlManager
 						"&cOwner: &f%owner%",
 						"&cShopname: &f%signshopname%",
 						"&cCreationdatum: &f%creationdate%",
+						"&cLuminous shield: &f%glow%",
+						"&cListType: &f%listtype%",
+						"&cItemHologram: &f%hologram%",
 						"&cStorage Items Actual: &f%itemstoragecurrent%",
 						"&cStorage Items Total: &f%itemstoragetotal%",
 						"&cLocation: &f%server%>%world%>&7%x%&f/&7%y%&f/&7%z%",
@@ -2561,7 +2587,7 @@ public class YamlManager
 		path = "19"; //Setglowing
 		admin.put(path+".SettingLevel",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.EXPERT.toString()}));
+						SettingsLevel.ADVANCED.toString()}));
 		admin.put(path+".Material",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						Material.GLOW_INK_SAC.toString()}));
@@ -2670,8 +2696,11 @@ public class YamlManager
 		admin.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_CUSTOM.toString()}));
-		path = "20"; //ToggleItemHover
-		admin.put(path+".SettingLevel", //FIXME Hier weitermachen
+		path = "20"; //ToggleItemHologram
+		admin.put(path+".Permission",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						".item.hologram"}));
+		admin.put(path+".SettingLevel",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						SettingsLevel.EXPERT.toString()}));
 		admin.put(path+".Material",
@@ -2679,40 +2708,28 @@ public class YamlManager
 						Material.END_CRYSTAL.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dToggel ItemHover",
-						"&dToggle ItemHover"}));
+						"&dToggel ItemHologram",
+						"&dToggle ItemHologram"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%listtype%",
-						"&bÖffnet einer der Keyboard Guis,",
-						"&bum Spieler zu den jeweiligen Listen hinzuzufügen",
-						"&boder zu entfernen. Hier können Mitglieder, Black- und Whitelist",
-						"&bsowie eine benutzerdefinierte Liste bearbeitet werden.",
-						"&cLinksklick &böffnet das Keyboard Gui für die Blacklist.",
-						"&cRechtsklick &böffnet das Keyboard Gui für die Whitelist.",
-						"&cShift-Linksklick &böffnet das Keyboard Gui für die Mitglieder.",
-						"&cShift-Rechtsklick &böffnet das Keyboard Gui für die benutzerdefinierte Liste.",
-						"&bAtm.: &f%listtype%",
-						"&bOpens one of the Keyboard Guis",
-						"&b to add or remove players from the respective lists.",
-						"&bMembers, blacklist, whitelist",
-						"&band a custom list can be edited here.",
-						"&cLeftclick &bopens the keyboard gui for the blacklist.",
-						"&cRightclick &bopens the keyboard gui for the whitelist.",
-						"&cShift-leftclick &bopens the keyboard Gui for the members.",
-						"&cShift-rightclick &bopens the Keyboard Gui for the user-defined list."}));
+						"&bZz.: &f%hologram%",
+						"&bToggelt das ItemHologram.",
+						"&bWenn aktiv, so erscheint mit einem Item in der Hand",
+						"&bund einem Linksklick auf das Shopschild das ItemHologram.",
+						"&cLinksklick &baktiviert das Hologram.",
+						"&cRechtsklick &bdeaktiviert das Hologram.",
+						"&bAtm.: &f%hologram%",
+						"&bToggles the ItemHologram.",
+						"&bIf active, with an item in hand",
+						"&band a left click on the store sign, the ItemHologram will appear.",
+						"&cLeftclick &bactivates the hologram.",
+						"&cRightclick &bdeactivates the hologram."}));
 		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_BLACKLIST.toString()}));
+						ClickFunctionType.ADMINISTRATION_SETITEMHOLOGRAM_ACTIVE.toString()}));
 		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_WHITELIST.toString()}));
-		admin.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(),
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_MEMBER.toString()}));
-		admin.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(),
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_CUSTOM.toString()}));
+						ClickFunctionType.ADMINISTRATION_SETITEMHOLOGRAM_DEACTIVE.toString()}));
 		path = "15"; //Open Shoplog
 		admin.put(path+".SettingLevel",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -3180,25 +3197,25 @@ public class YamlManager
 	public void initGuiNumpad() //INFO:GuiNumpad
 	{
 		LinkedHashMap<String, Language> numpad = new LinkedHashMap<>();
+		Language lNSL = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				SettingsLevel.NOLEVEL.toString()});
+		Language lNMat = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				Material.PLAYER_HEAD.toString()});
+		Language lNLo = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&bFügt am Ende ein Zeichen an.",
+				"&bAtm.: &f%numtext%",
+				"&bAdds a character at the end."});
 		String path = "12"; //7
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						7}));
+						"https://textures.minecraft.net/texture/9e198fd831cb61f3927f21cf8a7463af5ea3c7e43bd3e8ec7d2948631cce879"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f7 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_7.toString()}));
@@ -3211,19 +3228,14 @@ public class YamlManager
 						SettingsLevel.NOLEVEL.toString()}));
 		numpad.put(path+".Material",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
+						Material.PLAYER_HEAD.toString()}));
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						8}));
+						"https://textures.minecraft.net/texture/84ad12c2f21a1972f3d2f381ed05a6cc088489fcfdf68a713b387482fe91e2"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f8 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_8.toString()}));
@@ -3231,24 +3243,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_8.toString()}));
 		path = "14"; //9
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						9}));
+						"https://textures.minecraft.net/texture/9f7aa0d97983cd67dfb67b7d9d9c641bc9aa34d96632f372d26fee19f71f8b7"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f9 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_9.toString()}));
@@ -3256,24 +3259,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_9.toString()}));
 		path = "21"; //4
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						4}));
+						"https://textures.minecraft.net/texture/d198d56216156114265973c258f57fc79d246bb65e3c77bbe8312ee35db6"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f4 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_4.toString()}));
@@ -3281,24 +3275,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_4.toString()}));
 		path = "22"; //5
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						5}));
+						"https://textures.minecraft.net/texture/7fb91bb97749d6a6eed4449d23aea284dc4de6c3818eea5c7e149ddda6f7c9"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f5 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_5.toString()}));
@@ -3306,24 +3291,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_5.toString()}));
 		path = "23"; //6
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						6}));
+						"https://textures.minecraft.net/texture/9c613f80a554918c7ab2cd4a278752f151412a44a73d7a286d61d45be4eaae1"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f6 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_6.toString()}));
@@ -3331,24 +3307,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_6.toString()}));
 		path = "30"; //1
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						1}));
+						"https://textures.minecraft.net/texture/d2a6f0e84daefc8b21aa99415b16ed5fdaa6d8dc0c3cd591f49ca832b575"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f1 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_1.toString()}));
@@ -3356,24 +3323,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_1.toString()}));
 		path = "31"; //2
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						2}));
+						"https://textures.minecraft.net/texture/96fab991d083993cb83e4bcf44a0b6cefac647d4189ee9cb823e9cc1571e38"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f2 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_2.toString()}));
@@ -3381,24 +3339,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_2.toString()}));
 		path = "32"; //3
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						3}));
+						"https://textures.minecraft.net/texture/cd319b9343f17a35636bcbc26b819625a9333de3736111f2e932827c8e749"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f3 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_3.toString()}));
@@ -3406,24 +3355,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_3.toString()}));
 		path = "40"; //0
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.DARK_OAK_BUTTON.toString()}));
-		numpad.put(path+".Amount",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						1}));
+						"https://textures.minecraft.net/texture/6d68343bd0b129de93cc8d3bba3b97a2faa7ade38d8a6e2b864cd868cfab"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f0 &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_0.toString()}));
@@ -3431,21 +3371,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_0.toString()}));
 		path = "38"; //.
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.OAK_BUTTON.toString()}));
+						"https://textures.minecraft.net/texture/95f6e3383d128f17d73cf39af7b579889779c4e5f38d2c1ef85dba2f462f6840"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f. &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_DECIMAL.toString()}));
@@ -3453,21 +3387,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_DECIMAL.toString()}));
 		path = "42"; //:
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.OAK_FENCE.toString()}));
+						"https://textures.minecraft.net/texture/ac4c26963f8538c11eac6a8e437d27682dffea4bcc0f04afd5cda6d1d567"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&f: &7Numpad"}));
-		numpad.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
-						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an."}));
+		numpad.put(path+".Lore", lNLo);
 		numpad.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_COLON.toString()}));
@@ -3475,12 +3403,11 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_COLON.toString()}));
 		path = "48"; //RemoveOnce
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.REDSTONE.toString()}));
+						"https://textures.minecraft.net/texture/864f779a8e3ffa231143fa69b96b14ee35c16d669e19c75fd1a7da4bf306c"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eUm ein Zeichen zurücksetzen",
@@ -3498,12 +3425,11 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_NUMPAD_REMOVEONCE.toString()}));
 		path = "50"; //Clear
-		numpad.put(path+".SettingLevel",
+		numpad.put(path+".SettingLevel", lNSL);
+		numpad.put(path+".Material", lNMat);
+		numpad.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.NOLEVEL.toString()}));
-		numpad.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.BARRIER.toString()}));
+						"https://textures.minecraft.net/texture/118a2dd5bef0b073b13271a7eeb9cfea7afe8593c57a93821e43175572461812"}));
 		numpad.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZurücksetzen",
@@ -4288,5 +4214,1078 @@ public class YamlManager
 						"&dKlicke auf ein Item zum Hinzufügen des Shops.",
 						"&dClick on an item to add the store."}));
 		guiKeys.put(GuiType.ITEM_INPUT, iinput);
+	}
+	
+	public void initGuiKeyboard() //INFO:GuiKeyBoard
+	{
+		LinkedHashMap<String, Language> keyboard = new LinkedHashMap<>();
+		Language lBSL = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				SettingsLevel.NOLEVEL.toString()});
+		Language lBMat = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				Material.PLAYER_HEAD.toString()});
+		Language lBLo = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&bFügt am Ende ein Zeichen an.",
+				"&bAtm.: &f%numtext%",
+				"&bAdds a character at the end."});
+		Language lB2Lo = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&cLinksklick &bfügt den Kleinbuchstabe am Ende hinzu.",
+				"&cRechtsklick &bfügt den Großbuchstabe am Ende hinzu.",
+				"&bAtm.: &f%numtext%",
+				"&cLeftclick &badds the lowercase letter at the end.",
+				"&cRightclick &badds the capital letter at the end."});
+		String path = ""; //7
+		path = "27"; //Q
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/ff72cceb4a565478de5b0b0e727946e549834e36f6e0ec8f7dd7f6327b15a"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fq/Q &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_Q_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_Q_CAPITAL.toString()}));
+		path = "19"; //W
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/79cbc465525e16a89441d789b72f554e8ff4ea5b393447aef3ff193f0465058"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fw/W &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_W_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_W_CAPITAL.toString()}));
+		path = "20"; //E
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/ced9f431a997fce0d8be1844f62090b1783ac569c9d2797528349d37c215fcc"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fe/E &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_E_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_E_CAPITAL.toString()}));
+		path = "21"; //R
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/3cb88225ee4ab39f7cbf581f22cbf08bdcc33884f1ff747689312841516c345"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fr/R &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_R_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_R_CAPITAL.toString()}));
+		path = "22"; //T
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/fc2fcbc24e7382ac112bb2c0d5eca27e9f48ffca5a157e502617a96d636f5c3"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&ft/T &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_T_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_T_CAPITAL.toString()}));
+		path = "23"; //Y
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/a71071bef733f477021b3291dc3d47f0bdf0be2da1b165a119a8ff1594567"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fy/Y &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_Y_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_Y_CAPITAL.toString()}));
+		path = "24"; //U
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/9fdc4f321c78d67484135ae464af4fd925bd57d459383a4fe9d2f60a3431a79"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fu/U &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_U_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_U_CAPITAL.toString()}));
+		path = "25"; //I
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/c148a8865bc4afe0747f3415138b96bbb4e8bbb7261f45e5d11d7219f368e4"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fi/I &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_I_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_I_CAPITAL.toString()}));
+		path = "26"; //O
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/1c27235de3a55466b627459f1233596ab6a22c435cfc89a4454b47d32b199431"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fo/O &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_O_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_O_CAPITAL.toString()}));
+		path = "27"; //A
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/17dd34924d2b6a213a5ed46ae5783f95373a9ef5ce5c88f9d736705983b97"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fa/A &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_A_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_A_CAPITAL.toString()}));
+		path = "28"; //S
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/af22d7cd53d5bfe61eafbc2fb1ac94443eec24f455292139ac9fbdb83d0d09"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fs/S &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_S_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_S_CAPITAL.toString()}));
+		path = "29"; //D
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/59aa69229ffdfa182889bf3097d32215c1b2159d987103b1d5843646faac"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fd/D &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_D_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_D_CAPITAL.toString()}));
+		path = "30"; //F
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/9d714bafb0b5ab9cfa7db02efc8927aed1ef29797a595da066efc5c3efdc9"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&ff/F &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_F_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_F_CAPITAL.toString()}));
+		path = "31"; //G
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/58c336dedfe197b434b5ab67988cbe9c2c9f285ec1871fdd1ba434855b"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fg/G &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_G_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_G_CAPITAL.toString()}));
+		path = "32"; //H
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/bde4a89be2197f86d2e6166a0ac541ccc21dce28b7854b788d329a39daec32"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fh/H &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_H_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_H_CAPITAL.toString()}));
+		path = "33"; //J
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/18c9dc3d38a56282e1d92337198fb19ea641b61a8c4e57fb4e27c1ba6a4b24c"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fj/J &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_J_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_J_CAPITAL.toString()}));
+		path = "34"; //K
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/12bfeb246f649b86f212feea87a9c216a655565d4b7992e80326b3918d923bd"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fk/K &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_K_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_K_CAPITAL.toString()}));
+		path = "35"; //L
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/cc58321d4bffbec2ddf66bf38cf2f9e9ddf3fa2f1387dc7d30c62b4d010c8"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fl/L &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_L_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_L_CAPITAL.toString()}));
+		path = "36"; //Z
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/c992c753bf9c625853ce2a0b7b174b89a6ec26bb5c3ccb473b6a2012496312"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fz/Z &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_Z_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_Z_CAPITAL.toString()}));
+		path = "37"; //X
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/c38ab145747b4bd09ce0354354948ce69ff6f41d9e098c6848b80e187e919"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fx/X &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_X_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_X_CAPITAL.toString()}));
+		path = "38"; //C
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/56b1486e1f576bc921b8f9f59fe6122ce6ce9dd70d75e2c92fdb8ab9897b5"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fc/C &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_C_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_C_CAPITAL.toString()}));
+		path = "39"; //V
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/2dd0143d8e449ad1ba97e1981712cee0f3fc297dbc17c83b05eea3338d659"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fv/V &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_V_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_V_CAPITAL.toString()}));
+		path = "40"; //B
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/2dd0143d8e449ad1ba97e1981712cee0f3fc297dbc17c83b05eea3338d659"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fb/B &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_B_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_B_CAPITAL.toString()}));
+		path = "41"; //N
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/612c7afea48e53325e5129038a45aec51afe256abca941b6bc8206fae1cef"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fn/N &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_N_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_N_CAPITAL.toString()}));
+		path = "42"; //M
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/90376dc5e3c981b52960578afe4bfc41c1778789bcd80ec2c2d2fd460e5a51a"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fm/M &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_M_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_M_CAPITAL.toString()}));
+		path = "43"; //P
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/c584dc7ecf36b4f044f8262527985718bf24a9daef012de92e1e76d4586d96"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&fp/P &7Numpad"}));
+		keyboard.put(path+".Lore", lB2Lo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_P_SMALL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_P_CAPITAL.toString()}));
+		path = "44"; //_
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/979a465183a3ba63fe6ae272bc1bf1cd15f2c209ebbfcc5c521b9514682a43"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&f_ &7Numpad"}));
+		keyboard.put(path+".Lore", lBLo);
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD__.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD__.toString()}));
+		path = "49"; //0-1
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/6d68343bd0b129de93cc8d3bba3b97a2faa7ade38d8a6e2b864cd868cfab"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&f0/1 &7Numpad"}));
+		keyboard.put(path+".Lore", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%numtext%",
+						"&cLinksklick &bfügt eine 0 hinzu.",
+						"&cRechtsklick &bfügt eine 1 hinzu.",
+						"&bAtm.: &f%numtext%",
+						"&bFügt am Ende ein Zeichen an.",
+						"&cLeftclick &badds a 0.",
+						"&cRightclick &badds a 1."}));
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_0.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_1.toString()}));
+		path = "50"; //2-3
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/96fab991d083993cb83e4bcf44a0b6cefac647d4189ee9cb823e9cc1571e38"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&f2/3 &7Numpad"}));
+		keyboard.put(path+".Lore",  
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%numtext%",
+						"&cLinksklick &bfügt eine 2 hinzu.",
+						"&cRechtsklick &bfügt eine 3 hinzu.",
+						"&bAtm.: &f%numtext%",
+						"&cLeftclick &badds a 2.",
+						"&cRightclick &badds a 3."}));
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_2.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_3.toString()}));
+		path = "51"; //4-5
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/d198d56216156114265973c258f57fc79d246bb65e3c77bbe8312ee35db6"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&f4/5 &7Numpad"}));
+		keyboard.put(path+".Lore",  
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%numtext%",
+						"&cLinksklick &bfügt eine 4 hinzu.",
+						"&cRechtsklick &bfügt eine 5 hinzu.",
+						"&bAtm.: &f%numtext%",
+						"&cLeftclick &badds a 4.",
+						"&cRightclick &badds a 5."}));
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_4.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_5.toString()}));
+		path = "52"; //6-7
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/9c613f80a554918c7ab2cd4a278752f151412a44a73d7a286d61d45be4eaae1"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&f6/7 &7Numpad"}));
+		keyboard.put(path+".Lore",  
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%numtext%",
+						"&cLinksklick &bfügt eine 6 hinzu.",
+						"&cRechtsklick &bfügt eine 7 hinzu.",
+						"&bAtm.: &f%numtext%",
+						"&cLeftclick &badds a 6.",
+						"&cRightclick &badds a 7."}));
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_6.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_7.toString()}));
+		path = "53"; //8-9
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/84ad12c2f21a1972f3d2f381ed05a6cc088489fcfdf68a713b387482fe91e2"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&f8/9 &7Numpad"}));
+		keyboard.put(path+".Lore",  
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%numtext%",
+						"&cLinksklick &bfügt eine 8 hinzu.",
+						"&cRechtsklick &bfügt eine 9 hinzu.",
+						"&bAtm.: &f%numtext%",
+						"&cLeftclick &badds a 8.",
+						"&cRightclick &badds a 9."}));
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_8.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_KEYBOARD_9.toString()}));
+		path = "46"; //RemoveOnce
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/864f779a8e3ffa231143fa69b96b14ee35c16d669e19c75fd1a7da4bf306c"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eUm ein Zeichen zurücksetzen",
+						"&eReset by one character"}));
+		keyboard.put(path+".Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%numtext%",
+						"&bSetzt die Eingabe um ein Zeichen zurück.",
+						"&bAtm.: &f%numtext%",
+						"&bResets the input by one character."}));
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_NUMPAD_REMOVEONCE.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_NUMPAD_REMOVEONCE.toString()}));
+		path = "47"; //Clear
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material", lBMat);
+		keyboard.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"https://textures.minecraft.net/texture/118a2dd5bef0b073b13271a7eeb9cfea7afe8593c57a93821e43175572461812"}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eZurücksetzen",
+						"&eReset"}));
+		keyboard.put(path+".Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%numtext%",
+						"&bSetzt die Eingabe zurück.",
+						"&bAtm.: &f%numtext%",
+						"&bResets the input."}));
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_NUMPAD_CLEAR.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_NUMPAD_CLEAR.toString()}));
+		path = "45"; //Cancel
+		keyboard.put(path+".SettingLevel", lBSL);
+		keyboard.put(path+".Material",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						Material.RED_BANNER.toString()}));
+		keyboard.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cZurück zum Administrations-Gui",
+						"&cBack to the administration gui"}));
+		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_NUMPAD_CANCEL.toString()}));
+		keyboard.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_NUMPAD_CANCEL.toString()}));
+		LinkedHashMap<String, Language> keyboard_signshopname = new LinkedHashMap<>();
+		keyboard_signshopname.putAll(keyboard);
+		LinkedHashMap<String, Language> keyboard_blacklist = new LinkedHashMap<>();
+		keyboard_blacklist.putAll(keyboard);
+		LinkedHashMap<String, Language> keyboard_whitelist = new LinkedHashMap<>();
+		keyboard_whitelist.putAll(keyboard);
+		LinkedHashMap<String, Language> keyboard_member = new LinkedHashMap<>();
+		keyboard_member.putAll(keyboard);
+		LinkedHashMap<String, Language> keyboard_custom = new LinkedHashMap<>();
+		keyboard_custom.putAll(keyboard);
+		path = "4"; //TakeOver
+		keyboard_signshopname.put(path+".SettingLevel",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						SettingsLevel.NOLEVEL.toString()}));
+		keyboard_signshopname.put(path+".Material",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						Material.GREEN_BANNER.toString()}));
+		keyboard_signshopname.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&aÜbernahme der Eingabe",
+						"&cAcceptance of the input"}));
+		keyboard_signshopname.put(path+".Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%numtext%", "&bÜbernimmt die Eingabe und kehre zum Administration Gui zurück.",
+						"&bAtm.: &f%numtext%", "&bAccept the input and return to the Administration Gui."}));
+		keyboard_signshopname.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_SETSIGNSHOPNAME_TAKEOVER.toString()}));
+		keyboard_signshopname.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_SETSIGNSHOPNAME_TAKEOVER.toString()}));
+		guiKeys.put(GuiType.KEYBOARD_SIGNSHOPNAME, keyboard_signshopname);
+		//-------------
+		Language lSL = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				SettingsLevel.NOLEVEL.toString()});
+		Language lMat = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				Material.PLAYER_HEAD.toString()});
+		Language lLo_BL = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&cLinksklick &bfügt den Spieler zur Blacklist dieses Shops hinzu.",
+				"&cRechtsklick &bfügt den Spieler zur Blacklist aller Shops dieser Welt hinzu.",
+				"&cShift-Linksklick &bentfernt den Spieler von der Blackliste dies Shops.",
+				"&cShift-Rechtsklick &bentfernt den Spieler von der Blackliste aller Shops dieser Welt.",
+				"&bAtm.: &f%numtext%",
+				"&cLeftclick &badds the player to the blacklist of this store.",
+				"&cRightclick &badds the player to the blacklist of all stores in the world.",
+				"&cShift-Leftclick &bremoves the player from the blacklist of this store.",
+				"&cShift-Rightclick &bremoves the player from the blacklist of all stores in the world."});
+		Language lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST.toString()});
+		Language lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_WORLD.toString()});
+		Language lSLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE.toString()});
+		Language lSRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE_WORLD.toString()});
+		path = "0"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {0}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "1"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {1}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "2"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {2}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "3"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {3}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "4"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {4}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "5"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {5}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "6"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {6}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "7"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {7}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "8"; //PlayerHead
+		keyboard_blacklist.put(path+".SettingLevel", lSL);
+		keyboard_blacklist.put(path+".Material", lMat);
+		keyboard_blacklist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {8}));
+		keyboard_blacklist.put(path+".Lore", lLo_BL);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_blacklist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		guiKeys.put(GuiType.KEYBOARD_BLACKLIST, keyboard_blacklist);
+		//-------------
+		Language lLo_WL = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&cLinksklick &bfügt den Spieler zur Whitelist dieses Shops hinzu.",
+				"&cRechtsklick &bfügt den Spieler zur Whitelist aller Shops dieser Welt hinzu.",
+				"&cShift-Linksklick &bentfernt den Spieler von der Whiteliste dieses Shops.",
+				"&cShift-Rechtsklick &bentfernt den Spieler von der Whiteliste aller Shops dieser Welt.",
+				"&bAtm.: &f%numtext%",
+				"&cLeftclick &badds the player to the whitelist of this store.",
+				"&cRightclick &badds the player to the whitelist of all stores in the world.",
+				"&cShift-Leftclick &bremoves the player from the whitelist of this store.",
+				"&cShift-Rightclick &bremoves the player from the whitelist of all stores in the world."});
+		lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST.toString()});
+		lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_WORLD.toString()});
+		lSLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE.toString()});
+		lSRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE_WORLD.toString()});
+		path = "0"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {0}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "1"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {1}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "2"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {2}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "3"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {3}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "4"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {4}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "5"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {5}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "6"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {6}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "7"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {7}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "8"; //PlayerHead
+		keyboard_whitelist.put(path+".SettingLevel", lSL);
+		keyboard_whitelist.put(path+".Material", lMat);
+		keyboard_whitelist.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {8}));
+		keyboard_whitelist.put(path+".Lore", lLo_WL);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_whitelist.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		guiKeys.put(GuiType.KEYBOARD_WHITELIST, keyboard_whitelist);
+		//-------------
+		Language lLo_M = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&cLinksklick &bfügt den Spieler zur Mitgliedern dieses Shops hinzu.",
+				"&cRechtsklick &bfügt den Spieler zur Mitgliedern aller Shops dieser Welt hinzu.",
+				"&cShift-Linksklick &bentfernt den Spieler von den Mitgliedern dieses Shops.",
+				"&cShift-Rechtsklick &bentfernt den Spieler von den Mitgliedern aller Shops dieser Welt.",
+				"&bAtm.: &f%numtext%",
+				"&cLeftclick &badds the player to the members of this store.",
+				"&cRightclick &badds the player to the members of all stores in the world.",
+				"&cShift-Leftclick &bremoves the player from the members of this store.",
+				"&cShift-Rightclick &bremoves the player from the members of all stores in the world."});
+		lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER.toString()});
+		lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_WORLD.toString()});
+		lSLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE.toString()});
+		lSRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE_WORLD.toString()});
+		path = "0"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {0}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "1"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {1}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "2"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {2}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "3"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {3}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "4"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {4}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "5"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {5}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "6"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {6}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "7"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {7}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "8"; //PlayerHead
+		keyboard_member.put(path+".SettingLevel", lSL);
+		keyboard_member.put(path+".Material", lMat);
+		keyboard_member.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {8}));
+		keyboard_member.put(path+".Lore", lLo_M);
+		keyboard_member.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_member.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		guiKeys.put(GuiType.KEYBOARD_MEMBER, keyboard_member);
+		//-------------
+		Language lLo_C = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&cLinksklick &bfügt den Spieler zur bdefi. Liste dieses Shops hinzu.",
+				"&cRechtsklick &bfügt den Spieler zur bdefi. Liste aller Shops dieser Welt hinzu.",
+				"&cShift-Linksklick &bentfernt den Spieler von den bdefi. Liste dieses Shops.",
+				"&cShift-Rechtsklick &bentfernt den Spieler von den bdefi. Liste aller Shops dieser Welt.",
+				"&bAtm.: &f%numtext%",
+				"&cLeftclick &badds the player to the custom list of this store.",
+				"&cRightclick &badds the player to the custom list of all stores in the world.",
+				"&cShift-Leftclick &bremoves the player from the custom list of this store.",
+				"&cShift-Rightclick &bremoves the player from the custom list of all stores in the world."});
+		lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM.toString()});
+		lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_WORLD.toString()});
+		lSLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE.toString()});
+		lSRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE_WORLD.toString()});
+		path = "0"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {0}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "1"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {1}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "2"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {2}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "3"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {3}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "4"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {4}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "5"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {5}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "6"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {6}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "7"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {7}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		path = "8"; //PlayerHead
+		keyboard_custom.put(path+".SettingLevel", lSL);
+		keyboard_custom.put(path+".Material", lMat);
+		keyboard_custom.put(path+".PlayerSearchNum", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {8}));
+		keyboard_custom.put(path+".Lore", lLo_C);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.LEFT.toString(), lLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.RIGHT.toString(), lRC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
+		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
+		guiKeys.put(GuiType.KEYBOARD_CUSTOM, keyboard_custom);
 	}
 }

@@ -1,8 +1,6 @@
 package main.java.me.avankziar.sale.spigot.handler;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.enchantments.Enchantment;
 
@@ -15,8 +13,7 @@ public class EnchantmentHandler
 	@SuppressWarnings("deprecation")
 	public static void init(SaLE plugin)
 	{
-		List<Enchantment> list = Arrays.asList(Enchantment.values());
-		for(Enchantment e : list)
+		for(Enchantment e : Enchantment.values())
 		{
 			enchantmentLocalization.put(e.getName(), plugin.getYamlHandler().getMaterialLang().getString(e.getName(), e.getName()));		}
 	}

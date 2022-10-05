@@ -11,6 +11,7 @@ public enum CommandExecuteType
 	 * Auch soll man hier nach allen Shops filtern können, welches x material anbieten. (Tastaturpad a la NumPad gui?)
 	 * Dazu soll das auktionsystem erreichbar sein.
 	 */
+	//TODO Befehl um alle Spieler auf den ListedType aufzulisten
 	//TODO Worldguard negativ flag einstellen, um zu verbieten das man shop erstellen darf.
 	//TODO Worldguard shop search. mit angabe des Spielername und des grundstücknamens.
 	//TODO shop delete befehle, mit var wie player:xxx && server:xxx oder world:xxx etc.

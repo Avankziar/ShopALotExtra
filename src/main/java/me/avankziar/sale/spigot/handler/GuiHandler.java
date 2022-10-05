@@ -57,6 +57,7 @@ public class GuiHandler
 {
 	private static SaLE plugin = SaLE.getPlugin();
 	public static String SIGNSHOP_ID = "signshop_id";
+	public static String PLAYER_UUID = "player_uuid";
 	
 	public static void openAdministration(SignShop ssh, Player player, SettingsLevel settingsLevel, boolean closeInv)
 	{
@@ -92,7 +93,7 @@ public class GuiHandler
 		openGui(ssh2, player, gt, gui, settingsLevel, closeInv);
 	}
 	
-	public static void openInput(SignShop ssh, Player player, SettingsLevel settingsLevel, boolean closeInv)
+	public static void openInputInfo(SignShop ssh, Player player, SettingsLevel settingsLevel, boolean closeInv)
 	{
 		GuiType gt = GuiType.ITEM_INPUT;
 		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, "Shop:"+String.valueOf(ssh.getId()), settingsLevel);
@@ -100,16 +101,11 @@ public class GuiHandler
 		openGui(ssh2, player, gt, gui, settingsLevel, closeInv);
 	}
 	
-	public static void openNumpad(SignShop ssh, Player player, GuiType gt, SettingsLevel settingsLevel, boolean closeInv)
+	public static void openKeyOrNumInput(SignShop ssh, Player player, GuiType gt, SettingsLevel settingsLevel, boolean closeInv)
 	{
 		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, ssh.getSignShopName()+" Numpad", settingsLevel);
 		SignShop ssh2 = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssh.getId());
 		openGui(ssh2, player, gt, gui, settingsLevel, closeInv);
-	}
-	
-	public static void openKeyboard(SignShop ssh, Player player, GuiType gt, SettingsLevel settingsLevel, boolean closeInv)
-	{
-		openNumpad(ssh, player, gt, settingsLevel, closeInv);
 	}
 	
 	private static void openGui(SignShop ssh, Player player, GuiType gt, GUIApi gui, SettingsLevel settingsLevel, boolean closeInv)
@@ -131,7 +127,7 @@ public class GuiHandler
 				gui.add(i, is, settingsLevel, true, map, getClickFunction(y, String.valueOf(i)));
 				continue;
 			}
-			if(y.get(i+".Material") == null)
+			if(y.get(i+".Material") == null && y.get(i+".Material."+settingsLevel.toString()) == null)
 			{
 				continue;
 			}			
@@ -229,9 +225,9 @@ public class GuiHandler
 				try
 				{
 					mat = Material.valueOf(y.getString(i+".Material"));
-					if(mat == Material.PLAYER_HEAD && y.getString(i+".PlayerHeadTexture") != null)
+					if(mat == Material.PLAYER_HEAD && y.getString(i+".HeadTexture") != null)
 					{
-						is = getSkull(y.getString(i+".PlayerHeadTexture"));
+						is = getSkull(y.getString(i+".HeadTexture"));
 					}
 				} catch(Exception e)
 				{
@@ -239,6 +235,7 @@ public class GuiHandler
 				}
 			}
 			String playername = null;
+			UUID otheruuid = null;
 			if(y.get(i+".PlayerSearchNum") != null)
 			{
 				if(ssh.getNumText().isBlank() || ssh.getNumText().isEmpty())
@@ -254,6 +251,7 @@ public class GuiHandler
 				}
 				PlayerData pd = PlayerData.convert(l).get(0);
 				playername = pd.getName();
+				otheruuid = pd.getUUID();
 				is = new ItemStack(Material.PLAYER_HEAD);
 				if(!(is instanceof SkullMeta))
 				{
@@ -316,6 +314,10 @@ public class GuiHandler
 			is.setItemMeta(im);
 			LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
 			map.put(SIGNSHOP_ID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, ssh.getId()));
+			if(otheruuid != null)
+			{
+				map.put(PLAYER_UUID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.STRING, otheruuid.toString()));
+			}
 			gui.add(i, is, settingsLevel, true, map, getClickFunction(y, String.valueOf(i)));
 		}
 		if(closeInv)
@@ -624,6 +626,10 @@ public class GuiHandler
 		{
 			s = s.replace("%listtype%", 
 					plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+ssh.getListedType().toString()));
+		}
+		if(text.contains("%hologram%"))
+		{
+			s = s.replace("%hologram%", getBoolean(ssh.isItemHologram()));
 		}
 		if(text.contains("%buyraw1%"))
 		{

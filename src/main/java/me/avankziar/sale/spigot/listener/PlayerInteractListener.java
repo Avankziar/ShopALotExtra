@@ -70,7 +70,7 @@ public class PlayerInteractListener implements Listener
 			}
 			if(player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.AIR)
 			{
-				if(ssh.isItemHover())
+				if(ssh.isItemHologram())
 				{
 					ItemHologramHandler.spawnHologram(ssh);
 				}				

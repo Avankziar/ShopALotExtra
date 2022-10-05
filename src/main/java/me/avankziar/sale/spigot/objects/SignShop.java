@@ -57,7 +57,7 @@ public class SignShop implements MysqlHandable
 	private String numText; //Input all number for sell/buy etc.
 	private boolean signGlowing;
 	private ListedType listedType;
-	private boolean itemHover;
+	private boolean itemHologram;
 	
 	public SignShop(){}
 	
@@ -70,7 +70,7 @@ public class SignShop implements MysqlHandable
 			String server, String world, int x, int y, int z, int storageId,
 			boolean unlimitedBuy, boolean unlimitedSell,
 			boolean canBuy, boolean canSell, String numText, boolean signGlowing, ListedType listedType,
-			boolean itemHover)
+			boolean itemHologram)
 	{
 		setId(id);
 		setOwner(owner);
@@ -105,7 +105,7 @@ public class SignShop implements MysqlHandable
 		setNumText(numText);
 		setSignGlowing(signGlowing);
 		setListedType(listedType);
-		setItemHover(itemHover);
+		setItemHologram(itemHologram);
 	}
 	
 	private SignShop(int id, UUID owner, String signShopName, int accountId, long creationDateTime,
@@ -152,7 +152,7 @@ public class SignShop implements MysqlHandable
 		setNumText(numText);
 		setSignGlowing(signGlowing);
 		setListedType(ListedType.valueOf(listedType));
-		setItemHover(itemHover);
+		setItemHologram(itemHover);
 	}
 	
 	public int getId()
@@ -485,14 +485,14 @@ public class SignShop implements MysqlHandable
 		this.listedType = listedType;
 	}
 
-	public boolean isItemHover()
+	public boolean isItemHologram()
 	{
-		return itemHover;
+		return itemHologram;
 	}
 
-	public void setItemHover(boolean itemHover)
+	public void setItemHologram(boolean itemHologram)
 	{
-		this.itemHover = itemHover;
+		this.itemHologram = itemHologram;
 	}
 
 	@Override
@@ -511,7 +511,7 @@ public class SignShop implements MysqlHandable
 					+ "`storage_id`,"
 					+ "`unlimited_buy`, `unlimited_sell`,"
 					+ "`can_buy`, `can_sell`,"
-					+ "`num_text`, `sign_glowing`, `listed_type`, `item_hover`) " 
+					+ "`num_text`, `sign_glowing`, `listed_type`, `item_hologram`) " 
 					+ "VALUES("
 					+ "?, ?, ?, ?, "
 					+ "?, ?, ?, "
@@ -558,7 +558,7 @@ public class SignShop implements MysqlHandable
 	        ps.setString(30, getNumText());
 	        ps.setBoolean(31, isSignGlowing());
 	        ps.setString(32, getListedType().toString());
-	        ps.setBoolean(33, isItemHover());
+	        ps.setBoolean(33, isItemHologram());
 	        int i = ps.executeUpdate();
 	        MysqlHandler.addRows(MysqlHandler.QueryType.INSERT, i);
 	        return true;
@@ -584,7 +584,7 @@ public class SignShop implements MysqlHandable
 				+ "`server_name` = ?, `world` = ?, `x` = ?, `y` = ?, `z` = ?, "
 				+ "`storage_id` = ?, `unlimited_buy` = ?, `unlimited_sell` = ?, "
 				+ "`can_buy` = ?, `can_sell` = ?, `num_text` = ?, `sign_glowing` = ?, `listed_type` = ?, "
-				+ "`item_hover` = ?" 
+				+ "`item_hologram` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, getOwner().toString());
@@ -619,7 +619,7 @@ public class SignShop implements MysqlHandable
 	        ps.setString(30, getNumText());
 	        ps.setBoolean(31, isSignGlowing());
 	        ps.setString(32, getListedType().toString());
-	        ps.setBoolean(33, isItemHover());
+	        ps.setBoolean(33, isItemHologram());
 			int i = 34;
 			for(Object o : whereObject)
 			{
@@ -689,7 +689,7 @@ public class SignShop implements MysqlHandable
 						rs.getString("num_text"),
 						rs.getBoolean("sign_glowing"),
 						rs.getString("listed_type"),
-						rs.getBoolean("item_hover")));
+						rs.getBoolean("item_hologram")));
 			}
 			return al;
 		} catch (SQLException e)

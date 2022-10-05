@@ -1,6 +1,7 @@
 package main.java.me.avankziar.sale.spigot.gui.listener;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -56,6 +57,11 @@ public class UpperListener implements Listener
 		{
 			return;
 		}
+		UUID otheruuid = null;
+		if(event.getValuesString().containsKey(GuiHandler.PLAYER_UUID))
+		{
+			otheruuid = UUID.fromString(event.getValuesString().get(GuiHandler.PLAYER_UUID));
+		}
 		ClickType ct = getClickFunctionType(event.getEvent().getClick(), event.getEvent().getHotbarButton());
 		if(ct == null)
 		{
@@ -90,7 +96,14 @@ public class UpperListener implements Listener
 		case NUMPAD_POSSIBLE_BUY:
 		case NUMPAD_POSSIBLE_SELL:
 		case NUMPAD_SELL:
-			AdminstrationFunctionHandler.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel()); break;
+		case KEYBOARD_BLACKLIST:
+		case KEYBOARD_CUSTOM:
+		case KEYBOARD_MEMBER:
+		case KEYBOARD_SIGNSHOPNAME:
+		case KEYBOARD_WHITELIST:
+			AdminstrationFunctionHandler
+				.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel(), otheruuid);
+			break;
 		case SHOP:
 			ShopFunctionHandler.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel()); break;
 		}
