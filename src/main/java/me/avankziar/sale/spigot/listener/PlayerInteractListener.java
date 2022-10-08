@@ -57,6 +57,15 @@ public class PlayerInteractListener implements Listener
 		}
 		PlayerData pd = (PlayerData) plugin.getMysqlHandler().getData(
 				MysqlHandler.Type.PLAYERDATA, "`player_uuid` = ?", player.getUniqueId().toString());
+		if((ssh.getMaterial() == Material.AIR)
+				&& (SignHandler.isOwner(ssh, player.getUniqueId())
+				|| SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId())
+				|| SignHandler.isBypassToggle(player.getUniqueId())))
+		{
+			GuiHandler.openInputInfo(ssh, player, pd.getLastSettingLevel(), true);
+			event.setCancelled(true);
+			return;
+		}
 		if(event.getAction() == Action.LEFT_CLICK_BLOCK)
 		{
 			if(SignHandler.isOwner(ssh, player.getUniqueId()) || SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
@@ -120,6 +129,7 @@ public class PlayerInteractListener implements Listener
 			switch(ssh.getListedType())
 			{
 			case ALL:
+				break;
 			case BLACKLIST:
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsBlackList")
 						.replace("%name%", ssh.getSignShopName())));

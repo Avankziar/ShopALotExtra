@@ -120,7 +120,6 @@ public class UpperListener implements Listener
 		case SHIFT_LEFT: return ClickType.SHIFT_LEFT;
 		case SHIFT_RIGHT: return ClickType.SHIFT_RIGHT;
 		case CONTROL_DROP: return ClickType.CTRL_DROP;
-		case SWAP_OFFHAND: return ClickType.SWAP;
 		case NUMBER_KEY:
 			if(hotbarButton < 0)
 			{

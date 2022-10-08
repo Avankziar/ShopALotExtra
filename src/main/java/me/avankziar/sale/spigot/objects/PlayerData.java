@@ -89,7 +89,7 @@ public class PlayerData implements MysqlHandable
 		{
 			String sql = "INSERT INTO `" + tablename
 					+ "`(`player_uuid`, `player_name`, `last_setting_level`, `last_login`) " 
-					+ "VALUES(?, ?, ?)";
+					+ "VALUES(?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 	        ps.setString(1, getUUID().toString());
 	        ps.setString(2, getName());

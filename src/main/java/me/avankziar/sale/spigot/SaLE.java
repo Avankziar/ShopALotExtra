@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -25,6 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
+import main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation;
 import main.java.me.avankziar.ifh.spigot.storage.PhysicalChestStorage;
 import main.java.me.avankziar.sale.spigot.assistance.BackgroundTask;
 import main.java.me.avankziar.sale.spigot.assistance.Utility;
@@ -41,7 +43,7 @@ import main.java.me.avankziar.sale.spigot.database.YamlManager;
 import main.java.me.avankziar.sale.spigot.gui.listener.BottomListener;
 import main.java.me.avankziar.sale.spigot.gui.listener.GuiPreListener;
 import main.java.me.avankziar.sale.spigot.gui.listener.UpperListener;
-import main.java.me.avankziar.sale.spigot.handler.EnchantmentHandler;
+import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
 import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
 import main.java.me.avankziar.sale.spigot.ifh.SignShopProvider;
 import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
@@ -49,6 +51,7 @@ import main.java.me.avankziar.sale.spigot.listener.PlayerArmorStandManipulateLis
 import main.java.me.avankziar.sale.spigot.listener.PlayerInteractListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerJoinListener;
 import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
+import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
 public class SaLE extends JavaPlugin
@@ -73,6 +76,7 @@ public class SaLE extends JavaPlugin
 	private main.java.me.avankziar.ifh.spigot.shop.SignShop signShopProvider;
 	
 	private Administration administrationConsumer;
+	private EnumTranslation enumTranslationConsumer;
 	private PhysicalChestStorage pcsConsumer;
 	private Economy ecoConsumer;
 	private BonusMalus bonusMalusConsumer;
@@ -117,11 +121,14 @@ public class SaLE extends JavaPlugin
 		setupListeners();
 		setupIFH();
 		MaterialHandler.init(plugin);
-		EnchantmentHandler.init(plugin);
 	}
 	
 	public void onDisable()
 	{
+		for(Entry<String, ItemHologram> e : ItemHologramHandler.taskMap.entrySet())
+		{
+			e.getValue().despawn();
+		}
 		Bukkit.getScheduler().cancelTasks(this);
 		HandlerList.unregisterAll(this);
 		log.info(pluginName + " is disabled!");
@@ -396,7 +403,11 @@ public class SaLE extends JavaPlugin
 	
 	private void setupIFH()
 	{
-		setupShop();
+		if(setupShop())
+		{
+			return;
+		}
+		setupIFHEnumTranslation();
 		setupIFHPhysicalChestStorage();
 		setupIFHEconomy();
 		setupBonusMalus();
@@ -418,6 +429,53 @@ public class SaLE extends JavaPlugin
         ServicePriority.Normal);
     	log.info(pluginName + " detected InterfaceHub >>> SignShop.class is provided!");
 		return false;
+	}
+	
+	private void setupIFHEnumTranslation() 
+	{
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+			log.severe("IFH is not set in the Plugin " + pluginName + "! Disable plugin!");
+			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(this);
+	    	return;
+	    }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						log.severe("IFH is not set in the Plugin " + pluginName + "! Disable plugin!");
+						Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
+				    	return;
+				    }
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    enumTranslationConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> EnumTranslation.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 0L, 20*2);
+	}
+	
+	public EnumTranslation getEnumTl()
+	{
+		return enumTranslationConsumer;
 	}
 	
 	private void setupIFHPhysicalChestStorage() 
@@ -455,7 +513,7 @@ public class SaLE extends JavaPlugin
 					cancel();
 				}			    
 			}
-        }.runTaskTimer(plugin, 20L, 20*2);
+        }.runTaskTimer(plugin, 0L, 20*2);
 	}
 	
 	public PhysicalChestStorage getPCS()

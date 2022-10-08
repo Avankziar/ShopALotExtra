@@ -17,7 +17,6 @@ import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
-import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
@@ -211,7 +210,8 @@ public class ShopFunctionHandler
 		String comment = plugin.getYamlHandler().getLang().getString("Economy.Buy.Comment")
 				.replace("%amount%", String.valueOf(samo))
 				.replace("%item%", ssh.getItemStack().getItemMeta().hasDisplayName() 
-						? ssh.getItemStack().getItemMeta().getDisplayName() : MaterialHandler.getMaterial(ssh.getItemStack().getType()))
+						? ssh.getItemStack().getItemMeta().getDisplayName() 
+						: SaLE.getPlugin().getEnumTl().getLocalization(ssh.getItemStack().getType()))
 				.replace("%shop%", ssh.getSignShopName());
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.BuyInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.BuyInPercent") : null;
@@ -344,7 +344,8 @@ public class ShopFunctionHandler
 		String comment = plugin.getYamlHandler().getLang().getString("Economy.Sell.Comment")
 				.replace("%amount%", String.valueOf(samo))
 				.replace("%item%", ssh.getItemStack().getItemMeta().hasDisplayName() 
-						? ssh.getItemStack().getItemMeta().getDisplayName() : MaterialHandler.getMaterial(ssh.getItemStack().getType()))
+						? ssh.getItemStack().getItemMeta().getDisplayName() 
+						: SaLE.getPlugin().getEnumTl().getLocalization(ssh.getItemStack().getType()))
 				.replace("%shop%", ssh.getSignShopName());
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.SellInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.SellInPercent") : null;

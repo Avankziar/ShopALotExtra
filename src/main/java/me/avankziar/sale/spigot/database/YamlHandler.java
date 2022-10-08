@@ -30,10 +30,9 @@ public class YamlHandler
 	private YamlConfiguration lang = new YamlConfiguration();
 	private File bmlanguage = null;
 	private YamlConfiguration bmlang = new YamlConfiguration();
+	
 	private File matlanguage = null;
 	private YamlConfiguration matlang = new YamlConfiguration();
-	private File enchlanguage = null;
-	private YamlConfiguration enchlang = new YamlConfiguration();
 	
 	private LinkedHashMap<GuiType, YamlConfiguration> gui = new LinkedHashMap<>();
 
@@ -66,11 +65,6 @@ public class YamlHandler
 	public YamlConfiguration getMaterialLang()
 	{
 		return matlang;
-	}
-	
-	public YamlConfiguration getEnchLang()
-	{
-		return enchlang;
 	}
 	
 	public YamlConfiguration getGui(GuiType guiType)
@@ -322,25 +316,6 @@ public class YamlHandler
 			return false;
 		}
 		writeFile(matlanguage, matlang, plugin.getYamlManager().getMaterialLanguageKey());
-		
-		enchlanguage = new File(directory.getPath(), languageString+"_enchantment.yml");
-		if(!enchlanguage.exists()) 
-		{
-			SaLE.log.info("Create %lang%_enchantment.yml...".replace("%lang%", languageString));
-			try(InputStream in = plugin.getResource("default.yml"))
-			{
-				Files.copy(in, enchlanguage.toPath());
-			} catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		enchlang = loadYamlTask(enchlanguage, enchlang);
-		if(enchlang == null)
-		{
-			return false;
-		}
-		writeFile(enchlanguage, enchlang, plugin.getYamlManager().getEnchantmentLanguageKey());
 		return true;
 	}
 	
@@ -356,8 +331,18 @@ public class YamlHandler
 		for(GuiType g : list)
 		{
 			File gf = new File(directory.getPath(), languageString+"_"+g.toString()+".yml");
-			if(gf.exists()) 
+			if(gf.exists())
 			{
+				YamlConfiguration gui = loadYamlTask(gf, new YamlConfiguration());
+				if (gui == null)
+				{
+					return false;
+				}
+				if(plugin.getYamlManager().getGuiKey(g) == null)
+				{
+					return false;
+				}
+				this.gui.put(g, gui);
 				continue;
 			}
 			SaLE.log.info("Create %lang%.yml...".replace("%lang%", languageString+"_"+g.toString()));

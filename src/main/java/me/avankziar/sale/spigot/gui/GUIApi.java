@@ -41,7 +41,6 @@ public class GUIApi
 	public static final String SHIFT_RIGHT_FUNCTION = "shift_right_function";
 	public static final String SHIFT_LEFT_FUNCTION = "shift_left_function";
 	public static final String SHIFT_DROP_FUNCTION = "shift_drop_function";
-	public static final String SWAP_FUNCTION = "swap_function";
 	public static final String NUMPAD_1_FUNCTION = "numpad_1_function";
 	public static final String NUMPAD_2_FUNCTION = "numpad_2_function";
 	public static final String NUMPAD_3_FUNCTION = "numpad_3_function";
@@ -138,8 +137,6 @@ public class GUIApi
 				pdc.set(new NamespacedKey(plugin, SHIFT_LEFT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
 			case SHIFT_RIGHT:
 				pdc.set(new NamespacedKey(plugin, SHIFT_RIGHT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case SWAP:
-				pdc.set(new NamespacedKey(plugin, SWAP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
 			}
 		}
 		if(values != null)
@@ -263,8 +260,6 @@ public class GUIApi
 				pdc.set(new NamespacedKey(plugin, SHIFT_LEFT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
 			case SHIFT_RIGHT:
 				pdc.set(new NamespacedKey(plugin, SHIFT_RIGHT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case SWAP:
-				pdc.set(new NamespacedKey(plugin, SWAP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
 			}
 		}
 		if(values != null)

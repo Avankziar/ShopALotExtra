@@ -11,7 +11,7 @@ import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class ItemHologramHandler
 {
-	public static LinkedHashMap<Long, ItemHologram> taskMap = new LinkedHashMap<>();
+	public static LinkedHashMap<String, ItemHologram> taskMap = new LinkedHashMap<>();
 	
 	public static void spawnHologram(SignShop ssh)
 	{
@@ -24,10 +24,10 @@ public class ItemHologramHandler
 		{
 			return;
 		}
-		Location loc = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX(), ssh.getY(), ssh.getZ());
+		Location loc = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX()+0.5, ssh.getY()-1, ssh.getZ()+0.5);
 		long timer = System.currentTimeMillis()
 				+ SaLE.getPlugin().getYamlHandler().getConfig().getLong("SignShop.ItemHologram.VisibilityTimeInSeconds", 5)*1000;
 		ItemHologram ish = new ItemHologram(ssh.getItemStack(), loc);
-		taskMap.put(timer, ish);
+		taskMap.put(String.valueOf(timer), ish);
 	}
 }

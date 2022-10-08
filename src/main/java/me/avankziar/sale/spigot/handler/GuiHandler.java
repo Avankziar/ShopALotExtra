@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.banner.Pattern;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -22,7 +23,6 @@ import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.MapMeta;
@@ -48,6 +48,7 @@ import main.java.me.avankziar.sale.spigot.gui.events.ClickType;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
@@ -253,11 +254,12 @@ public class GuiHandler
 				playername = pd.getName();
 				otheruuid = pd.getUUID();
 				is = new ItemStack(Material.PLAYER_HEAD);
-				if(!(is instanceof SkullMeta))
+				ItemMeta im = is.getItemMeta();
+				if(!(im instanceof SkullMeta))
 				{
 					continue;
 				}
-				SkullMeta sm = (SkullMeta) is.getItemMeta();
+				SkullMeta sm = (SkullMeta) im;
 				sm.setOwningPlayer(Bukkit.getOfflinePlayer(pd.getUUID()));
 				is.setItemMeta(sm);
 			}
@@ -279,7 +281,7 @@ public class GuiHandler
 			}
 			if(lore != null)
 			{
-				lore = (ArrayList<String>) getLorePlaceHolder(ssh, player, lore, ac, dg, useSI, useSy, ts, ds);
+				lore = (ArrayList<String>) getLorePlaceHolder(ssh, player, lore, ac, dg, useSI, useSy, ts, ds, playername);
 			}
 			
 			if(y.get(i+".InfoLore") != null && y.getBoolean(i+".InfoLore"))
@@ -296,8 +298,8 @@ public class GuiHandler
 			}
 			String displayname = y.get(i+".Displayname") != null 
 					? y.getString(i+".Displayname") 
-					: (playername != null ? playername : MaterialHandler.getMaterial(mat));
-			displayname = getStringPlaceHolder(ssh, player, displayname, ac, dg, useSI, useSy, ts, ds);
+					: (playername != null ? playername : SaLE.getPlugin().getEnumTl().getLocalization(mat));
+			displayname = getStringPlaceHolder(ssh, player, displayname, ac, dg, useSI, useSy, ts, ds, playername);
 			if(is == null)
 			{
 				is = new ItemStack(mat, amount);
@@ -354,12 +356,12 @@ public class GuiHandler
     }
 	
 	private static List<String> getLorePlaceHolder(SignShop ssh, Player player, List<String> lore,
-			Account ac, int dg, boolean useSI, boolean useSy, String ts, String ds)
+			Account ac, int dg, boolean useSI, boolean useSy, String ts, String ds, String playername)
 	{
 		List<String> list = new ArrayList<>();
 		for(String s : lore)
 		{
-			String a = getStringPlaceHolder(ssh, player, s, ac, dg, useSI, useSy, ts, ds);
+			String a = getStringPlaceHolder(ssh, player, s, ac, dg, useSI, useSy, ts, ds, playername);
 			list.add(a);
 		}
 		return list;
@@ -373,37 +375,33 @@ public class GuiHandler
 		}
 		ArrayList<String> list = new ArrayList<>();
 		YamlConfiguration y = plugin.getYamlHandler().getLang();
-		list.add(y.getString("GuiHandler.InfoLore.Owner") 
+		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Owner") 
 				+ (Utility.convertUUIDToName(uuid.toString()) == null 
-				? "/" : Utility.convertUUIDToName(uuid.toString())));
-		list.add(y.getString("GuiHandler.InfoLore.Displayname") + (is.getItemMeta().hasDisplayName() 
-				? is.getItemMeta().getDisplayName() : MaterialHandler.getMaterial(is.getType())));
-		list.add(y.getString("GuiHandler.InfoLore.Material") + MaterialHandler.getMaterial(is.getType()));
+				? "/" : Utility.convertUUIDToName(uuid.toString()))));
+		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Displayname") + (is.getItemMeta().hasDisplayName() 
+				? is.getItemMeta().getDisplayName() : SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))));
+		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Material") + SaLE.getPlugin().getEnumTl().getLocalization(is.getType())));
 		ItemMeta im = is.getItemMeta();
-		if(im.getItemFlags().size() > 0)
-		{
-			list.add(y.getString("GuiHandler.InfoLore.ItemFlag"));
-			for(ItemFlag itf : im.getItemFlags())
-			{
-				list.add(itf.toString());
-			}
-		}
 		if(im instanceof Damageable)
 		{
 			Damageable dam = (Damageable) im;
-			list.add(y.getString("GuiHandler.InfoLore.Damageable") + dam.getDamage());
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Damageable") + dam.getDamage()));
 		}
 		if(im instanceof Repairable)
 		{
 			Repairable rep = (Repairable) im;
 			if(rep.hasRepairCost())
 			{
-				list.add(y.getString("GuiHandler.InfoLore.Repairable") + rep.getRepairCost());
+				list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Repairable") + rep.getRepairCost()));
 			}
 		}
-		if(im instanceof PotionMeta)
+		if(im.getItemFlags().size() > 0)
 		{
-			
+			list.add(y.getString("GuiHandler.InfoLore.ItemFlag"));
+			for(ItemFlag itf : im.getItemFlags())
+			{
+				list.add(ChatApi.tl("&7"+plugin.getEnumTl().getLocalization(itf)));
+			}
 		}		
 		if(Material.ENCHANTED_BOOK != is.getType())
 		{
@@ -412,9 +410,9 @@ public class GuiHandler
 				list.add(y.getString("GuiHandler.InfoLore.Enchantment"));
 				for(Entry<Enchantment, Integer> en : is.getEnchantments().entrySet())
 				{
-					String name = EnchantmentHandler.getEnchantment(en.getKey());
 					int level = en.getValue()+1;
-					list.add(ChatApi.tl("&b"+name+": "+level));
+					list.add(ChatApi.tl("&7"+plugin.getEnumTl().getLocalization(en.getKey())
+					+" "+GuiHandler.IntegerToRomanNumeral(level)));
 				}
 			}
 		} else
@@ -425,24 +423,34 @@ public class GuiHandler
 				if(esm.hasStoredEnchants())
 				{
 					list.add(y.getString("GuiHandler.InfoLore.StorageEnchantment"));
+					for(Entry<Enchantment, Integer> en : esm.getEnchants().entrySet())
+					{
+						int level = en.getValue()+1;
+						list.add(ChatApi.tl("&7"+plugin.getEnumTl().getLocalization(en.getKey())
+						+" "+GuiHandler.IntegerToRomanNumeral(level)));
+					}
 				}
 			}
+		}
+		if(im instanceof PotionMeta)
+		{
+			
 		}
 		if(im instanceof AxolotlBucketMeta)
 		{
 			AxolotlBucketMeta abm = (AxolotlBucketMeta) im;
-			list.add(y.getString("") + abm.getVariant().toString());
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.AxolotlBucketMeta") + abm.getVariant().toString()));
 		}
 		if(im instanceof BannerMeta)
 		{
-			//TODO eine bannerconfig um für das team zu vervollständigen,
-			//dass man mit x y z pattern == Buchstabe H ergibt.
+			BannerMeta bm = (BannerMeta) im;
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BannerMeta")));
+			for(Pattern pa : bm.getPatterns())
+			{
+				list.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(pa.getColor(), pa.getPattern())));
+			}
 		}
 		if(im instanceof BookMeta)
-		{
-			
-		}
-		if(im instanceof FireworkEffectMeta)
 		{
 			
 		}
@@ -473,8 +481,68 @@ public class GuiHandler
 		return list;
 	}
 	
+	//thanks https://stackoverflow.com/questions/12967896/converting-integers-to-roman-numerals-java
+	public static String IntegerToRomanNumeral(int input) 
+	{
+	    if (input < 1 || input > 3999)
+	        return String.valueOf(input);
+	    String s = "";
+	    while (input >= 1000) {
+	        s += "M";
+	        input -= 1000;        }
+	    while (input >= 900) {
+	        s += "CM";
+	        input -= 900;
+	    }
+	    while (input >= 500) {
+	        s += "D";
+	        input -= 500;
+	    }
+	    while (input >= 400) {
+	        s += "CD";
+	        input -= 400;
+	    }
+	    while (input >= 100) {
+	        s += "C";
+	        input -= 100;
+	    }
+	    while (input >= 90) {
+	        s += "XC";
+	        input -= 90;
+	    }
+	    while (input >= 50) {
+	        s += "L";
+	        input -= 50;
+	    }
+	    while (input >= 40) {
+	        s += "XL";
+	        input -= 40;
+	    }
+	    while (input >= 10) {
+	        s += "X";
+	        input -= 10;
+	    }
+	    while (input >= 9) {
+	        s += "IX";
+	        input -= 9;
+	    }
+	    while (input >= 5) {
+	        s += "V";
+	        input -= 5;
+	    }
+	    while (input >= 4) {
+	        s += "IV";
+	        input -= 4;
+	    }
+	    while (input >= 1) {
+	        s += "I";
+	        input -= 1;
+	    }    
+	    return s;
+	}
+	
 	private static String getStringPlaceHolder(SignShop ssh, Player player, String text,
-			Account ac, int dg, boolean useSI, boolean useSy, String ts, String ds)
+			Account ac, int dg, boolean useSI, boolean useSy, String ts, String ds, String playername)
 	{
 		int buyFrac = 0;
 		if(ssh.getBuyAmount() != null)
@@ -507,6 +575,70 @@ public class GuiHandler
 			{
 				s = s.replace("%owner%", Utility.convertUUIDToName(ssh.getOwner().toString()) == null 
 						? "/" : Utility.convertUUIDToName(ssh.getOwner().toString()));
+			}
+		}
+		if(text.contains("%isonblacklist%"))
+		{
+			if(playername != null)
+			{
+				UUID uuid = Utility.convertNameToUUID(playername);
+				s = s.replace("%isonblacklist%", 
+						uuid == null ? "/" :
+							getBoolean(plugin.getMysqlHandler().exist(MysqlHandler.Type.SHOPACCESSTYPE,
+								"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+								uuid.toString(), ssh.getId(), ListedType.BLACKLIST.toString()))
+						);
+			} else
+			{
+				s = s.replace("%isonblacklist%", "/");
+			}
+		}
+		if(text.contains("%isonwhitelist%"))
+		{
+			if(playername != null)
+			{
+				UUID uuid = Utility.convertNameToUUID(playername);
+				s = s.replace("%isonwhitelist%", 
+						uuid == null ? "/" :
+							getBoolean(plugin.getMysqlHandler().exist(MysqlHandler.Type.SHOPACCESSTYPE,
+								"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+								uuid.toString(), ssh.getId(), ListedType.WHITELIST.toString()))
+						);
+			} else
+			{
+				s = s.replace("%isonwhitelist%", "/");
+			}
+		}
+		if(text.contains("%ismember%"))
+		{
+			if(playername != null)
+			{
+				UUID uuid = Utility.convertNameToUUID(playername);
+				s = s.replace("%ismember%", 
+						uuid == null ? "/" :
+							getBoolean(plugin.getMysqlHandler().exist(MysqlHandler.Type.SHOPACCESSTYPE,
+								"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+								uuid.toString(), ssh.getId(), ListedType.MEMBER.toString()))
+						);
+			} else
+			{
+				s = s.replace("%ismember%", "/");
+			}
+		}
+		if(text.contains("%isoncustom%"))
+		{
+			if(playername != null)
+			{
+				UUID uuid = Utility.convertNameToUUID(playername);
+				s = s.replace("%isoncustom%", 
+						uuid == null ? "/" :
+							getBoolean(plugin.getMysqlHandler().exist(MysqlHandler.Type.SHOPACCESSTYPE,
+								"`player_uuid` = ? AND `sign_shop_id` = ? AND `listed_type` = ?",
+								uuid.toString(), ssh.getId(), ListedType.CUSTOM.toString()))
+						);
+			} else
+			{
+				s = s.replace("%isoncustom%", "/");
 			}
 		}
 		if(text.contains("%id%"))

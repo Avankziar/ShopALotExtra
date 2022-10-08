@@ -1,8 +1,6 @@
 package main.java.me.avankziar.sale.spigot.handler;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.Material;
 
@@ -14,25 +12,15 @@ public class MaterialHandler
 	
 	public static void init(SaLE plugin)
 	{
-		List<Material> list = Arrays.asList(new Material[]
-				{
-						Material.BAKED_POTATO //TODO
-				});
-		for(Material m : list)
+		for(Material m : Material.values())
 		{
 			materialLocalization.put(m, plugin.getYamlHandler().getMaterialLang().getString(m.toString(), m.toString()));
 		}
 	}
 	
-	public static String getMaterial(Material mat)
-	{
-		String s = materialLocalization.get(mat);
-		return s != null ? s : mat.toString();
-	}
-	
 	public static String getMaterial(Material mat, Material sign)
 	{
-		String s = materialLocalization.get(mat);
+		String s = SaLE.getPlugin().getEnumTl().getLocalization(mat);
 		switch(sign)
 		{
 		default: return s != null ? s : mat.toString();

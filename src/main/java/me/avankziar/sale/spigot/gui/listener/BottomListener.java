@@ -15,7 +15,6 @@ import main.java.me.avankziar.sale.spigot.gui.GUIApi;
 import main.java.me.avankziar.sale.spigot.gui.events.BottomGuiClickEvent;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
-import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -111,7 +110,7 @@ public class BottomListener implements Listener
 			ssh.setDisplayName(im.getDisplayName());
 		} else
 		{
-			ssh.setDisplayName(MaterialHandler.getMaterial(is.getType()));
+			ssh.setDisplayName(SaLE.getPlugin().getEnumTl().getLocalization(is.getType()));
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		SignHandler.updateSign(ssh);

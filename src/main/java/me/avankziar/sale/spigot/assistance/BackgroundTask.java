@@ -20,16 +20,16 @@ public class BackgroundTask
 	public BackgroundTask(SaLE plugin)
 	{
 		BackgroundTask.plugin = plugin;
-		//initBackgroundTask();
+		initBackgroundTask();
 	}
 	
 	public boolean initBackgroundTask()
 	{
-		cleanUpPlayerData(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.Player.Active", false));
-		cleanUpSignShopLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShopLog.Active", false));
-		cleanUpSignShopDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShopDailyLog.Active", false));
-		cleanUpShoppingLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingLog.Active", false));
-		cleanUpShoppingDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingDailyLog.Active", false));
+		//cleanUpPlayerData(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.Player.Active", false));
+		//cleanUpSignShopLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShopLog.Active", false));
+		//cleanUpSignShopDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShopDailyLog.Active", false));
+		//cleanUpShoppingLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingLog.Active", false));
+		//cleanUpShoppingDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingDailyLog.Active", false));
 		removeShopItemHologram();
 		//TODO Steuern pro Woche pro Shop
 		//TODO Timer für 5 min um kurz nachricht zu geben für einen kauf pro spieler+Hover was gekauft wurde pro item
@@ -237,27 +237,27 @@ public class BackgroundTask
 	
 	public void removeShopItemHologram()
 	{
-		final long runEveryXSeconds = plugin.getYamlHandler().getConfig().getInt("ShopItemHover.ShoppingDailyLog.DeleteAfterXDays");
+		long runEveryXSeconds = plugin.getYamlHandler().getConfig().getInt("SignShop.ItemHologram.RunTimerInSeconds", 5);
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
 				long now = System.currentTimeMillis();
-				ArrayList<Long> toDelete = new ArrayList<>();
-				for(Entry<Long, ItemHologram> e : ItemHologramHandler.taskMap.entrySet())
+				ArrayList<String> toDelete = new ArrayList<>();
+				for(Entry<String, ItemHologram> e : ItemHologramHandler.taskMap.entrySet())
 				{
-					if(e.getKey() < now)
+					if(Long.parseLong(e.getKey()) < now)
 					{
 						e.getValue().despawn();
+						toDelete.add(e.getKey());
 					}
-					toDelete.add(e.getKey());
 				}
-				for(Long l : toDelete)
+				for(String l : toDelete)
 				{
 					ItemHologramHandler.taskMap.remove(l);
 				}
 			}
-		}.runTaskTimer(plugin, 20L*5, runEveryXSeconds*20L);
+		}.runTaskTimer(plugin, 0L, runEveryXSeconds*20L);
 	}
 }

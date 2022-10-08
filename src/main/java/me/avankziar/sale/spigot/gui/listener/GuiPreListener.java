@@ -200,7 +200,6 @@ public class GuiPreListener implements Listener
 		NamespacedKey nsl = new NamespacedKey(plugin, GUIApi.SHIFT_LEFT_FUNCTION);
 		NamespacedKey nsr = new NamespacedKey(plugin, GUIApi.SHIFT_RIGHT_FUNCTION);
 		NamespacedKey nsd = new NamespacedKey(plugin, GUIApi.SHIFT_DROP_FUNCTION);
-		NamespacedKey ns = new NamespacedKey(plugin, GUIApi.SWAP_FUNCTION);
 		NamespacedKey nn1 = new NamespacedKey(plugin, GUIApi.NUMPAD_1_FUNCTION);
 		NamespacedKey nn2 = new NamespacedKey(plugin, GUIApi.NUMPAD_2_FUNCTION);
 		NamespacedKey nn3 = new NamespacedKey(plugin, GUIApi.NUMPAD_3_FUNCTION);
@@ -216,7 +215,6 @@ public class GuiPreListener implements Listener
 		if(pdc.has(nsl, PersistentDataType.STRING)){map.put(ClickType.SHIFT_LEFT, pdc.get(nsl, PersistentDataType.STRING));}
 		if(pdc.has(nsr, PersistentDataType.STRING)){map.put(ClickType.SHIFT_RIGHT, pdc.get(nsr, PersistentDataType.STRING));}
 		if(pdc.has(nsd, PersistentDataType.STRING)){map.put(ClickType.CTRL_DROP, pdc.get(nsd, PersistentDataType.STRING));}
-		if(pdc.has(ns, PersistentDataType.STRING)){map.put(ClickType.SWAP, pdc.get(ns, PersistentDataType.STRING));}
 		if(pdc.has(nn1, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_1, pdc.get(nn1, PersistentDataType.STRING));}
 		if(pdc.has(nn2, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_2, pdc.get(nn2, PersistentDataType.STRING));}
 		if(pdc.has(nn3, PersistentDataType.STRING)){map.put(ClickType.NUMPAD_3, pdc.get(nn3, PersistentDataType.STRING));}

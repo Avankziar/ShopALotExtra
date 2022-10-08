@@ -7,7 +7,9 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +30,6 @@ import main.java.me.avankziar.sale.spigot.cmdtree.CommandSuggest;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
-import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
@@ -390,16 +391,25 @@ public class AdminstrationFunctionHandler
 		final int sshid = ssh.getId();
 		final String sshname = ssh.getSignShopName();
 		final ItemStack is = ssh.getItemStack();
-		final String displayname = is.getItemMeta().hasDisplayName() ? is.getItemMeta().getDisplayName() : MaterialHandler.getMaterial(is.getType());
+		final String displayname = is.getItemMeta().hasDisplayName() 
+				? is.getItemMeta().getDisplayName() : SaLE.getPlugin().getEnumTl().getLocalization(is.getType());
 		final long amount = ssh.getItemStorageCurrent();
 		player.closeInventory();
+		Block block = null;
+		if(Bukkit.getWorld(ssh.getWorld()) == null)
+		{
+			block = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX(), ssh.getY(), ssh.getZ()).getBlock();
+		}
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssh.getId());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DeleteAll.Delete")
 				.replace("%id%", String.valueOf(sshid))
 				.replace("%signshop%", sshname)
 				.replace("%displayname%", displayname)
 				.replace("%amount%", String.valueOf(amount))));
-		SignHandler.clearSign(ssh);
+		if(block != null)
+		{
+			SignHandler.clearSign(block);
+		}
 		return;
 	}
 	
@@ -887,13 +897,13 @@ public class AdminstrationFunctionHandler
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.Listed.Remove")
 					.replace("%amount%", String.valueOf(a))
 					.replace("%list%", 
-							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+ssh.getListedType().toString()))));
+							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+listType.toString()))));
 		} else
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.Listed.Add")
 					.replace("%amount%", String.valueOf(a))
 					.replace("%list%", 
-							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+ssh.getListedType().toString()))));
+							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+listType.toString()))));
 		}
 	}
 }

@@ -400,13 +400,13 @@ public class SignHandler
 		sign.update();
 	}
 	
-	public static void clearSign(SignShop ssh)
+	public static void clearSign(Block block)
 	{
-		Sign sign = getSign(ssh);
-		if(sign == null)
+		if(!(block instanceof Sign))
 		{
 			return;
 		}
+		Sign sign = (Sign) block;
 		sign.setLine(0, "");
 		sign.setLine(1, "");
 		sign.setLine(2, "");
