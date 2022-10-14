@@ -1,17 +1,31 @@
 package main.java.me.avankziar.sale.spigot.assistance;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.handler.Base64Handler;
 import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
+import main.java.me.avankziar.sale.spigot.listener.ShopPostTransactionListener;
 import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
+import main.java.me.avankziar.sale.spigot.objects.ShopLogVar;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
+import main.java.me.avankziar.sale.spigot.objects.SignShopDailyLog;
+import main.java.me.avankziar.sale.spigot.objects.SignShopLog;
+import main.java.me.avankziar.sale.spigot.objects.SignShopLog.WayType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class BackgroundTask
 {
@@ -31,8 +45,9 @@ public class BackgroundTask
 		//cleanUpShoppingLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingLog.Active", false));
 		//cleanUpShoppingDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingDailyLog.Active", false));
 		removeShopItemHologram();
+		msgTransactionMessageToShopOwnerTimer();
+		transactionShopLogTimer();
 		//TODO Steuern pro Woche pro Shop
-		//TODO Timer für 5 min um kurz nachricht zu geben für einen kauf pro spieler+Hover was gekauft wurde pro item
 		//TODO Timer für 15 min um alle Shoplog für den moneylog zusammenzufassen.
 		
 		return true;
@@ -259,5 +274,297 @@ public class BackgroundTask
 				}
 			}
 		}.runTaskTimer(plugin, 0L, runEveryXSeconds*20L);
+	}
+	
+	public void msgTransactionMessageToShopOwnerTimer()
+	{
+		long runEveryXMin = plugin.getYamlHandler().getConfig().getInt("SignShop.TransactionSummary.MessageToShopOwner.RunTimerInMinutes", 5)*60;
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				ArrayList<UUID> buyDel = new ArrayList<>();
+				ArrayList<UUID> sellDel = new ArrayList<>();
+				for(UUID shopOwner : ShopPostTransactionListener.buying.keySet())
+				{
+					LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>> subB = ShopPostTransactionListener.buying.get(shopOwner);
+					LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>> subS = ShopPostTransactionListener.selling.get(shopOwner);
+					LinkedHashMap<UUID, List<String>> lhm = new LinkedHashMap<>(); //client, hover
+					for(UUID client : subB.keySet())
+					{
+						LinkedHashMap<String, ShopLogVar> sub2 = subB.get(client);
+						List<String> hov = new ArrayList<>();
+						for(Entry<String, ShopLogVar> var : sub2.entrySet())
+						{
+							ItemStack is = new Base64Handler(var.getKey()).fromBase64();
+							String shopname = var.getValue().shopname;
+							String currency = var.getValue().currency;
+							long samo = var.getValue().itemAmount;
+							double costTotal = var.getValue().costTotal;
+							hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Buy")
+									.replace("%amount%", String.valueOf(samo))
+									.replace("%item%", is.getItemMeta().hasDisplayName() 
+											? is.getItemMeta().getDisplayName() 
+											: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))
+									.replace("%shop%", shopname)
+									.replace("%format%", plugin.getIFHEco().format(costTotal,
+											SaLE.getPlugin().getIFHEco().getCurrency(currency))));					
+						}
+						if(lhm.containsKey(client))
+						{
+							List<String> ls = lhm.get(client);
+							ls.addAll(hov);
+							lhm.put(client, ls);
+						} else
+						{
+							lhm.put(client, hov);
+						}
+					}
+					if(subS != null)
+					{
+						for(UUID client : subS.keySet())
+						{
+							LinkedHashMap<String, ShopLogVar> sub2 = subS.get(client);
+							List<String> hov = new ArrayList<>();
+							for(Entry<String, ShopLogVar> var : sub2.entrySet())
+							{
+								ItemStack is = new Base64Handler(var.getKey()).fromBase64();
+								String shopname = var.getValue().shopname;
+								String currency = var.getValue().currency;
+								long samo = var.getValue().itemAmount;
+								double costTotal = var.getValue().costTotal;
+								hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Sell")
+										.replace("%amount%", String.valueOf(samo))
+										.replace("%item%", is.getItemMeta().hasDisplayName() 
+												? is.getItemMeta().getDisplayName() 
+												: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))
+										.replace("%shop%", shopname)
+										.replace("%format%", plugin.getIFHEco().format(costTotal,
+												SaLE.getPlugin().getIFHEco().getCurrency(currency))));					
+							}
+							if(lhm.containsKey(client))
+							{
+								List<String> ls = lhm.get(client);
+								ls.addAll(hov);
+								lhm.put(client, ls);
+							} else
+							{
+								lhm.put(client, hov);
+							}
+						}
+					}
+					for(Entry<UUID, List<String>> li : lhm.entrySet())
+					{
+						StringBuilder sb = new StringBuilder();
+						for(int i = 0; i < li.getValue().size(); i++)
+						{
+							sb.append(li.getValue().get(i));
+							if(i+1 < li.getValue().size())
+							{
+								sb.append("~!~");
+							}
+						}
+						String pn = Utility.convertUUIDToName(li.getKey().toString());
+						TextComponent tc = ChatApi.hoverEvent(
+								plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Msg").replace("%player%", pn),
+								HoverEvent.Action.SHOW_TEXT, sb.toString());
+						
+						if(Bukkit.getPlayer(li.getKey()) != null)
+						{
+							Bukkit.getPlayer(li.getKey()).spigot().sendMessage(tc);
+						} else
+						{
+							ArrayList<BaseComponent> list = new ArrayList<>();
+							list.add(tc);
+							ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+							listInList.add(list);
+							SaLE.getPlugin().getBctB().sendMessage(shopOwner, listInList);
+						}
+					}
+					buyDel.add(shopOwner);
+				}
+				for(UUID uuid : buyDel)
+				{
+					ShopPostTransactionListener.buying.remove(uuid);
+				}
+				for(UUID uuid : sellDel)
+				{
+					ShopPostTransactionListener.selling.remove(uuid);
+				}
+				sellDel = new ArrayList<>();
+				for(UUID shopOwner : ShopPostTransactionListener.selling.keySet())
+				{
+					LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>> subS = ShopPostTransactionListener.selling.get(shopOwner);
+					LinkedHashMap<UUID, List<String>> lhm = new LinkedHashMap<>(); //client, hover
+					for(UUID client : subS.keySet())
+					{
+						LinkedHashMap<String, ShopLogVar> sub2 = subS.get(client);
+						List<String> hov = new ArrayList<>();
+						for(Entry<String, ShopLogVar> var : sub2.entrySet())
+						{
+							ItemStack is = new Base64Handler(var.getKey()).fromBase64();
+							String shopname = var.getValue().shopname;
+							String currency = var.getValue().currency;
+							long samo = var.getValue().itemAmount;
+							double costTotal = var.getValue().costTotal;
+							hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Sell")
+									.replace("%amount%", String.valueOf(samo))
+									.replace("%item%", is.getItemMeta().hasDisplayName() 
+											? is.getItemMeta().getDisplayName() 
+											: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))
+									.replace("%shop%", shopname)
+									.replace("%format%", plugin.getIFHEco().format(costTotal,
+											SaLE.getPlugin().getIFHEco().getCurrency(currency))));					
+						}
+						if(lhm.containsKey(client))
+						{
+							List<String> ls = lhm.get(client);
+							ls.addAll(hov);
+							lhm.put(client, ls);
+						} else
+						{
+							lhm.put(client, hov);
+						}
+					}
+					for(Entry<UUID, List<String>> li : lhm.entrySet())
+					{
+						StringBuilder sb = new StringBuilder();
+						for(int i = 0; i < li.getValue().size(); i++)
+						{
+							sb.append(li.getValue().get(i));
+							if(i+1 < li.getValue().size())
+							{
+								sb.append("~!~");
+							}
+						}
+						String pn = Utility.convertUUIDToName(li.getKey().toString());
+						TextComponent tc = ChatApi.hoverEvent(
+								plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Msg").replace("%player%", pn),
+								HoverEvent.Action.SHOW_TEXT, sb.toString());
+						
+						if(Bukkit.getPlayer(li.getKey()) != null)
+						{
+							Bukkit.getPlayer(li.getKey()).spigot().sendMessage(tc);
+						} else
+						{
+							ArrayList<BaseComponent> list = new ArrayList<>();
+							list.add(tc);
+							ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+							listInList.add(list);
+							SaLE.getPlugin().getBctB().sendMessage(shopOwner, listInList);
+						}
+					}
+					sellDel.add(shopOwner);
+				}
+				for(UUID uuid : sellDel)
+				{
+					ShopPostTransactionListener.selling.remove(uuid);
+				}
+			}
+		}.runTaskTimer(plugin, 0L, runEveryXMin*20L);
+	}
+	
+	public void transactionShopLogTimer()
+	{
+		long runEveryXMin = plugin.getYamlHandler().getConfig().getInt("SignShop.TransactionSummary.ShopLop.RunTimerInMinutes", 15)*60;
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				doShopLog();
+			}
+		}.runTaskTimer(plugin, 0L, runEveryXMin*20L);
+	}
+	
+	public void doShopLog()
+	{
+		ArrayList<UUID> buyDel = new ArrayList<>();
+		ArrayList<UUID> sellDel = new ArrayList<>();
+		for(UUID shopOwner : ShopPostTransactionListener.buying.keySet())
+		{
+			LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>> subB = ShopPostTransactionListener.buying.get(shopOwner);
+			for(UUID client : subB.keySet())
+			{
+				LinkedHashMap<String, ShopLogVar> sub2 = subB.get(client);
+				for(Entry<String, ShopLogVar> var : sub2.entrySet())
+				{
+					ItemStack is = new Base64Handler(var.getKey()).fromBase64();
+					int shopID = var.getValue().shopID;
+					long samo = var.getValue().itemAmount;
+					double costTotal = var.getValue().costTotal;
+					SignShopLog ssl = new SignShopLog(0, shopID, System.currentTimeMillis(),
+							is, is.getItemMeta().hasDisplayName() 
+								? is.getItemMeta().getDisplayName() 
+								: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()),
+							is.getType(), WayType.BUY, costTotal, (int) samo);
+					plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPLOG, ssl);
+					long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
+					SignShopDailyLog ssdl = (SignShopDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOPDAILYLOG,
+							"`sign_shop_id` = ? AND `dates` = ?", shopID,
+							date);
+					if(ssdl == null)
+					{
+						ssdl = new SignShopDailyLog(0, shopID, date, costTotal, 0, (int) samo, 0);
+						plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPDAILYLOG, ssdl);
+					} else
+					{
+						ssdl.setBuyItemAmount(ssdl.getBuyItemAmount()+(int)samo);
+						ssdl.setBuyAmount(ssdl.getBuyAmount()+costTotal);
+						plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOPDAILYLOG, ssdl, 
+								"`sign_shop_id` = ? AND `dates` = ?", shopID,
+								date);
+					}
+				}
+			}
+			buyDel.add(shopOwner);
+		}
+		for(UUID uuid : buyDel)
+		{
+			ShopPostTransactionListener.buying.remove(uuid);
+		}
+		for(UUID shopOwner : ShopPostTransactionListener.selling.keySet())
+		{
+			LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>> subS = ShopPostTransactionListener.selling.get(shopOwner);
+			for(UUID client : subS.keySet())
+			{
+				LinkedHashMap<String, ShopLogVar> sub2 = subS.get(client);
+				for(Entry<String, ShopLogVar> var : sub2.entrySet())
+				{
+					int shopID = var.getValue().shopID;
+					ItemStack is = new Base64Handler(var.getKey()).fromBase64();
+					long samo = var.getValue().itemAmount;
+					double costTotal = var.getValue().costTotal;
+					SignShopLog ssl = new SignShopLog(0, shopID, System.currentTimeMillis(),
+							is, is.getItemMeta().hasDisplayName() 
+								? is.getItemMeta().getDisplayName() 
+								: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()),
+							is.getType(), WayType.BUY, costTotal, (int) samo);
+					plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPLOG, ssl);
+					long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
+					SignShopDailyLog ssdl = (SignShopDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOPDAILYLOG,
+							"`sign_shop_id` = ? AND `dates` = ?", shopID,
+							date);
+					if(ssdl == null)
+					{
+						ssdl = new SignShopDailyLog(0, shopID, date, costTotal, 0, (int) samo, 0);
+						plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPDAILYLOG, ssdl);
+					} else
+					{
+						ssdl.setBuyItemAmount(ssdl.getBuyItemAmount()+(int)samo);
+						ssdl.setBuyAmount(ssdl.getBuyAmount()+costTotal);
+						plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOPDAILYLOG, ssdl, 
+								"`sign_shop_id` = ? AND `dates` = ?", shopID,
+								date);
+					}			
+				}
+			}
+			sellDel.add(shopOwner);
+		}
+		for(UUID uuid : sellDel)
+		{
+			ShopPostTransactionListener.selling.remove(uuid);
+		}
 	}
 }

@@ -254,6 +254,12 @@ public class YamlManager
 		configSpigotKeys.put("SignShop.ItemHologram.VisibilityTimeInSeconds"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				3}));
+		configSpigotKeys.put("SignShop.TransactionSummary.MessageToShopOwner.RunTimerInMinutes"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				5}));
+		configSpigotKeys.put("SignShop.TransactionSummary.ShopLop.RunTimerInMinutes"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				15}));
 	}
 	
 	//INFO:Commands
@@ -444,7 +450,7 @@ public class YamlManager
 						"&eA stockroom extension from &f%past% &eto &f%now% (+%amount%) &eItems of the store &f%name%&e."}));
 		languageKeys.put("Economy.Buy.Category", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Shopverkauf",
+						"Shopkauf",
 						"Shopsale"}));
 		languageKeys.put("Economy.Buy.Comment", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -452,12 +458,16 @@ public class YamlManager
 						"&bAt the shop &f%shop% &bwere &r%item% &rx &e%amount% &bpurchased."}));
 		languageKeys.put("Economy.Sell.Category", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Shopankauf",
+						"Shopverkauf",
 						"Shoppurchase"}));
 		languageKeys.put("Economy.Sell.Comment", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bDer Shop &f%shop% &bhat &r%item% &rx &e%amount% &bankauft.",
 						"&bThe shop &f%shop% &bhad &r%item% &rx &e%amount% &bpurchased."}));
+		languageKeys.put("Economy.CommentAddition", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						" &bGesamtpreis: %format%",
+						" &bTotalprice: %format%"}));
 		languageKeys.put("FileError"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEs existiert ein Fehler in der Datei: &f%file%",
@@ -659,17 +669,33 @@ public class YamlManager
 						"&dCustom"}));
 		languageKeys.put("AdminstrationFunctionHandler.Listed.Add"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu hast %amount% Spieler zum Liste %list% &ehinzugefügt.",
-						"&eYou have added %amount% players to the %list% &elist."}));
+						"&eDu hast %amount% Spieler/Einträge zur Liste %list% &ehinzugefügt.",
+						"&eYou have added %amount% players/entrys to the %list% &elist."}));
 		languageKeys.put("AdminstrationFunctionHandler.Listed.Remove"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu hast das Item des Shop zurückgesetzt. Nun kann ein neues Item in den Shop eingetragen werden.",
-						"&eYou have reset the item of the store. Now you can add a new item to the store."}));
+						"&eDu hast %amount% Spieler/Einträge von der Liste %list% &eentfernt.",
+						"&eYou have removed %amount% players/entrys from the %list% &elist."}));
+		languageKeys.put("AdminstrationFunctionHandler.DiscountStartWorld"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast von %amount% Shops die Rabattstartzeit gesetzt.",
+						"&eYou have set the discount start time from %amount% shops."}));
+		languageKeys.put("AdminstrationFunctionHandler.DiscountEndWorld"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast von %amount% Shops die Rabattendzeit gesetzt.",
+						"&eYou have set the discount end time from %amount% shops."}));
+		languageKeys.put("AdminstrationFunctionHandler.DiscountHourWorld"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast von %amount% Shops die Rabattaktion für %hour% gestartet.",
+						"&eYou have started the discount promotion for %hour% from %amount% stores."}));
 		
 		languageKeys.put("ShopFunctionHandler.Buy.NoGoodsInStock"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop hat keine Ware mehr zum verkaufen!",
 						"&cThe store has no more goods for sale!"}));
+		languageKeys.put("ShopFunctionHandler.Buy.NoGoodsInStockII"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Shop &f%shopname% &chat keine Ware mehr zum verkaufen!",
+						"&cThe store &f%shopname% &chas no more goods for sale!"}));
 		languageKeys.put("ShopFunctionHandler.Buy.NotInit"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop hat noch keinen Verkauf-Wert festgelegt! Somit kann nicht gekauft werden!",
@@ -698,6 +724,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop ist voll!",
 						"&cThe store is full!"}));
+		languageKeys.put("ShopFunctionHandler.Sell.ShopIsFullII"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Shop &f%shopname% &cist voll!",
+						"&cThe store &f%shopname% &cis full!"}));
 		languageKeys.put("ShopFunctionHandler.Sell.NotInit"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop hat noch keinen Ankauf-Wert festgelegt! Somit kann nicht verkauft werden!",
@@ -722,6 +752,26 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast den Shop &c%shop% &edeabonniert!",
 						"&eYou have unsubscribed the shop &a%shop%&e!"}));
+		languageKeys.put("SignShopProvider.GetOutOfStorage"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eVom Shop &f%shopname% &ewurden &f%amount% &eItems ins Lager verschoben.",
+						"&eFrom the store &f%shopname% &ewere moved &f%amount% &eItems to the storehouse."}));
+		languageKeys.put("SignShopProvider.PutIntoStorage"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eAus dem Lager wurden &f%amount% &eItems in den Shop &f%shopname% &everschoben.",
+						"&eFrom the storehouse &f%amount% &eItems were moved to the store &f%shopname%&e."}));
+		languageKeys.put("ShopLog.MsgTimer.Msg", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bShopTransaktion von %player%",
+						"&bShopTransaction from %player%"}));
+		languageKeys.put("ShopLog.MsgTimer.Buy", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&eK&7]&f%shop% &e>> &r%item% &rx &e%amount% &e>> %format%",
+						"&7[&eB&7]&f%shop% &e>> &r%item% &rx &e%amount% &e>> %format%"}));
+		languageKeys.put("ShopLog.MsgTimer.Sell", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&bV&7]&f%shop% &b>> &r%item% &rx &e%amount% &b>> &r%format%",
+						"&7[&bS&7]&f%shop% &b>> &r%item% &rx &e%amount% &b>> &r%format%"}));
 	}
 	
 	public void initBonusMalusLanguage() //INFO:BonusMalusLanguages
@@ -1705,6 +1755,35 @@ public class YamlManager
 		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_SETDISCOUNT_END_OPEN_NUMPAD.toString()}));
+		path = "42"; //Discount Hour
+		admin.put(path+".SettingLevel",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						SettingsLevel.MASTER.toString()}));
+		admin.put(path+".Material",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						Material.CANDLE_CAKE.toString()}));
+		admin.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&dEingabe des Stundenzeitraums der Rabattaktion",
+						"&dEnter the hour period of the discount promotion"}));
+		admin.put(path+".Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Zz.: %discountstart% - %discountend%",
+						"&cLinksklick &böffnet das Numpad Gui für die Eingabe des Starts.",
+						"&cRechtsklick &Böffnet das Numpad Gui für die Eingabe des Endes.",
+						"&bDie Eingabe erfolgt über eine Zahl, welche als Stundenwert genommen wird.",
+						"&bNach der Eingabe ist dann die Rabattaktion für die x Stunden aktiv.",
+						"Atm.: %discountstart% - %discountend%",
+						"&cLeft click &open the Numpad Gui for entering the start.",
+						"&cRight click &opens the Numpad Gui for entering the end.",
+						"&bThe input is made via a number, which is taken as the hourly value.",
+						"&bAfter entering, the discount action is then active for the x hours.",}));
+		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_SETDISCOUNT_START_OPEN_NUMPAD.toString()}));
+		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_SETDISCOUNT_END_OPEN_NUMPAD.toString()}));
 		path = "30"; //Discount Possible Buy
 		admin.put(path+".CanBuy",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -2189,6 +2268,8 @@ public class YamlManager
 		numpad_DISCOUNTSTART.putAll(numpad);
 		LinkedHashMap<String, Language> numpad_DISCOUNTEND = new LinkedHashMap<>();
 		numpad_DISCOUNTEND.putAll(numpad);
+		LinkedHashMap<String, Language> numpad_DISCOUNTHOUR = new LinkedHashMap<>();
+		numpad_DISCOUNTHOUR.putAll(numpad);
 		LinkedHashMap<String, Language> numpad_DISCOUNTBUY = new LinkedHashMap<>();
 		numpad_DISCOUNTBUY.putAll(numpad);
 		LinkedHashMap<String, Language> numpad_DISCOUNTSELL = new LinkedHashMap<>();
@@ -2217,6 +2298,12 @@ public class YamlManager
 				ClickFunctionType.ADMINISTRATION_SETACCOUNT_TAKEOVER.toString()});
 		String sRC = path+".ClickFunction."+ClickType.RIGHT.toString();
 		Language lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETACCOUNT_TAKEOVER.toString()});
+		String sSLC = path+".ClickFunction."+ClickType.SHIFT_LEFT.toString();
+		Language lSLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETACCOUNT_TAKEOVER.toString()});
+		String sSRC = path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString();
+		Language lSRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				ClickFunctionType.ADMINISTRATION_SETACCOUNT_TAKEOVER.toString()});
 		numpad_ACCOUNT.put(sSL, lSL);
 		numpad_ACCOUNT.put(sMat, lMat);
@@ -2287,24 +2374,74 @@ public class YamlManager
 				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_START_TAKEOVER.toString()});
 		lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_START_TAKEOVER.toString()});
+		lSLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_START_WORLD_TAKEOVER.toString()});
+		lSRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_START_WORLD_TAKEOVER.toString()});
+		lLo = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&cLinks/Rechtsklick &bübernimmt die Eingabe für diesen Shop.",
+				"&cShift L./R. Klick &bübernimmt die Eingabe für alle Shop dieser Welt.",
+				"&bAtm.: &f%numtext%",
+				"&cShift L./R. Klick &baccept the input for this shop.",
+				"&cShift L./R. click &baccept the input for all shop of this world."});
 		numpad_DISCOUNTSTART.put(sSL, lSL);
 		numpad_DISCOUNTSTART.put(sMat, lMat);
 		numpad_DISCOUNTSTART.put(sDN, lDN);
 		numpad_DISCOUNTSTART.put(sLo, lLo);
 		numpad_DISCOUNTSTART.put(sLC, lLC);
 		numpad_DISCOUNTSTART.put(sRC, lRC);
+		numpad_DISCOUNTSTART.put(sSLC, lSLC);
+		numpad_DISCOUNTSTART.put(sSRC, lSRC);
 		guiKeys.put(GuiType.NUMPAD_DISCOUNT_START, numpad_DISCOUNTSTART);
 		lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_END_TAKEOVER.toString()});
 		lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_END_TAKEOVER.toString()});
+		lSLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_END_WORLD_TAKEOVER.toString()});
+		lSRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_END_WORLD_TAKEOVER.toString()});
+		lLo = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext%",
+				"&cLinks/Rechtsklick &bübernimmt die Eingabe für diesen Shop.",
+				"&cShift L./R. Klick &bübernimmt die Eingabe für alle Shop dieser Welt.",
+				"&bAtm.: &f%numtext%",
+				"&cShift L./R. Klick &baccept the input for this shop.",
+				"&cShift L./R. click &baccept the input for all shop of this world."});
 		numpad_DISCOUNTEND.put(sSL, lSL);
 		numpad_DISCOUNTEND.put(sMat, lMat);
 		numpad_DISCOUNTEND.put(sDN, lDN);
 		numpad_DISCOUNTEND.put(sLo, lLo);
 		numpad_DISCOUNTEND.put(sLC, lLC);
 		numpad_DISCOUNTEND.put(sRC, lRC);
+		numpad_DISCOUNTEND.put(sSLC, lLC);
+		numpad_DISCOUNTEND.put(sSRC, lRC);
 		guiKeys.put(GuiType.NUMPAD_DISCOUNT_END, numpad_DISCOUNTEND);
+		lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_HOUR_TAKEOVER.toString()});
+		lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_HOUR_TAKEOVER.toString()});
+		lSLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_HOUR_WORLD_TAKEOVER.toString()});
+		lSRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				ClickFunctionType.ADMINISTRATION_SETDISCOUNT_HOUR_WORLD_TAKEOVER.toString()});
+		lLo = new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				"&bZz.: &f%numtext% &bStunden",
+				"&cLinks/Rechtsklick &bübernimmt die Eingabe für diesen Shop.",
+				"&cShift L./R. Klick &bübernimmt die Eingabe für alle Shop dieser Welt.",
+				"&bAtm.: &f%numtext% &bHours",
+				"&cShift L./R. Klick &baccept the input for this shop.",
+				"&cShift L./R. click &baccept the input for all shop of this world."});
+		numpad_DISCOUNTHOUR.put(sSL, lSL);
+		numpad_DISCOUNTHOUR.put(sMat, lMat);
+		numpad_DISCOUNTHOUR.put(sDN, lDN);
+		numpad_DISCOUNTHOUR.put(sLo, lLo);
+		numpad_DISCOUNTHOUR.put(sLC, lLC);
+		numpad_DISCOUNTHOUR.put(sRC, lRC);
+		numpad_DISCOUNTHOUR.put(sSLC, lSLC);
+		numpad_DISCOUNTHOUR.put(sSRC, lSRC);
+		guiKeys.put(GuiType.NUMPAD_DISCOUNT_HOUR, numpad_DISCOUNTHOUR);
 		//----------------
 		lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				ClickFunctionType.ADMINISTRATION_SETDISCOUNTBUY_TAKEOVER.toString()});
@@ -2946,7 +3083,7 @@ public class YamlManager
 				"&cLeftclick &badds the lowercase letter at the end.",
 				"&cRightclick &badds the capital letter at the end."});
 		String path = ""; //7
-		path = "27"; //Q
+		path = "18"; //Q
 		keyboard.put(path+".SettingLevel", lBSL);
 		keyboard.put(path+".Material", lBMat);
 		keyboard.put(path+".HeadTexture",
@@ -3303,7 +3440,7 @@ public class YamlManager
 		keyboard.put(path+".Material", lBMat);
 		keyboard.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"https://textures.minecraft.net/texture/2dd0143d8e449ad1ba97e1981712cee0f3fc297dbc17c83b05eea3338d659"}));
+						"https://textures.minecraft.net/texture/9eca98befd0d7efca9b11ebf4b2da459cc19a378114b3cdde67d4067afb896"}));
 		keyboard.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&fb/B &7Numpad"}));
@@ -3393,7 +3530,6 @@ public class YamlManager
 						"&cLinksklick &bfügt eine 0 hinzu.",
 						"&cRechtsklick &bfügt eine 1 hinzu.",
 						"&bAtm.: &f%numtext%",
-						"&bFügt am Ende ein Zeichen an.",
 						"&cLeftclick &badds a 0.",
 						"&cRightclick &badds a 1."}));
 		keyboard.put(path+".ClickFunction."+ClickType.LEFT.toString(),

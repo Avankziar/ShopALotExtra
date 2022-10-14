@@ -28,6 +28,8 @@ import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation;
 import main.java.me.avankziar.ifh.spigot.storage.PhysicalChestStorage;
+import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee;
+import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
 import main.java.me.avankziar.sale.spigot.assistance.BackgroundTask;
 import main.java.me.avankziar.sale.spigot.assistance.Utility;
 import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
@@ -50,6 +52,7 @@ import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerArmorStandManipulateListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerInteractListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerJoinListener;
+import main.java.me.avankziar.sale.spigot.listener.ShopPostTransactionListener;
 import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
 import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
@@ -80,6 +83,8 @@ public class SaLE extends JavaPlugin
 	private PhysicalChestStorage pcsConsumer;
 	private Economy ecoConsumer;
 	private BonusMalus bonusMalusConsumer;
+	private MessageToBungee mtbConsumer;
+	private BaseComponentToBungee bctbConsumer;
 	
 	public void onEnable()
 	{
@@ -129,6 +134,7 @@ public class SaLE extends JavaPlugin
 		{
 			e.getValue().despawn();
 		}
+		backgroundTask.doShopLog();
 		Bukkit.getScheduler().cancelTasks(this);
 		HandlerList.unregisterAll(this);
 		log.info(pluginName + " is disabled!");
@@ -349,6 +355,7 @@ public class SaLE extends JavaPlugin
 		pm.registerEvents(new GuiPreListener(plugin), plugin);
 		pm.registerEvents(new BottomListener(plugin), plugin);
 		pm.registerEvents(new UpperListener(plugin), plugin);
+		pm.registerEvents(new ShopPostTransactionListener(), plugin);
 	}
 	
 	public boolean reload() throws IOException
@@ -403,17 +410,19 @@ public class SaLE extends JavaPlugin
 	
 	private void setupIFH()
 	{
-		if(setupShop())
+		if(setupIFHShop())
 		{
 			return;
 		}
 		setupIFHEnumTranslation();
 		setupIFHPhysicalChestStorage();
 		setupIFHEconomy();
-		setupBonusMalus();
+		setupIFHBonusMalus();
+		setupIFHMessageToBungee();
+		setupIFHBaseComponentToBungee();
 	}
 	
-	private boolean setupShop()
+	private boolean setupIFHShop()
 	{
 		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
 	    {
@@ -546,7 +555,7 @@ public class SaLE extends JavaPlugin
 		return this.ecoConsumer;
 	}
 	
-	private void setupBonusMalus() 
+	private void setupIFHBonusMalus() 
 	{
         if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
         {
@@ -654,5 +663,91 @@ public class SaLE extends JavaPlugin
 	public BonusMalus getBonusMalus()
 	{
 		return bonusMalusConsumer;
+	}
+	
+	private void setupIFHMessageToBungee() 
+	{
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    mtbConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> MessageToBungee.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public MessageToBungee getMtB()
+	{
+		return mtbConsumer;
+	}
+	
+	private void setupIFHBaseComponentToBungee() 
+	{
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 main.java.me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    bctbConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> BaseComponentToBungee.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public BaseComponentToBungee getBctB()
+	{
+		return bctbConsumer;
 	}
 }

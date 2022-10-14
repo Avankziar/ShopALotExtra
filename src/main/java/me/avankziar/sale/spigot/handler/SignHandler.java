@@ -280,7 +280,7 @@ public class SignHandler
 				{
 					continue;
 				}
-				if(ssh.getItemStorageTotal() < ssh.getItemStorageCurrent() + amount + is.getAmount())
+				if(ssh.getItemStorageTotal() <= ssh.getItemStorageCurrent() + amount + is.getAmount())
 				{
 					long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent() - amount;
 					amount += v;
@@ -297,8 +297,16 @@ public class SignHandler
 			{
 				return false;
 			}
-			amount = toPutIn.getAmount();
-			player.getInventory().setItemInMainHand(null);
+			if(ssh.getItemStorageTotal() <= ssh.getItemStorageCurrent() + toPutIn.getAmount())
+			{
+				long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent();
+				amount += v;
+				player.getInventory().getItemInMainHand().setAmount(amount);
+			} else
+			{
+				amount = toPutIn.getAmount();
+				player.getInventory().setItemInMainHand(null);
+			}
 		}
 		ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()+((long) amount));
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ItemsAddedToShop")

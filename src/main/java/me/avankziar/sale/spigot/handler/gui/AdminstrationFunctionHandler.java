@@ -98,9 +98,13 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_SETPOSSIBLE_SELL_TAKEOVER: takeOver(player, ssh, GuiType.NUMPAD_POSSIBLE_SELL, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETDISCOUNT_CLEAR: setClear(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETDISCOUNT_START_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel); break;
-		case ADMINISTRATION_SETDISCOUNT_START_TAKEOVER: takeOver(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel); break;
-		case ADMINISTRATION_SETDISCOUNT_END_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_DISCOUNT_END, openInv, settingsLevel); break;
-		case ADMINISTRATION_SETDISCOUNT_END_TAKEOVER: takeOver(player, ssh, GuiType.NUMPAD_DISCOUNT_END, openInv, settingsLevel); break;
+		case ADMINISTRATION_SETDISCOUNT_START_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel, false); break;
+		case ADMINISTRATION_SETDISCOUNT_START_WORLD_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel, true); break;
+		case ADMINISTRATION_SETDISCOUNT_HOUR_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel, false); break;
+		case ADMINISTRATION_SETDISCOUNT_HOUR_WORLD_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_HOUR, openInv, settingsLevel, false); break;
+		case ADMINISTRATION_SETDISCOUNT_END_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_DISCOUNT_HOUR, openInv, settingsLevel); break;
+		case ADMINISTRATION_SETDISCOUNT_END_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_END, openInv, settingsLevel, false); break;
+		case ADMINISTRATION_SETDISCOUNT_END_WORLD_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_END, openInv, settingsLevel, true); break;
 		case ADMINISTRATION_SETDISCOUNTBUY_CLEAR: setClear(player, ssh, GuiType.NUMPAD_DISCOUNT_BUY, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETDISCOUNTBUY_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_DISCOUNT_BUY, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETDISCOUNTBUY_TAKEOVER: takeOver(player, ssh, GuiType.NUMPAD_DISCOUNT_BUY, openInv, settingsLevel); break;
@@ -202,22 +206,22 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_WHITELIST: openKeyboard(player, ssh, GuiType.KEYBOARD_WHITELIST, openInv, settingsLevel); break;
 		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_MEMBER: openKeyboard(player, ssh, GuiType.KEYBOARD_MEMBER, openInv, settingsLevel); break;
 		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_CUSTOM: openKeyboard(player, ssh, GuiType.KEYBOARD_CUSTOM, openInv, settingsLevel); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, false, false); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, false, true); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, true, false); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, true, true); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, false, false); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, false, true); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, true, false); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, true, true); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.MEMBER, otheruuid, false, false); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.MEMBER, otheruuid, false, true); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.MEMBER, otheruuid, true, false); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.MEMBER, otheruuid, true, true); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, false, false); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, false, true); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, false); break;
-		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE_WORLD: addPlayerToList(player, ssh, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, false, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, false, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, true, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_BLACKLIST_REMOVE_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.BLACKLIST, otheruuid, true, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, false, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, false, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, true, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_WHITELIST_REMOVE_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.WHITELIST, otheruuid, true, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.MEMBER, otheruuid, false, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.MEMBER, otheruuid, false, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.MEMBER, otheruuid, true, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_MEMBER_REMOVE_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.MEMBER, otheruuid, true, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, false, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, false, true); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, false); break;
+		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, true); break;
 		}
 		SignHandler.updateSign(ssh);
 	}
@@ -461,7 +465,7 @@ public class AdminstrationFunctionHandler
 			return;
 		}
 		int acid = 0;
-		ssh.setAccountId(acid);
+		ssh.setStorageID(acid);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SetStorage.Set")));
 		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
@@ -570,7 +574,7 @@ public class AdminstrationFunctionHandler
 			}
 			break;
 		}
-		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, true);
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, " Numpad", true);
 	}
 	
 	private static void takeOver(Player player, SignShop ssh, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
@@ -629,7 +633,7 @@ public class AdminstrationFunctionHandler
 				break;
 			}
 			int ashid = Integer.parseInt(ssh.getNumText());
-			if(!plugin.getPCS().isOwner(ashid, player.getUniqueId()))
+			if(plugin.getPCS() == null || !plugin.getPCS().isOwner(ashid, player.getUniqueId()))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SetStorage.NotOwner")
 						.replace("%value%", ssh.getNumText())));
@@ -673,30 +677,6 @@ public class AdminstrationFunctionHandler
 				break;
 			}
 			ssh.setPossibleSell(Long.parseLong(ssh.getNumText()));
-			break;
-		case NUMPAD_DISCOUNT_START:
-			String p1 = plugin.getYamlHandler().getConfig().getString("SignShop.DiscountTimePattern");
-			if(!TimeHandler.isDateTime(ssh.getNumText(), p1))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DiscountTimeNotFit")
-						.replace("%value%", ssh.getNumText())
-						.replace("%pattern%", p1)));
-				break;
-			}
-			ssh.setDiscountStart(TimeHandler.getDateTime(ssh.getNumText(),
-					p1));
-			break;
-		case NUMPAD_DISCOUNT_END:
-			String p2 = plugin.getYamlHandler().getConfig().getString("SignShop.DiscountTimePattern");
-			if(!TimeHandler.isDateTime(ssh.getNumText(), p2))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DiscountTimeNotFit")
-						.replace("%value%", ssh.getNumText())
-						.replace("%pattern%", p2)));
-				break;
-			}
-			ssh.setDiscountEnd(TimeHandler.getDateTime(ssh.getNumText(),
-					p2));
 			break;
 		case NUMPAD_DISCOUNT_BUY:
 			if(!MatchApi.isDouble(ssh.getNumText()))
@@ -762,7 +742,123 @@ public class AdminstrationFunctionHandler
 		}
 		ssh.setNumText("");
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, false);
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, " Numpad", false);
+	}
+	
+	private static void takeOverDiscountTime(Player player, SignShop ssh, GuiType gt, Inventory inv, SettingsLevel settingsLevel, boolean world)
+	{
+		if(isTooMuchShop(player, ssh))
+		{
+			return;
+		}
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
+			return;
+		}
+		switch(gt)
+		{
+		default: break;
+		case NUMPAD_DISCOUNT_HOUR:
+			if(!MatchApi.isInteger(ssh.getNumText()))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+						.replace("%value%", ssh.getNumText())));
+				break;
+			}
+			long h = Long.parseLong(ssh.getNumText());
+			long now = System.currentTimeMillis();
+			long than = now + h*60*60*1000;
+			if(world)
+			{
+				int a = 0;
+				ArrayList<SignShop> sshAL = SignShop.convert(plugin.getMysqlHandler().getFullList(MysqlHandler.Type.SIGNSHOP,
+						"`id` ASC", "`player_uuid` = ? AND `server_name` = ? AND `world` = ?",
+						ssh.getOwner().toString(), plugin.getServername(), player.getWorld().getName()));
+				for(SignShop ss : sshAL)
+				{
+					ss.setDiscountStart(now);
+					ss.setDiscountEnd(than);
+					plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+					a++;
+				}
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DiscountHourWorld")
+						.replace("%amount%", String.valueOf(a))
+						.replace("%hour%", String.valueOf(h))));
+			} else
+			{
+				ssh.setDiscountStart(now);
+				ssh.setDiscountEnd(than);
+			}
+			ssh.setNumText("");
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+			break;
+		case NUMPAD_DISCOUNT_START:
+			String p0 = plugin.getYamlHandler().getConfig().getString("SignShop.DiscountTimePattern");
+			if(!TimeHandler.isDateTime(ssh.getNumText(), p0))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DiscountTimeNotFit")
+						.replace("%value%", ssh.getNumText())
+						.replace("%pattern%", p0)));
+				break;
+			}
+			if(world)
+			{
+				int a = 0;
+				ArrayList<SignShop> sshAL = SignShop.convert(plugin.getMysqlHandler().getFullList(MysqlHandler.Type.SIGNSHOP,
+						"`id` ASC", "`player_uuid` = ? AND `server_name` = ? AND `world` = ?",
+						ssh.getOwner().toString(), plugin.getServername(), player.getWorld().getName()));
+				for(SignShop ss : sshAL)
+				{
+					ss.setDiscountStart(TimeHandler.getDateTime(ssh.getNumText(),
+							p0));
+					plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+					a++;
+				}
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DiscountStartWorld")
+						.replace("%amount%", String.valueOf(a))));
+			} else
+			{
+				ssh.setDiscountStart(TimeHandler.getDateTime(ssh.getNumText(),
+						p0));
+			}
+			ssh.setNumText("");
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+			break;
+		case NUMPAD_DISCOUNT_END:
+			String p1 = plugin.getYamlHandler().getConfig().getString("SignShop.DiscountTimePattern");
+			if(!TimeHandler.isDateTime(ssh.getNumText(), p1))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DiscountTimeNotFit")
+						.replace("%value%", ssh.getNumText())
+						.replace("%pattern%", p1)));
+				break;
+			}
+			if(world)
+			{
+				int a = 0;
+				ArrayList<SignShop> sshAL = SignShop.convert(plugin.getMysqlHandler().getFullList(MysqlHandler.Type.SIGNSHOP,
+						"`id` ASC", "`player_uuid` = ? AND `server_name` = ? AND `world` = ?",
+						ssh.getOwner().toString(), plugin.getServername(), player.getWorld().getName()));
+				for(SignShop ss : sshAL)
+				{
+					ss.setDiscountEnd(TimeHandler.getDateTime(ssh.getNumText(),
+							p1));
+					plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+					a++;
+				}
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DiscountEndtWorld")
+						.replace("%amount%", String.valueOf(a))));
+			} else
+			{
+				ssh.setDiscountEnd(TimeHandler.getDateTime(ssh.getNumText(),
+						p1));
+			}
+			ssh.setNumText("");
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+			break;
+		}
+		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, true);
 	}
 	
 	private static void numpadRemoveOnce(Player player, SignShop ssh, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
@@ -780,7 +876,7 @@ public class AdminstrationFunctionHandler
 		{
 			ssh.setNumText(ssh.getNumText().substring(0, ssh.getNumText().length()-1));
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-			GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, false);
+			GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, " Numpad", false);
 		}
 	}
 	
@@ -797,7 +893,7 @@ public class AdminstrationFunctionHandler
 		}
 		ssh.setNumText(ssh.getNumText()+num);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, false);
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, " Numpad", false);
 	}
 	
 	private static void cancelNumpad(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
@@ -838,10 +934,10 @@ public class AdminstrationFunctionHandler
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
 		}
-		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, true);
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, " Keyboard", true);
 	}
 	
-	private static void addPlayerToList(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel,
+	private static void addPlayerToList(Player player, SignShop ssh, GuiType gt, Inventory inv, SettingsLevel settingsLevel,
 			ListedType listType, UUID otheruuid, boolean remove, boolean world)
 	{
 		if(otheruuid == null)
@@ -851,8 +947,8 @@ public class AdminstrationFunctionHandler
 		int a = 0;
 		if(world)
 		{
-			ArrayList<SignShop> sshAL = SignShop.convert(plugin.getMysqlHandler().getFullList(
-					MysqlHandler.Type.SIGNSHOP, "`player_uuid` = ? AND `server_name` = ? AND `world` = ?",
+			ArrayList<SignShop> sshAL = SignShop.convert(plugin.getMysqlHandler().getFullList(MysqlHandler.Type.SIGNSHOP,
+					"`id` ASC", "`player_uuid` = ? AND `server_name` = ? AND `world` = ?",
 					ssh.getOwner().toString(), plugin.getServername(), player.getWorld().getName()));
 			for(SignShop ss : sshAL)
 			{
@@ -905,5 +1001,6 @@ public class AdminstrationFunctionHandler
 					.replace("%list%", 
 							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+listType.toString()))));
 		}
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, " Keyboard", false);
 	}
 }

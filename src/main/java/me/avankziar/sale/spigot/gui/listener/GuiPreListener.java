@@ -90,6 +90,10 @@ public class GuiPreListener implements Listener
 			return;
 		}
 		ItemStack i = event.getCurrentItem().clone();
+		if(!i.hasItemMeta())
+		{
+			return;
+		}
 		NamespacedKey npluginName = new NamespacedKey(plugin, GUIApi.PLUGINNAME);
 		NamespacedKey ninventoryIdentifier = new NamespacedKey(plugin, GUIApi.INVENTORYIDENTIFIER);
 		NamespacedKey nclickEventCancel = new NamespacedKey(plugin, GUIApi.CLICKEVENTCANCEL);

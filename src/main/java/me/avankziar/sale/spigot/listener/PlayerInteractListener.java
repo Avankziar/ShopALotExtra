@@ -77,15 +77,12 @@ public class PlayerInteractListener implements Listener
 					return;
 				}
 			}
-			if(player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.AIR)
+			if(ssh.isItemHologram())
 			{
-				if(ssh.isItemHologram())
-				{
-					ItemHologramHandler.spawnHologram(ssh);
-				}				
-				event.setCancelled(true);
-				return;
-			}
+				ItemHologramHandler.spawnHologram(ssh);
+			}				
+			event.setCancelled(true);
+			return;
 		} else if(event.getAction() == Action.RIGHT_CLICK_BLOCK)
 		{
 			if(SignHandler.isOwner(ssh, player.getUniqueId())

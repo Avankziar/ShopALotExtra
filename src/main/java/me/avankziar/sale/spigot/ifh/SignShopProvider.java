@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import main.java.me.avankziar.ifh.spigot.position.ServerLocation;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.handler.MessageHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -154,6 +155,10 @@ public class SignShopProvider implements main.java.me.avankziar.ifh.spigot.shop.
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		SignHandler.updateSign(ssh);
+		String msg = plugin.getYamlHandler().getLang().getString("SignShopProvider.PutIntoStorage")
+				.replace("%shopname%", ssh.getSignShopName())
+				.replace("%amount%", String.valueOf(amountOfItems));
+		new MessageHandler().sendMessageToOwnerAndMember(ssh, msg);
 		return ramount;
 	}
 	
@@ -197,6 +202,10 @@ public class SignShopProvider implements main.java.me.avankziar.ifh.spigot.shop.
 		ssh.setItemStorageCurrent(isc);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		SignHandler.updateSign(ssh);
+		String msg = plugin.getYamlHandler().getLang().getString("SignShopProvider.GetOutOfStorage")
+				.replace("%shopname%", ssh.getSignShopName())
+				.replace("%amount%", String.valueOf(amountOfItems));
+		new MessageHandler().sendMessageToOwnerAndMember(ssh, msg);
 		return isa.toArray(new ItemStack[isa.size()]);
 	}
 }

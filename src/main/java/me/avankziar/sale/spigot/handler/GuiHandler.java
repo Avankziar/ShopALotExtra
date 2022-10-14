@@ -102,9 +102,9 @@ public class GuiHandler
 		openGui(ssh2, player, gt, gui, settingsLevel, closeInv);
 	}
 	
-	public static void openKeyOrNumInput(SignShop ssh, Player player, GuiType gt, SettingsLevel settingsLevel, boolean closeInv)
+	public static void openKeyOrNumInput(SignShop ssh, Player player, GuiType gt, SettingsLevel settingsLevel, String keyboardOrNumpad, boolean closeInv)
 	{
-		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, ssh.getSignShopName()+" Numpad", settingsLevel);
+		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, ssh.getSignShopName()+keyboardOrNumpad, settingsLevel);
 		SignShop ssh2 = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssh.getId());
 		openGui(ssh2, player, gt, gui, settingsLevel, closeInv);
 	}
