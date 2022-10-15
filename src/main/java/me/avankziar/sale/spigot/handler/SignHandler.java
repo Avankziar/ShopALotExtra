@@ -58,13 +58,13 @@ public class SignHandler
 			{ 
 				if(ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
 				{
-					if(ssh.getBuyAmount() != null)
+					if(ssh.getBuyAmount() != null && ssh.getBuyAmount() > 0.0)
 					{
 						return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
 								.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getBuyAmount()));
 					}
 					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
-							.replace("%amount%", MaterialHandler.getSignColor(b.getType())+"/");
+							.replace("%amount%", "&4--");
 				}
 				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1Discount")
 						.replace("%amount%", String.valueOf(ssh.getDiscountBuyAmount()));
@@ -73,7 +73,7 @@ public class SignHandler
 				if(ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0)
 				{
 					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
-							.replace("%amount%", MaterialHandler.getSignColor(b.getType())+"/");
+							.replace("%amount%", "&4--");
 				}
 				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
 						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getBuyAmount()));
@@ -83,13 +83,13 @@ public class SignHandler
 			{
 				if(ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
 				{
-					if(ssh.getSellAmount() != null)
+					if(ssh.getSellAmount() != null && ssh.getSellAmount() > 0.0)
 					{
 						return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
 								.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getSellAmount()));
 					}
 					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
-							.replace("%amount%", MaterialHandler.getSignColor(b.getType())+"/");
+							.replace("%amount%", "&4--");
 				}
 				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2Discount")
 						.replace("%amount%", String.valueOf(ssh.getDiscountSellAmount()));
@@ -98,7 +98,7 @@ public class SignHandler
 				if(ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0)
 				{
 					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
-							.replace("%amount%", MaterialHandler.getSignColor(b.getType())+"/");
+							.replace("%amount%", "&4--");
 				}
 				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
 						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getSellAmount()));
@@ -119,7 +119,11 @@ public class SignHandler
 			if(ssh.getDiscountStart() < now && ssh.getDiscountEnd() > now)
 			{
 				//DiscountpossibleBuy/sell
-				if(ssh.getDiscountPossibleBuy() >= 0)
+				if(ssh.isUnlimitedBuy()) 
+				{
+					colorB = getPercentColor(100, 100);
+					sb.append(colorB+"ꝏ"); //https://fsymbols.com/de/zeichen/unendlichkeit/
+				} else if(ssh.getDiscountPossibleBuy() >= 0)
 				{
 					colorB = getPercentColor(
 							Math.max(buy, ssh.getDiscountPossibleBuy()),
@@ -144,7 +148,11 @@ public class SignHandler
 					}
 				}
 				sb.append(" &r/ ");
-				if(ssh.getDiscountPossibleSell() >= 0)
+				if(ssh.isUnlimitedSell()) 
+				{
+					colorS = getPercentColor(100, 100);
+					sb.append(colorS+"ꝏ");
+				} else if(ssh.getDiscountPossibleSell() >= 0)
 				{
 					colorS = getPercentColor(
 							Math.max(sell, ssh.getDiscountPossibleSell()),
@@ -172,7 +180,11 @@ public class SignHandler
 			} else
 			{
 				//normal possibleBuy/sell
-				if(ssh.getPossibleBuy() >= 0)
+				if(ssh.isUnlimitedBuy()) 
+				{
+					colorB = getPercentColor(100, 100);
+					sb.append(colorB+"ꝏ");
+				} if(ssh.getPossibleBuy() >= 0)
 				{
 					colorB = getPercentColor(
 							Math.max(buy, ssh.getPossibleBuy()),
@@ -197,7 +209,11 @@ public class SignHandler
 					}
 				}
 				sb.append(" &r/ ");
-				if(ssh.getPossibleSell() >= 0)
+				if(ssh.isUnlimitedSell()) 
+				{
+					colorS = getPercentColor(100, 100);
+					sb.append(colorS+"ꝏ");
+				} if(ssh.getPossibleSell() >= 0)
 				{
 					colorS = getPercentColor(
 							Math.max(sell, ssh.getPossibleSell()),

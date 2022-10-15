@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.AxolotlBucketMeta;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -32,6 +34,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.inventory.meta.TropicalFishBucketMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -367,6 +371,7 @@ public class GuiHandler
 		return list;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static ArrayList<String> getStringPlaceHolder(ItemStack is, UUID uuid)
 	{
 		if(is == null)
@@ -385,7 +390,7 @@ public class GuiHandler
 		if(im instanceof Damageable)
 		{
 			Damageable dam = (Damageable) im;
-			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Damageable") + dam.getDamage()));
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Damageable") + (getMaxDamage(is.getType())-dam.getDamage())));
 		}
 		if(im instanceof Repairable)
 		{
@@ -434,7 +439,15 @@ public class GuiHandler
 		}
 		if(im instanceof PotionMeta)
 		{
-			
+			PotionMeta pm = (PotionMeta) im;
+			for(PotionEffect pe : pm.getCustomEffects())
+			{
+				int level = pe.getAmplifier()+1;
+				long dur = pe.getDuration();
+				String color = getPotionColor(pe);
+				list.add(ChatApi.tl(color+plugin.getEnumTl().getLocalization(pe.getType())
+				+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+			}
 		}
 		if(im instanceof AxolotlBucketMeta)
 		{
@@ -450,35 +463,259 @@ public class GuiHandler
 				list.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(pa.getColor(), pa.getPattern())));
 			}
 		}
+		if(im instanceof BlockStateMeta)
+		{
+			BlockStateMeta bsm = (BlockStateMeta) im;
+			if(bsm.getBlockState() instanceof ShulkerBox)
+			{
+				ShulkerBox sh = (ShulkerBox) bsm.getBlockState();
+				LinkedHashMap<String, Integer> lhm = new LinkedHashMap<>(); //B64, itemamount
+				for(ItemStack its : sh.getSnapshotInventory())
+				{
+					if(its == null || its.getType() == Material.AIR)
+					{
+						continue;
+					}
+					ItemStack c = its.clone();
+					c.setAmount(1);
+					String b64 = new Base64Handler(c).toBase64();
+					int amount = its.getAmount() + (lhm.containsKey(b64) ? lhm.get(b64) : 0);
+					lhm.put(b64, amount);
+				}
+				for(Entry<String, Integer> e : lhm.entrySet())
+				{
+					ItemStack ist = new Base64Handler(e.getKey()).fromBase64();
+					list.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(ist.getType())+ "x"+e.getValue()));
+				}
+			}
+		}
 		if(im instanceof BookMeta)
 		{
-			
+			BookMeta bm = (BookMeta) im;
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Title") + bm.getTitle()));
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Author") + bm.getAuthor()));
 		}
 		if(im instanceof LeatherArmorMeta)
 		{
-			
-		}
-		if(im instanceof MapMeta)
-		{
-			
-		}
-		if(im instanceof SkullMeta)
-		{
-			
+			LeatherArmorMeta lam = (LeatherArmorMeta) im;
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.LeatherArmorMeta") 
+					+ "R"+lam.getColor().getRed()+" G"+lam.getColor().getGreen()+" B"+lam.getColor().getBlue()));
 		}
 		if(im instanceof SpawnEggMeta)
 		{
-			
+			SpawnEggMeta sem = (SpawnEggMeta) im;
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.SpawnEggMeta") 
+					+ SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())));
 		}
 		if(im instanceof SuspiciousStewMeta)
 		{
-			
+			SuspiciousStewMeta ssm = (SuspiciousStewMeta) im;
+			for(PotionEffect pe : ssm.getCustomEffects())
+			{
+				int level = pe.getAmplifier()+1;
+				long dur = pe.getDuration();
+				String color = getPotionColor(pe);
+				list.add(ChatApi.tl(color+plugin.getEnumTl().getLocalization(pe.getType())
+				+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+			}
 		}
 		if(im instanceof TropicalFishBucketMeta)
 		{
-			
+			TropicalFishBucketMeta tfbm = (TropicalFishBucketMeta) im;
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.TropicalFishBucketMeta") 
+					+ SaLE.getPlugin().getEnumTl().getLocalization(tfbm.getBodyColor(), tfbm.getPattern(), tfbm.getPatternColor())));
 		}
 		return list;
+	}
+	
+	public static String getPotionColor(PotionEffect pe)
+	{
+		String color = "";
+		if(pe.getType() == PotionEffectType.ABSORPTION || pe.getType() == PotionEffectType.CONDUIT_POWER
+				|| pe.getType() == PotionEffectType.DAMAGE_RESISTANCE || pe.getType() == PotionEffectType.DOLPHINS_GRACE
+				|| pe.getType() == PotionEffectType.FAST_DIGGING || pe.getType() == PotionEffectType.FIRE_RESISTANCE
+				|| pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HEALTH_BOOST
+				|| pe.getType() == PotionEffectType.HERO_OF_THE_VILLAGE || pe.getType() == PotionEffectType.INCREASE_DAMAGE
+				|| pe.getType() == PotionEffectType.INVISIBILITY || pe.getType() == PotionEffectType.JUMP
+				|| pe.getType() == PotionEffectType.LUCK || pe.getType() == PotionEffectType.NIGHT_VISION
+				|| pe.getType() == PotionEffectType.REGENERATION || pe.getType() == PotionEffectType.SATURATION
+				|| pe.getType() == PotionEffectType.SLOW_FALLING || pe.getType() == PotionEffectType.SPEED
+				|| pe.getType() == PotionEffectType.WATER_BREATHING)
+		{
+			color = "&9";
+		} else if(pe.getType() == PotionEffectType.BAD_OMEN || pe.getType() == PotionEffectType.BLINDNESS
+				|| pe.getType() == PotionEffectType.CONFUSION || pe.getType() == PotionEffectType.DARKNESS
+				|| pe.getType() == PotionEffectType.HARM || pe.getType() == PotionEffectType.HUNGER
+				|| pe.getType() == PotionEffectType.LEVITATION || pe.getType() == PotionEffectType.POISON
+				|| pe.getType() == PotionEffectType.SLOW || pe.getType() == PotionEffectType.SLOW_DIGGING
+				|| pe.getType() == PotionEffectType.SLOW_FALLING || pe.getType() == PotionEffectType.UNLUCK
+				|| pe.getType() == PotionEffectType.WEAKNESS || pe.getType() == PotionEffectType.WITHER)
+		{
+			color = "&c";
+		} else if(pe.getType() == PotionEffectType.GLOWING)
+		{
+			color = "&7";
+		}
+		return color;
+	}
+	
+	public static int getMaxDamage(Material material)
+	{
+		int damage = 0;
+		switch(material)
+		{
+		case WOODEN_AXE: //Fallthrough
+		case WOODEN_HOE:
+		case WOODEN_PICKAXE:
+		case WOODEN_SHOVEL:
+		case WOODEN_SWORD:
+			damage = 60;
+			break;
+		case LEATHER_BOOTS:
+			damage = 65;
+			break;
+		case LEATHER_CHESTPLATE:
+			damage = 80;
+			break;
+		case LEATHER_HELMET:
+			damage = 55;
+			break;
+		case LEATHER_LEGGINGS:
+			damage = 75;
+			break;
+		case STONE_AXE:
+		case STONE_HOE:
+		case STONE_PICKAXE:
+		case STONE_SHOVEL:
+		case STONE_SWORD:
+			damage = 132;
+			break;
+		case CHAINMAIL_BOOTS:
+			damage = 196;
+			break;
+		case CHAINMAIL_CHESTPLATE:
+			damage = 241;
+			break;
+		case CHAINMAIL_HELMET:
+			damage = 166;
+			break;
+		case CHAINMAIL_LEGGINGS:
+			damage = 226;
+			break;
+		case GOLDEN_AXE:
+		case GOLDEN_HOE:
+		case GOLDEN_PICKAXE:
+		case GOLDEN_SHOVEL:
+		case GOLDEN_SWORD:
+			damage = 33;
+			break;
+		case GOLDEN_BOOTS:
+			damage = 91;
+			break;
+		case GOLDEN_CHESTPLATE:
+			damage = 112;
+			break;
+		case GOLDEN_HELMET:
+			damage = 77;
+			break;
+		case GOLDEN_LEGGINGS:
+			damage = 105;
+			break;
+		case IRON_AXE:
+		case IRON_HOE:
+		case IRON_PICKAXE:
+		case IRON_SHOVEL:
+		case IRON_SWORD:
+			damage = 251;
+			break;
+		case IRON_BOOTS:
+			damage = 195;
+			break;
+		case IRON_CHESTPLATE:
+			damage = 40;
+			break;
+		case IRON_HELMET:
+			damage = 165;
+			break;
+		case IRON_LEGGINGS:
+			damage = 225;
+			break;
+		case DIAMOND_AXE:
+		case DIAMOND_HOE:
+		case DIAMOND_PICKAXE:
+		case DIAMOND_SHOVEL:
+		case DIAMOND_SWORD:
+			damage = 1562;
+			break;
+		case DIAMOND_BOOTS:
+			damage = 429;
+			break;
+		case DIAMOND_CHESTPLATE:
+			damage = 528;
+			break;
+		case DIAMOND_HELMET:
+			damage = 363;
+			break;
+		case DIAMOND_LEGGINGS:
+			damage = 495;
+			break;
+		case NETHERITE_AXE:
+		case NETHERITE_HOE:
+		case NETHERITE_PICKAXE:
+		case NETHERITE_SHOVEL:
+		case NETHERITE_SWORD:
+			damage = 2031;
+			break;
+		case NETHERITE_BOOTS:
+			damage = 482;
+			break;
+		case NETHERITE_CHESTPLATE:
+			damage = 592;
+			break;
+		case NETHERITE_HELMET:
+			damage = 408;
+			break;
+		case NETHERITE_LEGGINGS:
+			damage = 556;
+			break;
+		case SHIELD:
+			damage = 337;
+			break;
+		case TURTLE_HELMET:
+			damage = 276;
+			break;
+		case TRIDENT:
+			damage = 251;
+			break;
+		case FISHING_ROD:
+			damage = 65;
+			break;
+		case CARROT_ON_A_STICK:
+			damage = 26;
+			break;
+		case WARPED_FUNGUS_ON_A_STICK:
+			damage = 100;
+			break;
+		case ELYTRA:
+			damage = 432;
+			break;
+		case SHEARS:
+			damage = 238;
+			break;
+		case BOW:
+			damage = 385;
+			break;
+		case CROSSBOW:
+			damage = 326;
+			break;
+		case FLINT_AND_STEEL:
+			damage = 65;
+			break;
+		default:
+			damage = 0;
+			break;
+		}
+		return damage;
 	}
 	
 	//thanks https://stackoverflow.com/questions/12967896/converting-integers-to-roman-numerals-java
@@ -781,8 +1018,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getBuyAmount(), ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%buy1%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountBuyAmount(), ac.getCurrency(), dg, dbuyFrac, useSI, useSy, ts, ds));
+				String b = (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+						? (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getBuyAmount(), ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountBuyAmount(), ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds);
+				s = s.replace("%buy1%", b);
 			}
 		}
 		if(text.contains("%buy8%"))
@@ -793,8 +1034,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getBuyAmount()*8, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%buy8%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*8, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, ts, ds));
+				String b = (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+						? (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getBuyAmount()*8, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*8, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds);
+				s = s.replace("%buy8%", b);
 			}
 		}
 		if(text.contains("%buy16%"))
@@ -805,8 +1050,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getBuyAmount()*16, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%buy16%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*16, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, ts, ds));
+				String b = (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+						? (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getBuyAmount()*16, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*16, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds);
+				s = s.replace("%buy16%", b);
 			}
 		}
 		if(text.contains("%buy32%"))
@@ -817,8 +1066,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getBuyAmount()*32, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%buy32%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*32, ac.getCurrency(), dg, dbuyFrac, useSI, useSy, ts, ds));
+				String b = (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+						? (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getBuyAmount()*32, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*32, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds);
+				s = s.replace("%buy32%", b);
 			}
 		}
 		if(text.contains("%buy64%"))
@@ -829,8 +1082,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getBuyAmount()*64, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%buy64%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*64, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
+				String b = (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+						? (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getBuyAmount()*64, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*64, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds);
+				s = s.replace("%buy64%", b);
 			}
 		}
 		if(text.contains("%buy576%"))
@@ -841,8 +1098,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getBuyAmount()*576, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%buy576%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*576, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
+				String b = (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+						? (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getBuyAmount()*576, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*576, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds);
+				s = s.replace("%buy576%", b);
 			}			
 		}
 		if(text.contains("%buy1728%"))
@@ -853,8 +1114,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getBuyAmount()*1728, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%buy1728%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*1728, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
+				String b = (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+						? (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getBuyAmount()*1728, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*1728, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds);
+				s = s.replace("%buy1728%", b);
 			}			
 		}
 		if(text.contains("%buy2304%"))
@@ -865,8 +1130,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getBuyAmount()*2304, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%buy2304%", (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*2304, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds));
+				String b = (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
+						? (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getBuyAmount()*2304, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountBuyAmount()*2304, ac.getCurrency(), dg, buyFrac, useSI, useSy, ts, ds);
+				s = s.replace("%buy2304%", b);
 			}			
 		}
 		if(text.contains("%sell1%"))
@@ -877,8 +1146,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getSellAmount(), ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%sell1%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountSellAmount(), ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
+				String v = (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+						? (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getSellAmount(), ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountSellAmount(), ac.getCurrency(), dg, dsellFrac, useSI, useSy, ts, ds);
+				s = s.replace("%sell1%", v);
 			}			
 		}
 		if(text.contains("%sell8%"))
@@ -889,8 +1162,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getSellAmount()*8, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%sell8%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*8, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
+				String v = (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+						? (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getSellAmount()*8, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountSellAmount()*8, ac.getCurrency(), dg, dsellFrac, useSI, useSy, ts, ds);
+				s = s.replace("%sell8%", v);
 			}			
 		}
 		if(text.contains("%sell16%"))
@@ -901,8 +1178,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getSellAmount()*16, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%sell16%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*16, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
+				String v = (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+						? (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getSellAmount()*16, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountSellAmount()*16, ac.getCurrency(), dg, dsellFrac, useSI, useSy, ts, ds);
+				s = s.replace("%sell16%", v);
 			}			
 		}
 		if(text.contains("%sell32%"))
@@ -913,8 +1194,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getSellAmount()*32, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%sell32%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*32, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
+				String v = (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+						? (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getSellAmount()*32, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountSellAmount()*32, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds);
+				s = s.replace("%sell32%", v);
 			}			
 		}
 		if(text.contains("%sell64%"))
@@ -925,8 +1210,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getSellAmount()*64, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%sell64%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*64, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
+				String v = (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+						? (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getSellAmount()*64, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getSellAmount()*64, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds);
+				s = s.replace("%sell64%", v);
 			}			
 		}
 		if(text.contains("%sell576%"))
@@ -937,8 +1226,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getSellAmount()*576, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%sell576%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*576, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
+				String v = (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+						? (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getSellAmount()*576, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountSellAmount()*576, ac.getCurrency(), dg, dsellFrac, useSI, useSy, ts, ds);
+				s = s.replace("%sell576%", v);
 			}			
 		}
 		if(text.contains("%sell1728%"))
@@ -949,8 +1242,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getSellAmount()*1728, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%sell1728%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*1728, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
+				String v = (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+						? (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getSellAmount()*1728, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountSellAmount()*1728, ac.getCurrency(), dg, dsellFrac, useSI, useSy, ts, ds);
+				s = s.replace("%sell1728%", v);
 			}			
 		}
 		if(text.contains("%sell2304%"))
@@ -961,8 +1258,12 @@ public class GuiHandler
 					plugin.getIFHEco().format(ssh.getSellAmount()*2304, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
 			} else
 			{
-				s = s.replace("%sell2304%", (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0) ? "/" : 
-					plugin.getIFHEco().format(ssh.getDiscountSellAmount()*2304, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds));
+				String v = (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
+						? (ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0
+							? "/"
+							: plugin.getIFHEco().format(ssh.getSellAmount()*2304, ac.getCurrency(), dg, sellFrac, useSI, useSy, ts, ds)) 
+						: plugin.getIFHEco().format(ssh.getDiscountSellAmount()*2304, ac.getCurrency(), dg, dsellFrac, useSI, useSy, ts, ds);
+				s = s.replace("%sell2304%", v);
 			}			
 		}
 		if(text.contains("%discountbuy1%"))

@@ -100,9 +100,10 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_SETDISCOUNT_START_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETDISCOUNT_START_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel, false); break;
 		case ADMINISTRATION_SETDISCOUNT_START_WORLD_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel, true); break;
-		case ADMINISTRATION_SETDISCOUNT_HOUR_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_START, openInv, settingsLevel, false); break;
+		case ADMINISTRATION_SETDISCOUNT_HOUR_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_DISCOUNT_HOUR, openInv, settingsLevel); break;
+		case ADMINISTRATION_SETDISCOUNT_HOUR_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_HOUR, openInv, settingsLevel, false); break;
 		case ADMINISTRATION_SETDISCOUNT_HOUR_WORLD_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_HOUR, openInv, settingsLevel, false); break;
-		case ADMINISTRATION_SETDISCOUNT_END_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_DISCOUNT_HOUR, openInv, settingsLevel); break;
+		case ADMINISTRATION_SETDISCOUNT_END_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_DISCOUNT_END, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETDISCOUNT_END_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_END, openInv, settingsLevel, false); break;
 		case ADMINISTRATION_SETDISCOUNT_END_WORLD_TAKEOVER: takeOverDiscountTime(player, ssh, GuiType.NUMPAD_DISCOUNT_END, openInv, settingsLevel, true); break;
 		case ADMINISTRATION_SETDISCOUNTBUY_CLEAR: setClear(player, ssh, GuiType.NUMPAD_DISCOUNT_BUY, openInv, settingsLevel); break;
@@ -900,7 +901,7 @@ public class AdminstrationFunctionHandler
 	{
 		ssh.setNumText("");
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, true);
+		GuiHandler.openAdministration(ssh, player, settingsLevel, true);
 	}
 	
 	private static void setKeyboardClear(Player player, SignShop ssh, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
@@ -915,7 +916,18 @@ public class AdminstrationFunctionHandler
 	
 	private static void keyboard(Player player, SignShop ssh, String key, GuiType gt, Inventory inv, SettingsLevel settingsLevel)
 	{
-		numpad(player, ssh, key, gt, inv, settingsLevel);
+		if(isTooMuchShop(player, ssh))
+		{
+			return;
+		}
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
+			return;
+		}
+		ssh.setNumText(ssh.getNumText()+key);
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, " Keybord", false);
 	}
 	
 	private static void cancelKeyboard(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)

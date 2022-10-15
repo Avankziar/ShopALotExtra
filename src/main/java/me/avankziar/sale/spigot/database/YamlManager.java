@@ -585,8 +585,8 @@ public class YamlManager
 						"&cStored Enchantments: "}));
 		languageKeys.put("GuiHandler.InfoLore.Damageable", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cErhaltener Schaden: &f",
-						"&cDamage received: &f"}));
+						"&cHaltbarkeit: &f",
+						"&cDurability: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.Repairable", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cReparaturkosten: &f",
@@ -599,6 +599,26 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cBannerMuster: ",
 						"&cBannerPattern: "}));
+		languageKeys.put("GuiHandler.InfoLore.BookMeta.Title", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cBuchtitle: ",
+						"&cBooktitle: "}));
+		languageKeys.put("GuiHandler.InfoLore.BookMeta.Author", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cBuchautor: ",
+						"&cBookauthor: "}));
+		languageKeys.put("GuiHandler.InfoLore.LeatherArmorMeta", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cLederrüstungfärbung: ",
+						"&cLeatherarmordye: "}));
+		languageKeys.put("GuiHandler.InfoLore.SpawnEggMeta", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cSpawnEi EntityType: ",
+						"&cSpawnEgg EntityType: "}));
+		languageKeys.put("GuiHandler.InfoLore.TropicalFishBucketMeta", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cTropenfischeimerfärbung: ",
+						"&cTropicalfishbucketdye: "}));
 		languageKeys.put("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast keinen Account um die Kosten abziehen zu können.",
@@ -1761,7 +1781,7 @@ public class YamlManager
 						SettingsLevel.MASTER.toString()}));
 		admin.put(path+".Material",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.CANDLE_CAKE.toString()}));
+						Material.CANDLE.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&dEingabe des Stundenzeitraums der Rabattaktion",
@@ -1769,21 +1789,19 @@ public class YamlManager
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Zz.: %discountstart% - %discountend%",
-						"&cLinksklick &böffnet das Numpad Gui für die Eingabe des Starts.",
-						"&cRechtsklick &Böffnet das Numpad Gui für die Eingabe des Endes.",
-						"&bDie Eingabe erfolgt über eine Zahl, welche als Stundenwert genommen wird.",
-						"&bNach der Eingabe ist dann die Rabattaktion für die x Stunden aktiv.",
+						"&cLinks/Rechtsklick &böffnet das Numpad Gui","&bfür die Stundeneingabe.",
+						"&bDie Eingabe erfolgt über eine Zahl,","&bwelche als Stundenwert genommen wird.",
+						"&bNach der Eingabe ist dann die Rabattaktion","&bfür die x Stunden aktiv.",
 						"Atm.: %discountstart% - %discountend%",
-						"&cLeft click &open the Numpad Gui for entering the start.",
-						"&cRight click &opens the Numpad Gui for entering the end.",
-						"&bThe input is made via a number, which is taken as the hourly value.",
-						"&bAfter entering, the discount action is then active for the x hours.",}));
+						"&cLeft click &open the Numpad Gui","&bfor entering the hours.",
+						"&bThe input is made via a number,","&bwhich is taken as the hourly value.",
+						"&bAfter entering, the discount action is then","&bactive for the x hours."}));
 		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_SETDISCOUNT_START_OPEN_NUMPAD.toString()}));
+						ClickFunctionType.ADMINISTRATION_SETDISCOUNT_HOUR_OPEN_NUMPAD.toString()}));
 		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_SETDISCOUNT_END_OPEN_NUMPAD.toString()}));
+						ClickFunctionType.ADMINISTRATION_SETDISCOUNT_HOUR_OPEN_NUMPAD.toString()}));
 		path = "30"; //Discount Possible Buy
 		admin.put(path+".CanBuy",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -3712,9 +3730,9 @@ public class YamlManager
 						"&cAcceptance of the input"}));
 		keyboard_signshopname.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%numtext%", "&bÜbernimmt die Eingabe und kehre zum Administration Gui zurück.",
-						"&bAtm.: &f%numtext%", "&bAccept the input and return to the Administration Gui."}));
-		keyboard_signshopname.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+						"&bZz.: &f%numtext%", "&bÜbernimmt die Eingabe und","&bkehre zum Administration Gui zurück.",
+						"&bAtm.: &f%numtext%", "&bAccept the input and","&breturn to the Administration Gui."}));
+		keyboard_signshopname.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_SETSIGNSHOPNAME_TAKEOVER.toString()}));
 		keyboard_signshopname.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
