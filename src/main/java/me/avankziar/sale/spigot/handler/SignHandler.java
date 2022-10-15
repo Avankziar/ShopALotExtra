@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.handler.gui.ShopFunctionHandler;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
@@ -184,7 +185,7 @@ public class SignHandler
 				{
 					colorB = getPercentColor(100, 100);
 					sb.append(colorB+"ꝏ");
-				} if(ssh.getPossibleBuy() >= 0)
+				} else if(ssh.getPossibleBuy() >= 0)
 				{
 					colorB = getPercentColor(
 							Math.max(buy, ssh.getPossibleBuy()),
@@ -213,7 +214,7 @@ public class SignHandler
 				{
 					colorS = getPercentColor(100, 100);
 					sb.append(colorS+"ꝏ");
-				} if(ssh.getPossibleSell() >= 0)
+				} else if(ssh.getPossibleSell() >= 0)
 				{
 					colorS = getPercentColor(
 							Math.max(sell, ssh.getPossibleSell()),
@@ -292,7 +293,7 @@ public class SignHandler
 				}
 				ItemStack cc = is.clone();
 				cc.setAmount(1);
-				if(!ssh.getItemStack().toString().equals(cc.toString()))
+				if(!ShopFunctionHandler.isSimilar(ssh.getItemStack(), cc))
 				{
 					continue;
 				}
@@ -309,7 +310,7 @@ public class SignHandler
 			
 		} else
 		{
-			if(!ssh.getItemStack().toString().equals(c.toString()))
+			if(!ShopFunctionHandler.isSimilar(ssh.getItemStack(), toPutIn))
 			{
 				return false;
 			}

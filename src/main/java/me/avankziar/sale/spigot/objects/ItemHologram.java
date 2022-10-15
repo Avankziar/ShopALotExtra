@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
@@ -39,7 +40,18 @@ public class ItemHologram
 	{
 		ArrayList<String> lines = new ArrayList<>();
 		ItemMeta im = is.getItemMeta();
-		lines.add(im.hasDisplayName() ? im.getDisplayName() : SaLE.getPlugin().getEnumTl().getLocalization(is.getType()));
+		PotionType ptd = PotionType.UNCRAFTABLE;
+		PotionMeta pmd = null;
+		if(im instanceof PotionMeta)
+		{
+			pmd = (PotionMeta) im;
+			ptd = pmd.getBasePotionData().getType();
+		}
+		lines.add(ChatApi.tl(im.hasDisplayName() 
+				? im.getDisplayName() 
+				: (ptd != null && pmd != null
+					? SaLE.getPlugin().getEnumTl().getLocalization(ptd, pmd)
+					: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))));
 		if(im.hasLore()) 
 		{
 			lines.addAll(im.getLore());
@@ -52,7 +64,7 @@ public class ItemHologram
 					for(Entry<Enchantment, Integer> en : is.getEnchantments().entrySet())
 					{
 						String name = SaLE.getPlugin().getEnumTl().getLocalization(en.getKey());
-						int level = en.getValue()+1;
+						int level = en.getValue();
 						lines.add(ChatApi.tl("&7"+name+" "+GuiHandler.IntegerToRomanNumeral(level)));
 					}
 				}
@@ -64,7 +76,7 @@ public class ItemHologram
 					for(Entry<Enchantment, Integer> en : esm.getStoredEnchants().entrySet())
 					{
 						String name = SaLE.getPlugin().getEnumTl().getLocalization(en.getKey());
-						int level = en.getValue()+1;
+						int level = en.getValue();
 						lines.add(ChatApi.tl("&7"+name+" "+GuiHandler.IntegerToRomanNumeral(level)));
 					}
 				}
@@ -80,38 +92,44 @@ public class ItemHologram
 			if(im instanceof PotionMeta)
 			{
 				PotionMeta pm = (PotionMeta) im;
-				for(PotionEffect pe : pm.getCustomEffects())
+				if(pm.hasCustomEffects())
 				{
-					int level = pe.getAmplifier()+1;
-					long dur = pe.getDuration();
-					String color = "";
-					if(pe.getType() == PotionEffectType.ABSORPTION || pe.getType() == PotionEffectType.CONDUIT_POWER
-							|| pe.getType() == PotionEffectType.DAMAGE_RESISTANCE || pe.getType() == PotionEffectType.DOLPHINS_GRACE
-							|| pe.getType() == PotionEffectType.FAST_DIGGING || pe.getType() == PotionEffectType.FIRE_RESISTANCE
-							|| pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HEALTH_BOOST
-							|| pe.getType() == PotionEffectType.HERO_OF_THE_VILLAGE || pe.getType() == PotionEffectType.INCREASE_DAMAGE
-							|| pe.getType() == PotionEffectType.INVISIBILITY || pe.getType() == PotionEffectType.JUMP
-							|| pe.getType() == PotionEffectType.LUCK || pe.getType() == PotionEffectType.NIGHT_VISION
-							|| pe.getType() == PotionEffectType.REGENERATION || pe.getType() == PotionEffectType.SATURATION
-							|| pe.getType() == PotionEffectType.SLOW_FALLING || pe.getType() == PotionEffectType.SPEED
-							|| pe.getType() == PotionEffectType.WATER_BREATHING)
+					for(PotionEffect pe : pm.getCustomEffects())
 					{
-						color = "&9";
-					} else if(pe.getType() == PotionEffectType.BAD_OMEN || pe.getType() == PotionEffectType.BLINDNESS
-							|| pe.getType() == PotionEffectType.CONFUSION || pe.getType() == PotionEffectType.DARKNESS
-							|| pe.getType() == PotionEffectType.HARM || pe.getType() == PotionEffectType.HUNGER
-							|| pe.getType() == PotionEffectType.LEVITATION || pe.getType() == PotionEffectType.POISON
-							|| pe.getType() == PotionEffectType.SLOW || pe.getType() == PotionEffectType.SLOW_DIGGING
-							|| pe.getType() == PotionEffectType.SLOW_FALLING || pe.getType() == PotionEffectType.UNLUCK
-							|| pe.getType() == PotionEffectType.WEAKNESS || pe.getType() == PotionEffectType.WITHER)
-					{
-						color = "&c";
-					} else if(pe.getType() == PotionEffectType.GLOWING)
-					{
-						color = "&7";
+						int level = pe.getAmplifier()+1;
+						long dur = pe.getDuration();
+						String color = GuiHandler.getPotionColor(pe);
+						if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
+						{
+							lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+									+" "+GuiHandler.IntegerToRomanNumeral(level)));
+						} else
+						{
+							lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+									+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+						}
 					}
-					lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
-					+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+				} else
+				{
+					int pv = 0;
+					if(is.getType() == Material.POTION) {pv = 1;}
+					else if(is.getType() == Material.SPLASH_POTION) {pv = 2;}
+					else if(is.getType() == Material.LINGERING_POTION) {pv = 3;}
+					for(PotionEffect pe : GuiHandler.getBasePotion(pm.getBasePotionData(), pv))
+					{
+						int level = pe.getAmplifier()+1;
+						long dur = pe.getDuration()*50;
+						String color = GuiHandler.getPotionColor(pe);
+						if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
+						{
+							lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+									+" "+GuiHandler.IntegerToRomanNumeral(level)));
+						} else
+						{
+							lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+									+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+						}
+					}
 				}
 			}
 			if(im instanceof BlockStateMeta)
@@ -136,7 +154,7 @@ public class ItemHologram
 					for(Entry<String, Integer> e : lhm.entrySet())
 					{
 						ItemStack ist = new Base64Handler(e.getKey()).fromBase64();
-						lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(ist.getType())+ "x"+e.getValue()));
+						lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(ist.getType())+ " x"+e.getValue()));
 					}
 				}
 			}

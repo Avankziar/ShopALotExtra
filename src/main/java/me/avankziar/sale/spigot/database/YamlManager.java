@@ -486,10 +486,8 @@ public class YamlManager
 						"&cYou have already created the maximum number of SignShops. First delete SignShops before creating new ones! Current &f%actual% &cof %max%"}));
 		languageKeys.put("SignChangeListener.ShopCreated", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu hast den Shop &f%name% &eerstellt! &bStelle mit einem &fItem in der Hand &bund einem &fRechtsklick &bauf das Shopschild das Item ein, "
-						+ "danach kommst du durch einen &fLinksklick &bins Einstellungsmenu um dort den Shop nach Belieben einzustellen.",
-						"&eYou have created the store &f%name%! &bSet the item with an &f item in your hand &band a &fright click &bon the store sign, "
-						+ "then you come by a &fleft click &bin the settings menu to set the store as desired."}));
+						"&eDu hast den Shop &f%name% &eerstellt! &bKlicke auf das Schild und stelle dort das Item des Shops ein!",
+						"&eYou have created the store &f%name%! &bClick on the sign and set the item of the store there!"}));
 		languageKeys.put("PlayerInteractListener.IsBlackList", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu steht für diesen Shop auf der schwarzen Liste.",
@@ -748,6 +746,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop &f%shopname% &cist voll!",
 						"&cThe store &f%shopname% &cis full!"}));
+		languageKeys.put("ShopFunctionHandler.Sell.NoItemInInventory"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast keine Items im Inventar zum verkaufen!",
+						"&cYou have no items in your inventory to sell!"}));
 		languageKeys.put("ShopFunctionHandler.Sell.NotInit"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop hat noch keinen Ankauf-Wert festgelegt! Somit kann nicht verkauft werden!",
@@ -786,12 +788,12 @@ public class YamlManager
 						"&bShopTransaction from %player%"}));
 		languageKeys.put("ShopLog.MsgTimer.Buy", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&7[&eK&7]&f%shop% &e>> &r%item% &rx &e%amount% &e>> %format%",
-						"&7[&eB&7]&f%shop% &e>> &r%item% &rx &e%amount% &e>> %format%"}));
+						"&7[&#FF8800K&7]&f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%",
+						"&7[&#FF8800B&7]&f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%"}));
 		languageKeys.put("ShopLog.MsgTimer.Sell", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&7[&bV&7]&f%shop% &b>> &r%item% &rx &e%amount% &b>> &r%format%",
-						"&7[&bS&7]&f%shop% &b>> &r%item% &rx &e%amount% &b>> &r%format%"}));
+						"&7[&aV&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%",
+						"&7[&aS&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%"}));
 	}
 	
 	public void initBonusMalusLanguage() //INFO:BonusMalusLanguages

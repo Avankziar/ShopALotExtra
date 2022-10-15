@@ -27,15 +27,16 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.inventory.meta.TropicalFishBucketMeta;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -378,19 +379,34 @@ public class GuiHandler
 		{
 			return new ArrayList<>();
 		}
+		ItemMeta im = is.getItemMeta();
 		ArrayList<String> list = new ArrayList<>();
 		YamlConfiguration y = plugin.getYamlHandler().getLang();
 		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Owner") 
 				+ (Utility.convertUUIDToName(uuid.toString()) == null 
 				? "/" : Utility.convertUUIDToName(uuid.toString()))));
-		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Displayname") + (is.getItemMeta().hasDisplayName() 
-				? is.getItemMeta().getDisplayName() : SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))));
+		PotionType ptd = PotionType.UNCRAFTABLE;
+		PotionMeta pmd = null;
+		if(im instanceof PotionMeta)
+		{
+			pmd = (PotionMeta) im;
+			ptd = pmd.getBasePotionData().getType();
+		}
+		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Displayname") 
+				+ (is.getItemMeta().hasDisplayName() 
+				? is.getItemMeta().getDisplayName() 
+				: (ptd != null && pmd != null
+					? SaLE.getPlugin().getEnumTl().getLocalization(ptd, pmd)
+					: SaLE.getPlugin().getEnumTl().getLocalization(is.getType())))));
 		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Material") + SaLE.getPlugin().getEnumTl().getLocalization(is.getType())));
-		ItemMeta im = is.getItemMeta();
 		if(im instanceof Damageable)
 		{
 			Damageable dam = (Damageable) im;
-			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Damageable") + (getMaxDamage(is.getType())-dam.getDamage())));
+			int dama = getMaxDamage(is.getType())-dam.getDamage();
+			if(dama > 0)
+			{
+				list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Damageable") + dama));
+			}			
 		}
 		if(im instanceof Repairable)
 		{
@@ -415,7 +431,7 @@ public class GuiHandler
 				list.add(y.getString("GuiHandler.InfoLore.Enchantment"));
 				for(Entry<Enchantment, Integer> en : is.getEnchantments().entrySet())
 				{
-					int level = en.getValue()+1;
+					int level = en.getValue();
 					list.add(ChatApi.tl("&7"+plugin.getEnumTl().getLocalization(en.getKey())
 					+" "+GuiHandler.IntegerToRomanNumeral(level)));
 				}
@@ -428,9 +444,9 @@ public class GuiHandler
 				if(esm.hasStoredEnchants())
 				{
 					list.add(y.getString("GuiHandler.InfoLore.StorageEnchantment"));
-					for(Entry<Enchantment, Integer> en : esm.getEnchants().entrySet())
+					for(Entry<Enchantment, Integer> en : esm.getStoredEnchants().entrySet())
 					{
-						int level = en.getValue()+1;
+						int level = en.getValue();
 						list.add(ChatApi.tl("&7"+plugin.getEnumTl().getLocalization(en.getKey())
 						+" "+GuiHandler.IntegerToRomanNumeral(level)));
 					}
@@ -440,13 +456,44 @@ public class GuiHandler
 		if(im instanceof PotionMeta)
 		{
 			PotionMeta pm = (PotionMeta) im;
-			for(PotionEffect pe : pm.getCustomEffects())
+			if(pm.hasCustomEffects())
 			{
-				int level = pe.getAmplifier()+1;
-				long dur = pe.getDuration();
-				String color = getPotionColor(pe);
-				list.add(ChatApi.tl(color+plugin.getEnumTl().getLocalization(pe.getType())
-				+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+				for(PotionEffect pe : pm.getCustomEffects())
+				{
+					int level = pe.getAmplifier()+1;
+					long dur = pe.getDuration()*50;
+					String color = GuiHandler.getPotionColor(pe);
+					if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
+					{
+						list.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+								+" "+GuiHandler.IntegerToRomanNumeral(level)));
+					} else
+					{
+						list.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+								+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+					}
+				}
+			} else
+			{
+				int pv = 0;
+				if(is.getType() == Material.POTION) {pv = 1;}
+				else if(is.getType() == Material.SPLASH_POTION) {pv = 2;}
+				else if(is.getType() == Material.LINGERING_POTION) {pv = 3;}
+				for(PotionEffect pe : GuiHandler.getBasePotion(pm.getBasePotionData(), pv))
+				{
+					int level = pe.getAmplifier()+1;
+					long dur = pe.getDuration()*50;
+					String color = GuiHandler.getPotionColor(pe);
+					if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
+					{
+						list.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+								+" "+GuiHandler.IntegerToRomanNumeral(level)));
+					} else
+					{
+						list.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+								+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+					}
+				}
 			}
 		}
 		if(im instanceof AxolotlBucketMeta)
@@ -485,7 +532,7 @@ public class GuiHandler
 				for(Entry<String, Integer> e : lhm.entrySet())
 				{
 					ItemStack ist = new Base64Handler(e.getKey()).fromBase64();
-					list.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(ist.getType())+ "x"+e.getValue()));
+					list.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(ist.getType())+ " x"+e.getValue()));
 				}
 			}
 		}
@@ -524,6 +571,137 @@ public class GuiHandler
 			TropicalFishBucketMeta tfbm = (TropicalFishBucketMeta) im;
 			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.TropicalFishBucketMeta") 
 					+ SaLE.getPlugin().getEnumTl().getLocalization(tfbm.getBodyColor(), tfbm.getPattern(), tfbm.getPatternColor())));
+		}
+		return list;
+	}
+	
+	public static List<PotionEffect> getBasePotion(PotionData pd, int pv) //pv PotionVariation, 1 Normal, 2 Splash, 3 Linger
+	{
+		PotionType pt = pd.getType();
+		boolean ex = pd.isExtended();
+		List<PotionEffect> list = new ArrayList<>();
+		int amp = pd.isUpgraded() ? 1 : 0;
+		int dur = 0;
+		switch(pt)
+		{
+		case AWKWARD:
+		case MUNDANE:
+		case UNCRAFTABLE:
+		case WATER:
+		case THICK:
+			break;
+		case INVISIBILITY:
+		case NIGHT_VISION:
+		case FIRE_RESISTANCE:
+		case WATER_BREATHING:
+			if(amp == 0 && !ex && pv == 1) {dur = 3*60*20;}
+			else if(amp == 0 && ex && pv == 1) {dur = 8*60*20;}
+			
+			else if(amp == 0 && !ex && pv == 2) {dur = 3*60*20;}
+			else if(amp == 0 && ex && pv == 2) {dur = 8*60*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 45*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 2*60*20;}
+			list.add(pt.getEffectType().createEffect(dur, amp));
+			break;
+		case INSTANT_DAMAGE:
+		case INSTANT_HEAL:
+			list.add(pt.getEffectType().createEffect(10, amp));
+			break;
+		case JUMP:
+		case SPEED:
+		case STRENGTH:
+			if(amp == 0 && !ex && pv == 1) {dur = 3*60*20;}
+			else if(amp == 0 && ex && pv == 1) {dur = 8*60*20;}
+			else if(amp == 1 && !ex && pv == 1) {dur = 90*20;}
+			
+			else if(amp == 0 && !ex && pv == 2) {dur = 3*60*20;}
+			else if(amp == 0 && ex && pv == 2) {dur = 8*60*20;}
+			else if(amp == 1 && !ex && pv == 2) {dur = 90*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 45*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 2*60*20;}
+			else if(amp == 1 && !ex && pv == 3) {dur = 22*20;}
+			list.add(pt.getEffectType().createEffect(dur, amp));
+			break;
+		case POISON:
+		case REGEN:
+			if(amp == 0 && !ex && pv == 1) {dur = 90*20;}
+			else if(amp == 0 && ex && pv == 1) {dur = 4*60*20;}
+			else if(amp == 1 && !ex && pv == 1) {dur = 22*20;}
+			
+			else if(amp == 0 && !ex && pv == 2) {dur = 90*20;}
+			else if(amp == 0 && ex && pv == 2) {dur = 4*60*20;}
+			else if(amp == 1 && !ex && pv == 2) {dur = 22*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 11*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 22*20;}
+			else if(amp == 1 && !ex && pv == 3) {dur = 5*20;}
+			list.add(pt.getEffectType().createEffect(dur, amp));
+			break;
+		case SLOW_FALLING:
+		case WEAKNESS:
+			if(amp == 0 && !ex && pv == 1) {dur = 90*20;}
+			else if(amp == 0 && ex && pv == 1) {dur = 4*60*20;}
+			
+			else if(amp == 0 && !ex && pv == 2) {dur = 90*20;}
+			else if(amp == 0 && ex && pv == 2) {dur = 4*60*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 22*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 60*20;}
+			list.add(pt.getEffectType().createEffect(dur, amp));
+			break;
+		case SLOWNESS:
+			amp = pd.isUpgraded() ? 3 : 0;
+			if(amp == 0 && !ex && pv == 1) {dur = 90*20;}
+			else if(amp == 0 && ex && pv == 1) {dur = 4*60*20;}
+			else if(amp == 3 && !ex && pv == 1) {dur = 20*20;}
+			
+			else if(amp == 0 && !ex && pv == 2) {dur = 90*20;}
+			else if(amp == 0 && ex && pv == 2) {dur = 4*60*20;}
+			else if(amp == 3 && !ex && pv == 2) {dur = 20*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 22*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 60*20;}
+			else if(amp == 3 && !ex && pv == 3) {dur = 5*20;}
+			list.add(pt.getEffectType().createEffect(dur, amp));
+			break;
+		case TURTLE_MASTER:
+			amp = pd.isUpgraded() ? 5 : 3;
+			if(amp == 3 && !ex && pv == 1) {dur = 20*20;}
+			else if(amp == 3 && ex && pv == 1) {dur = 40*20;}
+			else if(amp == 5 && !ex && pv == 1) {dur = 20*20;}
+			
+			else if(amp == 3 && !ex && pv == 2) {dur = 20*20;}
+			else if(amp == 3 && ex && pv == 2) {dur = 40*20;}
+			else if(amp == 5 && !ex && pv == 2) {dur = 20*20;}
+			
+			else if(amp == 3 && !ex && pv == 3) {dur = 5*20;}
+			else if(amp == 3 && ex && pv == 3) {dur = 10*20;}
+			else if(amp == 5 && !ex && pv == 3) {dur = 5*20;}
+			list.add(new PotionEffect(PotionEffectType.SLOW, dur, amp));
+			amp = pd.isUpgraded() ? 3 : 2;
+			if(amp == 2 && !ex && pv == 1) {dur = 20*20;}
+			else if(amp == 2 && ex && pv == 1) {dur = 40*20;}
+			else if(amp == 3 && !ex && pv == 1) {dur = 20*20;}
+			
+			else if(amp == 2 && !ex && pv == 2) {dur = 20*20;}
+			else if(amp == 2 && ex && pv == 2) {dur = 40*20;}
+			else if(amp == 3 && !ex && pv == 2) {dur = 20*20;}
+			
+			else if(amp == 2 && !ex && pv == 3) {dur = 5*20;}
+			else if(amp == 2 && ex && pv == 3) {dur = 10*20;}
+			else if(amp == 3 && !ex && pv == 3) {dur = 5*20;}
+			list.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, dur, amp));
+			break;
+		case LUCK:
+			if(amp == 0 && !ex && pv == 1) {dur = 5*60*20;}
+			
+			else if(amp == 0 && !ex && pv == 2) {dur = 5*60*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 75*20;}
+			list.add(pt.getEffectType().createEffect(dur, amp));
+			break;
 		}
 		return list;
 	}

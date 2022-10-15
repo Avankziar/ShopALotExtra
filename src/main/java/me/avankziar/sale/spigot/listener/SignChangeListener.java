@@ -86,7 +86,7 @@ public class SignChangeListener implements Listener
 		event.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh, event.getBlock())));
 		event.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, event.getBlock())));
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.ShopCreated")
-				.replace("%name%", ssh.getDisplayName())
+				.replace("%name%", ssh.getSignShopName())
 				));
 		return;
 	}

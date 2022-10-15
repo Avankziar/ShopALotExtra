@@ -1,12 +1,25 @@
 package main.java.me.avankziar.sale.spigot.handler.gui;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.ShulkerBox;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
@@ -15,6 +28,7 @@ import main.java.me.avankziar.ifh.general.economy.action.OrdererType;
 import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.ifh.spigot.economy.currency.EconomyCurrency;
 import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.event.ShopPostTransactionEvent;
 import main.java.me.avankziar.sale.spigot.event.ShopPreTransactionEvent;
@@ -24,12 +38,17 @@ import main.java.me.avankziar.sale.spigot.handler.MessageHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.objects.ShoppingDailyLog;
+import main.java.me.avankziar.sale.spigot.objects.ShoppingLog;
+import main.java.me.avankziar.sale.spigot.objects.ShoppingLog.WayType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SubscribedShop;
 
 public class ShopFunctionHandler
 {
 	private static SaLE plugin = SaLE.getPlugin();
+	private static Enchantment[] enchs = Enchantment.values();
+	private static PotionEffectType[] poefty = PotionEffectType.values();
 	
 	public static void doClickFunktion(GuiType guiType, ClickFunctionType cft, Player player, SignShop ssh,
 			Inventory openInv, SettingsLevel settingsLevel)
@@ -245,6 +264,22 @@ public class ShopFunctionHandler
 		}
 		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
+		long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
+		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), System.currentTimeMillis(),
+				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.BUY, samo*d, (int) samo);
+		plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGLOG, sl);
+		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SHOPPINGDAILYLOG,
+				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId(), date);
+		if(sdl == null)
+		{
+			sdl = new ShoppingDailyLog(0, player.getUniqueId(), date, samo*d, 0, (int) samo, 0);
+			plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGDAILYLOG, sdl);
+		} else
+		{
+			sdl.setBuyAmount(sdl.getBuyAmount()+samo*d);
+			sdl.setBuyItemAmount(sdl.getBuyItemAmount()+(int) samo);
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SHOPPINGDAILYLOG, sdl, "`id` = ?", sdl.getId());
+		}
 		ShopPostTransactionEvent spote = new ShopPostTransactionEvent(ssh, samo, d.doubleValue(), true, player, category, comment);
 		Bukkit.getPluginManager().callEvent(spote);
 		if(!ssh.isUnlimitedBuy())
@@ -349,6 +384,7 @@ public class ShopFunctionHandler
 			}
 		}
 		long samo = quantity;
+		long count = 0;
 		for(int i = 0; i < player.getInventory().getStorageContents().length; i++)
 		{
 			ItemStack is = player.getInventory().getStorageContents()[i];
@@ -358,7 +394,7 @@ public class ShopFunctionHandler
 			}
 			ItemStack c = is.clone();
 			c.setAmount(1);
-			if(!ssh.getItemStack().toString().equals(c.toString()))
+			if(!isSimilar(ssh.getItemStack(), c))
 			{
 				continue;
 			}
@@ -366,9 +402,9 @@ public class ShopFunctionHandler
 			{
 				break;
 			}
-			//TODO Fehler
 			if(quantity > is.getAmount())
 			{
+				count += is.getAmount();
 				postc = postc + is.getAmount();
 				quantity = quantity - is.getAmount();
 				ItemStack cc = is.clone();
@@ -376,6 +412,7 @@ public class ShopFunctionHandler
 				is.setAmount(0);
 			} else if(quantity <= is.getAmount())
 			{
+				count += quantity;
 				postc = postc + quantity;
 				ItemStack cc = is.clone();
 				cc.setAmount((int) quantity);
@@ -384,6 +421,12 @@ public class ShopFunctionHandler
 				quantity = 0;
 				break;
 			}
+		}
+		if(count == 0)
+		{
+			player.sendMessage(ChatApi.tl(
+					plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.NoItemInInventory")));
+			return;
 		}
 		if(quantity != 0)
 		{
@@ -418,6 +461,22 @@ public class ShopFunctionHandler
 		}
 		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
+		long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
+		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), System.currentTimeMillis(),
+				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.SELL, samo*d, (int) samo);
+		plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGLOG, sl);
+		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SHOPPINGDAILYLOG,
+				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId(), date);
+		if(sdl == null)
+		{
+			sdl = new ShoppingDailyLog(0, player.getUniqueId(), date, 0, samo*d, 0, (int) samo);
+			plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGDAILYLOG, sdl);
+		} else
+		{
+			sdl.setSellAmount(sdl.getSellAmount()+samo*d);
+			sdl.setSellItemAmount(sdl.getSellItemAmount()+(int) samo);
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SHOPPINGDAILYLOG, sdl, "`id` = ?", sdl.getId());
+		}
 		ShopPostTransactionEvent spote = new ShopPostTransactionEvent(ssh, samo, d.doubleValue(), false, player, category, comment);
 		Bukkit.getPluginManager().callEvent(spote);
 		if(!ssh.isUnlimitedSell())
@@ -454,5 +513,303 @@ public class ShopFunctionHandler
 					.replace("%shop%", ssh.getSignShopName())));
 		}
 		GuiHandler.openShop(ssh, player, settingsLevel, inv, false);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static boolean isSimilar(ItemStack item, ItemStack filter)
+	{
+		if (item == null || filter == null) 
+        {
+            return false;
+        }
+        final ItemStack i = item.clone();
+        final ItemStack f = filter.clone();
+        i.setAmount(1);
+        f.setAmount(1);
+        if(i.getType() != f.getType())
+        {
+        	return false;
+        }
+        if(i.hasItemMeta() == true && f.hasItemMeta() == true)
+        {
+        	ItemMeta im = i.getItemMeta();
+        	ItemMeta fm = f.getItemMeta();
+        	if(im.hasCustomModelData())
+        	{
+        		if(!fm.hasCustomModelData())
+        		{
+        			return false;
+        		}
+        		if(im.getCustomModelData() != fm.getCustomModelData())
+        		{
+        			return false;
+        		}
+        	}
+        	if(im.hasDisplayName())
+        	{
+        		if(!fm.hasDisplayName())
+        		{
+        			return false;
+        		}
+        		if(!im.getDisplayName().equals(fm.getDisplayName()))
+        		{
+        			return false;
+        		}
+        	}
+        	if(!im.getItemFlags().isEmpty())
+        	{
+        		if(fm.getItemFlags().isEmpty()
+        				|| im.getItemFlags().size() != fm.getItemFlags().size())
+        		{
+        			return false;
+        		}
+        		for(ItemFlag iifs : im.getItemFlags())
+        		{
+        			if(!fm.hasItemFlag(iifs))
+        			{
+        				return false;
+        			}
+        		}
+        	}
+        	if(im.hasLore())
+        	{
+        		if(!fm.hasLore())
+        		{
+        			return false;
+        		}
+        		for(int j = 0; j < im.getLore().size(); j++)
+        		{
+        			if(j >= fm.getLore().size())
+        			{
+        				return false;
+        			}
+        			if(!im.getLore().get(j).equals(fm.getLore().get(j)))
+        			{
+        				return false;
+        			}
+        		}
+        	}
+        	if(im instanceof EnchantmentStorageMeta)
+        	{
+        		if(!(fm instanceof EnchantmentStorageMeta))
+        		{
+        			return false;
+        		}
+        		EnchantmentStorageMeta iesm = (EnchantmentStorageMeta) im;
+        		EnchantmentStorageMeta fesm = (EnchantmentStorageMeta) fm;
+        		i.setItemMeta(orderStorageEnchantments(iesm));
+        		f.setItemMeta(orderStorageEnchantments(fesm));
+        		im = i.getItemMeta();
+            	fm = f.getItemMeta();
+        		for(Entry<Enchantment, Integer> e : iesm.getStoredEnchants().entrySet())
+        		{
+        			boolean bo = false;
+        			for(Entry<Enchantment, Integer> ee : fesm.getStoredEnchants().entrySet())
+        			{
+        				if(e.getKey().getName().equals(ee.getKey().getName())
+        						&& e.getValue() == ee.getValue())
+        				{
+        					bo = true;
+        					break;
+        				}
+        			}
+        			if(!bo)
+        			{
+        				return false;
+        			}
+        		}
+        	}
+        	
+        	if(im.hasEnchants() && i.getType() != Material.ENCHANTED_BOOK)
+        	{
+        		if(!fm.hasEnchants() && f.getType() != Material.ENCHANTED_BOOK)
+        		{
+        			return false;
+        		}
+        		i.setItemMeta(orderEnchantments(im));
+        		f.setItemMeta(orderEnchantments(fm));
+        		im = i.getItemMeta();
+            	fm = f.getItemMeta();
+        		for(Entry<Enchantment, Integer> e : im.getEnchants().entrySet())
+        		{
+        			boolean bo = false;
+        			for(Entry<Enchantment, Integer> ee : fm.getEnchants().entrySet())
+        			{
+        				if(e.getKey().getName().equals(ee.getKey().getName())
+        						&& e.getValue() == ee.getValue())
+        				{
+        					bo = true;
+        					break;
+        				}
+        			}
+        			if(!bo)
+        			{
+        				return false;
+        			}
+        		}
+        	}
+        	if(im instanceof BlockStateMeta)
+			{
+        		if(!(fm instanceof BlockStateMeta))
+        		{
+        			return false;
+        		}
+				BlockStateMeta ibsm = (BlockStateMeta) im;
+				BlockStateMeta fbsm = (BlockStateMeta) im;
+				if(ibsm.getBlockState() instanceof ShulkerBox)
+				{
+					if(!(ibsm.getBlockState() instanceof ShulkerBox))
+					{
+						return false;
+					}
+					ShulkerBox ish = (ShulkerBox) ibsm.getBlockState();
+					ShulkerBox fsh = (ShulkerBox) fbsm.getBlockState();
+					if(ish.getColor() != fsh.getColor())
+					{
+						return false;
+					}
+					for(int j = 0; j < ish.getSnapshotInventory().getStorageContents().length; j++)
+					{
+						ItemStack its = ish.getSnapshotInventory().getStorageContents()[j];
+						ItemStack fts = fsh.getSnapshotInventory().getStorageContents()[j];
+						if(!isSimilar(its, fts))
+						{
+							return false;
+						}
+					}
+				}
+				return true; //Short exist only shulker
+			}
+        	if(im instanceof BannerMeta)
+			{
+        		if(!(fm instanceof BannerMeta))
+        		{
+        			return false;
+        		}
+				BannerMeta bim = (BannerMeta) im;
+				BannerMeta bfm = (BannerMeta) fm;
+				for(int j = 0; j < bim.getPatterns().size(); j++)
+				{
+					if(j >= bfm.getPatterns().size())
+					{
+						return false;
+					}
+					if((bim.getPattern(j).getPattern() != bfm.getPattern(j).getPattern())
+							|| (bim.getPattern(j).getColor() != bfm.getPattern(j).getColor()))
+					{
+						return false;
+					}
+				}
+			}
+        	if(im instanceof PotionMeta)
+			{
+        		if(!(fm instanceof PotionMeta))
+        		{
+        			return false;
+        		}
+				PotionMeta pim = (PotionMeta) im;
+				PotionMeta pfm = (PotionMeta) fm;
+				if(pim.hasCustomEffects())
+				{
+					i.setItemMeta(orderCustomEffects(pim));
+					f.setItemMeta(orderCustomEffects(pfm));
+					im = i.getItemMeta();
+					fm = f.getItemMeta();
+					for(int j = 0; j < pim.getCustomEffects().size(); j++)
+					{
+						PotionEffect pei = pim.getCustomEffects().get(j);
+						if(j >= pfm.getCustomEffects().size())
+						{
+							return false;
+						}
+						PotionEffect pef = pfm.getCustomEffects().get(j);
+						if(pei.getAmplifier() != pef.getAmplifier()
+								|| pei.getDuration() != pef.getDuration())
+						{
+							return false;
+						}
+					}
+				} else
+				{
+					int pv = 0;
+					if(i.getType() == Material.POTION) {pv = 1;}
+					else if(i.getType() == Material.SPLASH_POTION) {pv = 2;}
+					else if(i.getType() == Material.LINGERING_POTION) {pv = 3;}
+					List<PotionEffect> peil = GuiHandler.getBasePotion(pim.getBasePotionData(), pv);
+					List<PotionEffect> pefl = GuiHandler.getBasePotion(pfm.getBasePotionData(), pv);
+					for(int j = 0; j < peil.size(); j++)
+					{
+						PotionEffect pei = peil.get(j);
+						if(j >= pefl.size())
+						{
+							return false;
+						}
+						PotionEffect pef = pefl.get(j);
+						if(pei.getAmplifier() != pef.getAmplifier()
+								|| pei.getDuration() != pef.getDuration())
+						{
+							return false;
+						}
+					}
+				}
+			}
+        	return i.toString().equals(f.toString());
+        } else
+    	{
+        	return i.toString().equals(f.toString());
+    	}
+	}
+	
+	public static ItemMeta orderEnchantments(ItemMeta i)
+	{
+		ItemMeta ri = i.clone();
+		for(Enchantment enchan : i.getEnchants().keySet())
+		{
+			ri.removeEnchant(enchan);
+		}
+		for(Enchantment enchan : enchs)
+		{
+			if(i.hasEnchant(enchan))
+			{
+				ri.addEnchant(enchan, i.getEnchantLevel(enchan), true);
+			}
+		}
+		return ri;
+	}
+	
+	public static EnchantmentStorageMeta orderStorageEnchantments(EnchantmentStorageMeta esm)
+	{
+		EnchantmentStorageMeta resm = esm.clone();
+		for(Enchantment enchan : esm.getStoredEnchants().keySet())
+		{
+			resm.removeStoredEnchant(enchan);
+		}
+		for(Enchantment enchan : enchs)
+		{
+			if(esm.hasStoredEnchant(enchan))
+			{
+				resm.addStoredEnchant(enchan, esm.getStoredEnchantLevel(enchan), true);
+			}
+		}
+		return resm;
+	}
+	
+	public static PotionMeta orderCustomEffects(PotionMeta p)
+	{
+		PotionMeta pm = p.clone();
+		LinkedHashMap<PotionEffectType, PotionEffect> pel = new LinkedHashMap<>();
+		for(PotionEffect pe : p.getCustomEffects())
+		{
+			pel.put(pe.getType(), pe);
+			pm.removeCustomEffect(pe.getType());
+		}
+		for(PotionEffectType pet : poefty)
+		{
+			if(pel.containsKey(pet))
+			{
+				pm.addCustomEffect(pel.get(pet), true);
+			}
+		}
+		return pm;
 	}
 }
