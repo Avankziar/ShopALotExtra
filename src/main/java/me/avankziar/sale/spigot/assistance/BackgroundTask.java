@@ -47,7 +47,6 @@ public class BackgroundTask
 		removeShopItemHologram();
 		msgTransactionMessageToShopOwnerTimer();
 		transactionShopLogTimer();
-		//TODO Steuern pro Woche pro Shop
 		return true;
 	}
 	

@@ -43,6 +43,7 @@ import main.java.me.avankziar.sale.spigot.objects.ShoppingLog;
 import main.java.me.avankziar.sale.spigot.objects.ShoppingLog.WayType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SubscribedShop;
+import main.java.me.avankziar.sale.spigot.permission.BoniMali;
 
 public class ShopFunctionHandler
 {
@@ -241,10 +242,10 @@ public class ShopFunctionHandler
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.BuyInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.BuyInPercent") : null;
 		
-		/*if(plugin.getBonusMalus() != null) //TODO
+		if(plugin.getBonusMalus() != null)
 		{
-			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BonusMalus.SHOP_BUYING_TAX.getBonusMalus());
-		}*/
+			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BoniMali.SHOP_BUYING_TAX.getBonusMalus());
+		}
 		ShopPreTransactionEvent sprte = new ShopPreTransactionEvent(ssh, samo, d.doubleValue(), taxation, true, player);
 		Bukkit.getPluginManager().callEvent(sprte);
 		if(sprte.isCancelled())
@@ -435,10 +436,10 @@ public class ShopFunctionHandler
 		}
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.SellInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.SellInPercent") : null;
-		/*if(plugin.getBonusMalus() != null)
+		if(plugin.getBonusMalus() != null)
 		{
-			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BonusMalus.SHOP_SELLING_TAX.getBonusMalus());
-		}*/
+			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BoniMali.SHOP_SELLING_TAX.getBonusMalus());
+		}
 		ShopPreTransactionEvent sprte = new ShopPreTransactionEvent(ssh, samo, d.doubleValue(), taxation, false, player);
 		Bukkit.getPluginManager().callEvent(sprte);
 		if(sprte.isCancelled())

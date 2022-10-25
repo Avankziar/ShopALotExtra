@@ -378,7 +378,6 @@ public class SignHandler
 			}
 		} else
 		{
-			//TODO Fehler
 			ItemStack out = ssh.getItemStack().clone();
 			amount = out.getMaxStackSize();
 			if(amount > ssh.getItemStorageCurrent())

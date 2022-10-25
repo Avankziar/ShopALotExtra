@@ -2,7 +2,7 @@ package main.java.me.avankziar.sale.spigot.permission;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
 
-public enum BonusMalus
+public enum BoniMali
 {
 	COST_ADDING_STORAGE,
 	SHOP_BUYING_TAX,

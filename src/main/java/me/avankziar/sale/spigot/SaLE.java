@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
@@ -24,6 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus;
+import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalusType;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation;
@@ -55,6 +57,7 @@ import main.java.me.avankziar.sale.spigot.database.YamlManager;
 import main.java.me.avankziar.sale.spigot.gui.listener.BottomListener;
 import main.java.me.avankziar.sale.spigot.gui.listener.GuiPreListener;
 import main.java.me.avankziar.sale.spigot.gui.listener.UpperListener;
+import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
 import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
 import main.java.me.avankziar.sale.spigot.ifh.SignShopProvider;
@@ -65,6 +68,7 @@ import main.java.me.avankziar.sale.spigot.listener.PlayerJoinListener;
 import main.java.me.avankziar.sale.spigot.listener.ShopPostTransactionListener;
 import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
 import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
+import main.java.me.avankziar.sale.spigot.permission.BoniMali;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
 public class SaLE extends JavaPlugin
@@ -630,8 +634,12 @@ public class SaLE extends JavaPlugin
 				{
 					cancel();
 				}
-				/*if(getBonusMalus() != null)
+				if(getBonusMalus() != null)
 				{
+					if(!new ConfigHandler().isMechanicBonusMalusEnabled())
+					{
+						return;
+					}
 					for(BaseConstructor bc : getCommandHelpList())
 					{
 						if(!bc.isPutUpCmdPermToBonusMalusSystem())
@@ -647,42 +655,43 @@ public class SaLE extends JavaPlugin
 								pluginName.toLowerCase()+":"+bc.getPath(),
 								plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Displayname", "Command "+bc.getName()),
 								true,
-								BonusMalusType.UP, MultiplicationCalculationType.MULTIPLICATION,
+								BonusMalusType.UP,
 								ex);
-					}
-					if(!new ConfigHandler().isMechanicBonusMalusEnabled())
-					{
-						return;
 					}
 					List<Bypass.Permission> list = new ArrayList<Bypass.Permission>(EnumSet.allOf(Bypass.Permission.class));
 					for(Bypass.Permission ept : list)
 					{
-						if(!getBonusMalus().isRegistered(ept.toString().toLowerCase()))
+						if(!getBonusMalus().isRegistered(pluginName.toLowerCase()+":"+ept.toString().toLowerCase()))
 						{
 							BonusMalusType bmt = null;
 							switch(ept)
 							{
 							case SHOP_CREATION:
-								bmt = BonusMalusType.UP; break;
+							case SHOP_GUI_BYPASS:
+							case SHOP_LOG_OTHERPLAYER:								
+							case SHOPPING_LOG_OTHERPLAYER:
+								bmt = BonusMalusType.UP;
+								break;
 							}
 							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
 							getBonusMalus().register(
 									pluginName.toLowerCase()+":"+ept.toString().toLowerCase(),
 									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
 									true,
-									bmt, MultiplicationCalculationType.MULTIPLICATION,
+									bmt,
 									lar.toArray(new String[lar.size()]));
 						}
 					}
 					List<Bypass.CountPermission> list2 = new ArrayList<Bypass.CountPermission>(EnumSet.allOf(Bypass.CountPermission.class));
 					for(Bypass.CountPermission ept : list2)
 					{
-						if(!getBonusMalus().isRegistered(ept.toString().toLowerCase()))
+						if(!getBonusMalus().isRegistered(pluginName.toLowerCase()+":"+ept.toString().toLowerCase()))
 						{
 							BonusMalusType bmt = null;
 							switch(ept)
 							{
 							case SHOP_CREATION_AMOUNT_:
+							case SHOP_ITEMSTORAGE_AMOUNT_:
 								bmt = BonusMalusType.UP;
 								break;
 							}
@@ -691,12 +700,36 @@ public class SaLE extends JavaPlugin
 									ept.getBonusMalus(),
 									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
 									false,
-									bmt, MultiplicationCalculationType.MULTIPLICATION,
+									bmt,
 									lar.toArray(new String[lar.size()]));
 						}
 					}
-					//TODO BonusMalus Class
-				}*/
+					List<BoniMali> list3 = new ArrayList<BoniMali>(EnumSet.allOf(BoniMali.class));
+					for(BoniMali ept : list3)
+					{
+						if(!getBonusMalus().isRegistered(pluginName.toLowerCase()+":"+ept.toString().toLowerCase()))
+						{
+							BonusMalusType bmt = null;
+							switch(ept)
+							{
+							case COST_ADDING_STORAGE:
+								bmt = BonusMalusType.UP;
+								break;
+							case SHOP_BUYING_TAX:
+							case SHOP_SELLING_TAX:
+								bmt = BonusMalusType.DOWN;
+								break;
+							}
+							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
+							getBonusMalus().register(
+									ept.getBonusMalus(),
+									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
+									false,
+									bmt,
+									lar.toArray(new String[lar.size()]));
+						}
+					}
+				}
 			}
         }.runTaskTimer(plugin, 20L, 20*2);
 	}

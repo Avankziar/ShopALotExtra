@@ -15,6 +15,7 @@ import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
+import main.java.me.avankziar.sale.spigot.permission.BoniMali;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
 public class YamlManager
@@ -233,6 +234,9 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"dollar;1000.0",
 				"token;99.0"}));
+		configSpigotKeys.put("SignShop.ForbiddenWorld"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"hubs", "spawns"}));
 		configSpigotKeys.put("SignShop.DiscountTimePattern"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"yyyy.MM.dd.HH:mm:ss"}));
@@ -635,6 +639,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast &f%amount% &eItems aus dem Shop entfernt. Zz.: &r%now%",
 						"&eYou have removed &f%amount% &eItems from the store. Attn: &r%now%"}));
+		languageKeys.put("SignHandler.ForbiddenWorld", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Welt darfst du keine Signshop erstellt.",
+						"&cIn this world you may not create a signshop."}));
 		languageKeys.put("GuiHandler.InfoLore.Owner", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEigentümer: &f",
@@ -970,6 +978,36 @@ public class YamlManager
 						"&eerstellen zu können.",
 						"&ePermission, which allows",
 						"&eto create SchilderShop."}));
+		bmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eShop-Adminstrationbypass",
+						"&eShop administration bypass"}));
+		bmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePermission, welche spezifische",
+						"&eAdministrative Rechte gibt.",
+						"&ePermission, which gives specific",
+						"&eadministrative rights."}));
+		bmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eShopLog andere Spieler Einsichtrecht",
+						"&eShopLog other players right of inspection"}));
+		bmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePermission, welche erlaubt von anderen",
+						"&eSpieler die Shoplog einzusehen.",
+						"&ePermission, which allows other",
+						"&eplayers to view the shoplog."}));
+		bmlanguageKeys.put(Bypass.Permission.SHOPPING_LOG_OTHERPLAYER.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eShoppingLog andere Spieler Einsichtrecht",
+						"&eShoppingLog other players right of inspection"}));
+		bmlanguageKeys.put(Bypass.Permission.SHOPPING_LOG_OTHERPLAYER.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePermission, welche erlaubt von anderen",
+						"&eSpieler die Shoppinglog einzusehen.",
+						"&ePermission, which allows other",
+						"&eplayers to view the shoppinglog."}));
 		bmlanguageKeys.put(Bypass.CountPermission.SHOP_CREATION_AMOUNT_.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eAnzahl zu erstellende Shops",
@@ -980,6 +1018,46 @@ public class YamlManager
 						"&ezu erstellender definiert.",
 						"&eCounting mission, which defines",
 						"&ethe number to be created."}));
+		bmlanguageKeys.put(Bypass.CountPermission.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eGröße des Shoplagerraums",
+						"&eShop storageroom size"}));
+		bmlanguageKeys.put(Bypass.CountPermission.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eZählpermission, welche die Größe",
+						"&edes Shoplagerraums definiert.",
+						"&eCounting mission, which defines the",
+						"&esize of the shopstoreroom."}));
+		bmlanguageKeys.put(BoniMali.COST_ADDING_STORAGE.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eKosten für die Vergrößerung des Shoplagerraums",
+						"&eCosts for the enlargement of the store storage room"}));
+		bmlanguageKeys.put(BoniMali.COST_ADDING_STORAGE.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eZählpermission, welche die Kosten für die",
+						"&eVergrößerung des Shoplagerraums definiert.",
+						"&eCount mission that defines the cost",
+						"&eof increasing the store storage space."}));
+		bmlanguageKeys.put(BoniMali.SHOP_BUYING_TAX.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eProzentuale Kaufsteuer",
+						"&ePercentage buy tax"}));
+		bmlanguageKeys.put(BoniMali.SHOP_BUYING_TAX.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eZählpermission, welche die prozentualen Kaufsteuer",
+						"&edes Shops definiert. Zählt für Shopeigentümer.",
+						"&eCounting mission, which defines the percentage",
+						"&ebuy tax of the shop. Counts for shop owner."}));
+		bmlanguageKeys.put(BoniMali.SHOP_SELLING_TAX.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eProzentuale Verkaufsteuer",
+						"&ePercentage sell tax"}));
+		bmlanguageKeys.put(BoniMali.SHOP_SELLING_TAX.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eZählpermission, welche die prozentualen Verkaufsteuer",
+						"&edes Shops definiert. Zählt für Shopeigentümer.",
+						"&eCounting mission, which defines the percentage",
+						"&esell tax of the shop. Counts for shop owner."}));
 	}
 	
 	public void initMaterialLanguage() //INFO:MaterialLanguages

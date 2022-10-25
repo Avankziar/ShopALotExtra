@@ -48,7 +48,11 @@ public class SignChangeListener implements Listener
 			return;
 		}
 		Player player = event.getPlayer();
-		//TODO Shop Welt ausschließbar machen per config
+		if(plugin.getYamlHandler().getConfig().getStringList("SignShop.ForbiddenWorld").contains(event.getBlock().getWorld().getName()))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ForbiddenWorld")));
+			return;
+		}
 		if(!BonusMalusPermission.hasPermission(player, Bypass.Permission.SHOP_CREATION))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));

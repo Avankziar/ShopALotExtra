@@ -37,6 +37,7 @@ import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.ShopAccessType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
+import main.java.me.avankziar.sale.spigot.permission.BoniMali;
 import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
@@ -252,7 +253,9 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		List<String> costPerOne = plugin.getYamlHandler().getConfig().getStringList("SignShop.CostToAdd1Storage");
+		List<String> costPerOne = plugin.getYamlHandler().getConfig().get("SignShop.CostToAdd"+amount+"Storage") != null 
+				? plugin.getYamlHandler().getConfig().getStringList("SignShop.CostToAdd"+amount+"Storage")
+				: plugin.getYamlHandler().getConfig().getStringList("SignShop.CostToAdd1Storage");
 		long maxStorage = ssh.getItemStorageTotal();
 		long maxPossibleStorage = (long) BonusMalusPermission.getPermissionCount(player, Bypass.CountPermission.SHOP_ITEMSTORAGE_AMOUNT_);
 		if(maxStorage >= maxPossibleStorage)
@@ -290,6 +293,10 @@ public class AdminstrationFunctionHandler
 				return;
 			}
 			double d = Double.parseDouble(split[1]);
+			if(plugin.getBonusMalus() != null)
+			{
+				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, BoniMali.COST_ADDING_STORAGE.getBonusMalus());
+			}
 			moneymap.put(ec, d);
 		}
 		String category = plugin.getYamlHandler().getLang().getString("Economy.AddStorage.Category");
