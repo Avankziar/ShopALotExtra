@@ -624,10 +624,10 @@ public class SaLE extends JavaPlugin
 		                            		 main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus.class);
 				    if(rsp == null) 
 				    {
-				    	//Check up to 20 seconds after the start, to connect with the provider
 				    	i++;
 				        return;
 				    }
+				    log.info(pluginName + " detected InterfaceHub >>> BonusMalus.class is consumed!");
 				    bonusMalusConsumer = rsp.getProvider();
 				    cancel();
 				} catch(NoClassDefFoundError e)
@@ -640,6 +640,10 @@ public class SaLE extends JavaPlugin
 					{
 						return;
 					}
+					int cmd = 0;
+					int bperm = 0;
+					int cperm = 0;
+					int bm = 0;
 					for(BaseConstructor bc : getCommandHelpList())
 					{
 						if(!bc.isPutUpCmdPermToBonusMalusSystem())
@@ -648,6 +652,7 @@ public class SaLE extends JavaPlugin
 						}
 						if(getBonusMalus().isRegistered(pluginName.toLowerCase()+":"+bc.getPath()))
 						{
+							cmd++;
 							continue;
 						}
 						String[] ex = {plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Explanation")};
@@ -657,6 +662,7 @@ public class SaLE extends JavaPlugin
 								true,
 								BonusMalusType.UP,
 								ex);
+						cmd++;
 					}
 					List<Bypass.Permission> list = new ArrayList<Bypass.Permission>(EnumSet.allOf(Bypass.Permission.class));
 					for(Bypass.Permission ept : list)
@@ -681,6 +687,7 @@ public class SaLE extends JavaPlugin
 									bmt,
 									lar.toArray(new String[lar.size()]));
 						}
+						bperm++;
 					}
 					List<Bypass.CountPermission> list2 = new ArrayList<Bypass.CountPermission>(EnumSet.allOf(Bypass.CountPermission.class));
 					for(Bypass.CountPermission ept : list2)
@@ -703,6 +710,7 @@ public class SaLE extends JavaPlugin
 									bmt,
 									lar.toArray(new String[lar.size()]));
 						}
+						cperm++;
 					}
 					List<BoniMali> list3 = new ArrayList<BoniMali>(EnumSet.allOf(BoniMali.class));
 					for(BoniMali ept : list3)
@@ -728,7 +736,13 @@ public class SaLE extends JavaPlugin
 									bmt,
 									lar.toArray(new String[lar.size()]));
 						}
+						bm++;
 					}
+					log.info("===Registered BonusMalus===");
+					log.info(">> Commands: "+cmd);
+					log.info(">> BypassPerm: "+bperm);
+					log.info(">> CountPerm: "+cperm);
+					log.info(">> Other BoniMali: "+bm);
 				}
 			}
         }.runTaskTimer(plugin, 20L, 20*2);
