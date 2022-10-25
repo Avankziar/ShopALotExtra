@@ -22,7 +22,7 @@ import main.java.me.avankziar.sale.spigot.objects.SignShop;
 public class SignHandler
 {
 	private static SaLE plugin = SaLE.getPlugin();
-	private static ArrayList<UUID> bypassToggle = new ArrayList<>();
+	public static ArrayList<String> bypassToggle = new ArrayList<>();
 	
 	public static Sign getSign(SignShop ssh)
 	{
@@ -260,9 +260,10 @@ public class SignHandler
 		return ssh != null ? ssh.getOwner().toString().equals(uuid.toString()) : false;
 	}
 	
+	
 	public static boolean isBypassToggle(UUID uuid)
 	{
-		return bypassToggle.contains(uuid);
+		return bypassToggle.contains(uuid.toString());
 	}
 	
 	public static boolean isListed(ListedType listedType, SignShop ssh, UUID uuid)

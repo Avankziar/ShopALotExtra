@@ -23,6 +23,7 @@ public class ShoppingLog implements MysqlHandable
 	}
 	
 	private int id;
+	private int signShopId;
 	private UUID owner; //shoppinglog owner
 	private long dateTime;
 	private ItemStack itemStack;
@@ -36,7 +37,7 @@ public class ShoppingLog implements MysqlHandable
 	
 	public ShoppingLog(int id, UUID owner, long dateTime,
 			ItemStack itemStack, String displayName, Material material,
-			WayType wayType, double amount, int itemAmount)
+			WayType wayType, double amount, int itemAmount, int signShopId)
 	{
 		setId(id);
 		setDateTime(dateTime);
@@ -46,11 +47,12 @@ public class ShoppingLog implements MysqlHandable
 		setWayType(wayType);
 		setAmount(itemAmount);
 		setItemAmount(itemAmount);
+		setSignShopId(signShopId);
 	}
 	
 	public ShoppingLog(int id, UUID owner, long dateTime,
 			String itemStack, String displayName, String material,
-			String wayType, double amount, int itemAmount)
+			String wayType, double amount, int itemAmount, int signShopId)
 	{
 		setId(id);
 		setDateTime(dateTime);
@@ -60,6 +62,7 @@ public class ShoppingLog implements MysqlHandable
 		setWayType(WayType.valueOf(wayType));
 		setAmount(itemAmount);
 		setItemAmount(itemAmount);
+		setSignShopId(signShopId);
 	}
 
 	public int getId()
@@ -70,6 +73,16 @@ public class ShoppingLog implements MysqlHandable
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+
+	public int getSignShopId()
+	{
+		return signShopId;
+	}
+
+	public void setSignShopId(int signShopId)
+	{
+		this.signShopId = signShopId;
 	}
 
 	public UUID getOwner()
@@ -160,11 +173,11 @@ public class ShoppingLog implements MysqlHandable
 			String sql = "INSERT INTO `" + tablename
 					+ "`(`player_uuid`, `date_time`, `itemstack_base64`, `display_name`, "
 					+ "`itemstack_base64`, `display_name`, `material`, "
-					+ "`way_type`, `amount double`, `item_amount`) " 
+					+ "`way_type`, `amount double`, `item_amount`, `sign_shop_id`) " 
 					+ "VALUES("
 					+ "?, ?, ?, ?, "
 					+ "?, ?, ?, "
-					+ "?, ?, ?"
+					+ "?, ?, ?, ?"
 					+ ")";
 			PreparedStatement ps = conn.prepareStatement(sql);
 	        ps.setString(1, getOwner().toString());
@@ -175,6 +188,7 @@ public class ShoppingLog implements MysqlHandable
 	        ps.setString(6, getWayType().toString());
 	        ps.setDouble(7, getAmount());
 	        ps.setLong(8, getItemAmount());
+	        ps.setInt(9, getSignShopId());
 	        
 	        int i = ps.executeUpdate();
 	        MysqlHandler.addRows(MysqlHandler.QueryType.INSERT, i);
@@ -194,7 +208,7 @@ public class ShoppingLog implements MysqlHandable
 			String sql = "UPDATE `" + tablename
 				+ "` SET `player_uuid` = ?, `date_time` = ?, `itemstack_base64` = ?, `display_name` = ?, "
 				+ "`itemstack_base64` = ?, `display_name` = ?, `material` = ?, "
-				+ "`way_type` = ?, `amount double` = ?, `item_amount` = ?" 
+				+ "`way_type` = ?, `amount double` = ?, `item_amount` = ?, `sign_shop_id` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, getOwner().toString());
@@ -205,7 +219,8 @@ public class ShoppingLog implements MysqlHandable
 	        ps.setString(6, getWayType().toString());
 	        ps.setDouble(7, getAmount());
 	        ps.setInt(8, getItemAmount());
-			int i = 9;
+	        ps.setInt(9, getSignShopId());
+			int i = 10;
 			for(Object o : whereObject)
 			{
 				ps.setObject(i, o);
@@ -250,7 +265,8 @@ public class ShoppingLog implements MysqlHandable
 						rs.getString("material"),
 						rs.getString("way_type"),
 						rs.getDouble("amount"),
-						rs.getInt("item_amount")));
+						rs.getInt("item_amount"),
+						rs.getInt("sign_shop_id")));
 			}
 			return al;
 		} catch (SQLException e)

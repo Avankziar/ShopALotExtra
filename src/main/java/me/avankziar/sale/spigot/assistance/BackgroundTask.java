@@ -413,7 +413,8 @@ public class BackgroundTask
 								is, is.getItemMeta().hasDisplayName() 
 								? is.getItemMeta().getDisplayName() 
 								: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()),
-							is.getType(), WayType.BUY, bcostTotal, (int) bsamo);
+							is.getType(), WayType.BUY, bcostTotal, (int) bsamo,
+							client, shopOwner);
 						plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPLOG, ssl);
 					}
 					if(ssamo > 0)
@@ -422,7 +423,8 @@ public class BackgroundTask
 								is, is.getItemMeta().hasDisplayName() 
 								? is.getItemMeta().getDisplayName() 
 								: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()),
-							is.getType(), WayType.SELL, scostTotal, (int) ssamo);
+							is.getType(), WayType.SELL, scostTotal, (int) ssamo,
+							client, shopOwner);
 						plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPLOG, ssl);
 					}
 					SignShopDailyLog ssdl = (SignShopDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOPDAILYLOG,

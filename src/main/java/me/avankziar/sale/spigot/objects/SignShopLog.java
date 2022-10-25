@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
@@ -30,11 +31,13 @@ public class SignShopLog implements MysqlHandable
 	private WayType wayType; //If it was from the client buyed or selled
 	private double amount;
 	private int itemAmount;
+	private UUID client;
+	private UUID player;
 	
 	public SignShopLog(){}
 	
 	public SignShopLog(int id, int signShopId, long dateTime, ItemStack itemStack, String displayName, Material material,
-			WayType wayType, double amount, int itemAmount)
+			WayType wayType, double amount, int itemAmount, UUID client, UUID player)
 	{
 		setId(id);
 		setSignShopId(signShopId);
@@ -45,10 +48,12 @@ public class SignShopLog implements MysqlHandable
 		setWayType(wayType);
 		setAmount(amount);
 		setItemAmount(itemAmount);
+		setClient(client);
+		setPlayer(player);
 	}
 	
 	private SignShopLog(int id, int signShopId, long dateTime, String itemStack, String displayName, String material,
-			String wayType, double amount, int itemAmount)
+			String wayType, double amount, int itemAmount, UUID client, UUID player)
 	{
 		setId(id);
 		setSignShopId(signShopId);
@@ -59,6 +64,8 @@ public class SignShopLog implements MysqlHandable
 		setWayType(WayType.valueOf(wayType));
 		setAmount(amount);
 		setItemAmount(itemAmount);
+		setClient(client);
+		setPlayer(player);
 	}
 
 	public int getId()
@@ -151,6 +158,26 @@ public class SignShopLog implements MysqlHandable
 		this.itemAmount = itemAmount;
 	}
 	
+	public UUID getClient()
+	{
+		return client;
+	}
+
+	public void setClient(UUID client)
+	{
+		this.client = client;
+	}
+
+	public UUID getPlayer()
+	{
+		return player;
+	}
+
+	public void setPlayer(UUID player)
+	{
+		this.player = player;
+	}
+
 	@Override
 	public boolean create(Connection conn, String tablename)
 	{
@@ -159,11 +186,11 @@ public class SignShopLog implements MysqlHandable
 			String sql = "INSERT INTO `" + tablename
 					+ "`(`sign_shop_id`, `date_time`, `itemstack_base64`, `display_name`, "
 					+ "`itemstack_base64`, `display_name`, `material`, "
-					+ "`way_type`, `amount double`, `item_amount`) " 
+					+ "`way_type`, `amount double`, `item_amount`, `client`, `player`) " 
 					+ "VALUES("
 					+ "?, ?, ?, ?, "
 					+ "?, ?, ?, "
-					+ "?, ?, ?"
+					+ "?, ?, ?, ?, ?"
 					+ ")";
 			PreparedStatement ps = conn.prepareStatement(sql);
 	        ps.setInt(1, getSignShopId());
@@ -174,7 +201,8 @@ public class SignShopLog implements MysqlHandable
 	        ps.setString(6, getWayType().toString());
 	        ps.setDouble(7, getAmount());
 	        ps.setLong(8, getItemAmount());
-	        
+	        ps.setString(9, getClient().toString());
+	        ps.setString(10, getPlayer().toString());
 	        int i = ps.executeUpdate();
 	        MysqlHandler.addRows(MysqlHandler.QueryType.INSERT, i);
 	        return true;
@@ -193,7 +221,7 @@ public class SignShopLog implements MysqlHandable
 			String sql = "UPDATE `" + tablename
 				+ "` SET `sign_shop_id` = ?, `date_time` = ?, `itemstack_base64` = ?, `display_name` = ?, "
 				+ "`itemstack_base64` = ?, `display_name` = ?, `material` = ?, "
-				+ "`way_type` = ?, `amount double` = ?, `item_amount` = ?" 
+				+ "`way_type` = ?, `amount double` = ?, `item_amount` = ?, `client` = ?, `player` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, getSignShopId());
@@ -204,7 +232,9 @@ public class SignShopLog implements MysqlHandable
 	        ps.setString(6, getWayType().toString());
 	        ps.setDouble(7, getAmount());
 	        ps.setInt(8, getItemAmount());
-			int i = 9;
+	        ps.setString(9, getClient().toString());
+	        ps.setString(10, getPlayer().toString());
+			int i = 11;
 			for(Object o : whereObject)
 			{
 				ps.setObject(i, o);
@@ -248,7 +278,9 @@ public class SignShopLog implements MysqlHandable
 						rs.getString("material"),
 						rs.getString("way_type"),
 						rs.getDouble("amount"),
-						rs.getInt("item_amount")));
+						rs.getInt("item_amount"),
+						UUID.fromString(rs.getString("client")),
+						UUID.fromString(rs.getString("player"))));
 			}
 			return al;
 		} catch (SQLException e)

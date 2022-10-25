@@ -421,7 +421,7 @@ public class AdminstrationFunctionHandler
 	private static void openShopLog(Player player, SignShop ssh)
 	{
 		player.closeInventory();
-		Bukkit.dispatchCommand(player, CommandSuggest.get(CommandExecuteType.SHOPLOG)+" "+ssh.getSignShopName());
+		Bukkit.dispatchCommand(player, CommandSuggest.get(CommandExecuteType.SALE_SHOP_LOG)+" "+ssh.getSignShopName());
 		return;
 	}
 	

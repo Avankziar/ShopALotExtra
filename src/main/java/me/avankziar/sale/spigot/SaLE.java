@@ -34,6 +34,15 @@ import main.java.me.avankziar.sale.spigot.assistance.BackgroundTask;
 import main.java.me.avankziar.sale.spigot.assistance.Utility;
 import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
 import main.java.me.avankziar.sale.spigot.cmd.TabCompletion;
+import main.java.me.avankziar.sale.spigot.cmd.sale.ARGDelete;
+import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShop;
+import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShopping;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARGBreakToggle;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARGSDailyLog;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARGSLog;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARGToggle;
+import main.java.me.avankziar.sale.spigot.cmd.shopping.ARGSPLog;
+import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandConstructor;
@@ -192,10 +201,35 @@ public class SaLE extends JavaPlugin
 		
 		TabCompletion tab = new TabCompletion(plugin);
 		
-		CommandConstructor base = new CommandConstructor(CommandExecuteType.SALE, "base", false);
-		registerCommand(base.getPath(), base.getName());
-		getCommand(base.getName()).setExecutor(new SaLECommandExecutor(plugin, base));
-		getCommand(base.getName()).setTabCompleter(tab);
+		ArgumentConstructor delete = new ArgumentConstructor(CommandExecuteType.SALE_DELETE, "sale_delete", 0, 1, 99, false, null);
+		new ARGDelete(plugin, delete);
+		
+		ArgumentConstructor breaktoggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_BREAKTOGGLE, "sale_shop_breaktoggle", 1, 1, 1, false, null);
+		new ARGBreakToggle(plugin, breaktoggle);
+		ArgumentConstructor toggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_TOGGLE, "sale_shop_toggle", 1, 1, 1, false, null);
+		new ARGToggle(plugin, toggle);
+		ArgumentConstructor slog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_LOG, "sale_shop_log", 1, 1, 5, false, null);
+		new ARGSLog(plugin, slog);
+		ArgumentConstructor sdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_DAILYLOG, "sale_shop_dailylog", 1, 1, 5, false, null);
+		new ARGSDailyLog(plugin, sdailylog);
+		ArgumentConstructor shop = new ArgumentConstructor(CommandExecuteType.SALE_SHOP, "sale_shop", 0, 0, 0, false, null,
+				breaktoggle, toggle, slog, sdailylog);
+		new ARGShop(plugin, shop);
+		
+		
+		ArgumentConstructor splog = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING_LOG, "sale_shopping_log", 1, 1, 5, false, null);
+		new ARGSPLog(plugin, splog);
+		ArgumentConstructor shopping = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING, "sale_shopping", 0, 0, 0, false, null,
+				splog);
+		new ARGShopping(plugin, shopping);
+		
+		
+		
+		CommandConstructor sale = new CommandConstructor(CommandExecuteType.SALE, "sale", false,
+				delete, shop);
+		registerCommand(sale.getPath(), sale.getName());
+		getCommand(sale.getName()).setExecutor(new SaLECommandExecutor(plugin, sale));
+		getCommand(sale.getName()).setTabCompleter(tab);
 	}
 	
 	private void setupBypassPerm()

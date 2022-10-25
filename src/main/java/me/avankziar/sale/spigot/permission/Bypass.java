@@ -9,7 +9,9 @@ public class Bypass
 	public enum Permission
 	{
 		SHOP_CREATION,
-		SHOP_GUI_BYPASS;
+		SHOP_GUI_BYPASS,
+		SHOP_LOG_OTHERPLAYER,
+		SHOPPING_LOG_OTHERPLAYER;
 		
 		public String getBonusMalus()
 		{

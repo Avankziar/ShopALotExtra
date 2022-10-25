@@ -266,7 +266,8 @@ public class ShopFunctionHandler
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
 		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), System.currentTimeMillis(),
-				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.BUY, samo*d, (int) samo);
+				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.BUY, samo*d, (int) samo,
+				ssh.getId());
 		plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGLOG, sl);
 		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SHOPPINGDAILYLOG,
 				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId(), date);
@@ -463,7 +464,8 @@ public class ShopFunctionHandler
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
 		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), System.currentTimeMillis(),
-				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.SELL, samo*d, (int) samo);
+				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.SELL, samo*d, (int) samo,
+				ssh.getId());
 		plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGLOG, sl);
 		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SHOPPINGDAILYLOG,
 				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId(), date);

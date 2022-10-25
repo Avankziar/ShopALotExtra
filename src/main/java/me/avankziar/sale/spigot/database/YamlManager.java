@@ -260,29 +260,107 @@ public class YamlManager
 		configSpigotKeys.put("SignShop.TransactionSummary.ShopLop.RunTimerInMinutes"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				15}));
+		configSpigotKeys.put("SignShop.ShopLog.TimePattern"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"dd-MM-yyyy/HH:mm"}));
+		configSpigotKeys.put("SignShop.ShopDailyLog.TimePattern"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"dd-MM-yyyy"}));
 	}
 	
 	//INFO:Commands
 	public void initCommands()
 	{
 		comBypass();
-		commandsInput("base", "base", "perm.command.perm", 
-				"/base [pagenumber]", "/base ", false,
-				"&c/base &f| Infoseite für alle Befehle.",
-				"&c/base &f| Info page for all commands.",
-				"&bBefehlsrecht für &f/base",
-				"&bCommandright for &f/base",
-				"&eBasisbefehl für das BaseTemplate Plugin.",
-				"&eGroundcommand for the BaseTemplate Plugin.");
-		String basePermission = "perm.base.";
-		argumentInput("base_argument", "argument", basePermission,
-				"/base argument <id>", "/econ deletelog ", false,
-				"&c/base argument &f| Ein Subbefehl",
-				"&c/base argument &f| A Subcommand.",
-				"&bBefehlsrecht für &f/base argument",
-				"&bCommandright for &f/base argument",
-				"&eBasisbefehl für das BaseTemplate Plugin.",
-				"&eGroundcommand for the BaseTemplate Plugin.");
+		commandsInput("sale", "sale", "sale.cmd.sale", 
+				"/sale [pagenumber]", "/sale ", false,
+				"&c/sale &f| Infoseite für alle Befehle.",
+				"&c/sale &f| Info page for all commands.",
+				"&bBefehlsrecht für &f/sale",
+				"&bCommandright for &f/sale",
+				"&eBasisbefehl für das Sale Plugin.",
+				"&eGroundcommand for the Sale Plugin.");
+		String basePermission = "sale.cmd.";
+		argumentInput("sale_delete", "delete", basePermission,
+				"/sale delete <xxx:yyy...>", "/sale delete ", false,
+				"&c/sale delete <xxx:yyy...> &f| Löscht alle Shops nach den Parameter(xxx). Param. sind id, player, server, world, item, radius.",
+				"&c/sale delete <xxx:yyy...> &f| Deletes all stores after the parameter(xxx). Param. are id, player, server, world, item, radius.",
+				"&bBefehlsrecht für &f/sale delete",
+				"&bCommandright for &f/sale delete",
+				"&eBefehl zum Löschen von Shops über Parameterangaben.",
+				"&eCommand to delete stores via parameter specifications.");
+		argumentInput("sale_shop", "shop", basePermission,
+				"/sale shop", "/sale shop ", false,
+				"&c/sale shop &f| Zwischenbefehl.",
+				"&c/sale shop &f| Intermediate command.",
+				"&bBefehlsrecht für &f/sale shop",
+				"&bCommandright for &f/sale shop",
+				"&eBefehl für den Zwischenbefehl.",
+				"&eCommand for the intermediate command.");
+		argumentInput("sale_shop_breaktoggle", "breaktoggle", basePermission,
+				"/sale shop breaktoggle", "/sale shop breaktoggle ", false,
+				"&c/sale shop breaktoggle &f| Togglet ob man Shops direkt löschen durch das Abbauen kann.",
+				"&c/sale shop breaktoggle &f| Togglet whether you can delete stores directly by dismantling.",
+				"&bBefehlsrecht für &f/sale shop breaktoggle",
+				"&bCommandright for &f/sale shop breaktoggle",
+				"&eBefehl für die direkte",
+				"&eCommand for the intermediate command.");
+		argumentInput("sale_shop_toggle", "toggle", basePermission,
+				"/sale shop toggle", "/sale shop toggle ", false,
+				"&c/sale shop toggle &f| Togglet ob man fremde Shops durch das Gui administrieren kann.",
+				"&c/sale shop toggle &f| Toggle whether you can administrate foreign stores through the gui.",
+				"&bBefehlsrecht für &f/sale shop toggle",
+				"&bCommandright for &f/sale shop toggle",
+				"&eBefehl zum togglet ob man fremde Shops durch das Gui administrieren kann.",
+				"&eCommand to toggle whether you can administrate foreign stores through the gui.");
+		argumentInput("sale_shop_toggle", "toggle", basePermission,
+				"/sale shop toggle", "/sale shop toggle ", false,
+				"&c/sale shop toggle &f| Togglet ob man fremde Shops durch das Gui administrieren kann.",
+				"&c/sale shop toggle &f| Toggle whether you can administrate foreign stores through the gui.",
+				"&bBefehlsrecht für &f/sale shop toggle",
+				"&bCommandright for &f/sale shop toggle",
+				"&eBefehl zum togglet ob man fremde Shops durch das Gui administrieren kann.",
+				"&eCommand to toggle whether you can administrate foreign stores through the gui.");
+		argumentInput("sale_shop_log", "log", basePermission+".shop",
+				"/sale shop log [number] [shopid] [player] [boolean]", "/sale shop log", false,
+				"&c/sale shop log [Zahl] [Shopid] [Spieler] [boolean] &f| Zeigt die Shop Aktivitäten des Eigentümer an. True für Buy.",
+				"&c/sale shop log [number] [shopid] [player] [boolean] &f| Displays the shop activities of the owner. True for Buy.",
+				"&bBefehlsrecht für &f/sale shop log",
+				"&bCommandright for &f/sale shop log",
+				"&eBefehl zeigt die Shop Aktivitäten des Eigentümer an.",
+				"&eCommand for displays the shop activities of the owner.");
+		argumentInput("sale_shop_dailylog", "dailylog", basePermission+".shop",
+				"/sale shop dailylog [number] [shopid] [player]", "/sale shop dailylog", false,
+				"&c/sale shop dailylog [Zahl] [Shopid] [Spieler] &f| Zeigt die Shop Tagesaktivitäten des Eigentümer an.",
+				"&c/sale shop dailylog [number] [shopid] [player] &f| Displays the shop dailyactivities of the owner.",
+				"&bBefehlsrecht für &f/sale shop dailylog",
+				"&bCommandright for &f/sale shop dailylog",
+				"&eBefehl zeigt die Shop Aktivitäten des Eigentümer an.",
+				"&eCommand for displays the shop activities of the owner.");
+		argumentInput("sale_shopping", "shopping", basePermission,
+				"/sale shopping", "/sale shopping ", false,
+				"&c/sale shopping &f| Zwischenbefehl.",
+				"&c/sale shopping &f| Intermediate command.",
+				"&bBefehlsrecht für &f/sale shopping",
+				"&bCommandright for &f/sale shopping",
+				"&eBefehl für den Zwischenbefehl.",
+				"&eCommand for the intermediate command.");
+		argumentInput("sale_shopping_log", "log", basePermission+".shopping",
+				"/sale shopping log [number] [player] [boolean]", "/sale shopping log", false,
+				"&c/sale shopping [Zahl] [Spieler] [boolean] &f| Zeigt die Shopping Aktivitäten des Spielers an. True für Buy.",
+				"&c/sale shopping [number] [player] [boolean] &f| Displays the shopping activities of the player. True for Buy.",
+				"&bBefehlsrecht für &f/sale shopping log",
+				"&bCommandright for &f/sale shopping log",
+				"&eBefehl zeigt die Shopping Aktivitäten des Spielers an.",
+				"&eCommand for displays the shopping activities of the player.");
+		argumentInput("sale_shopping_dailylog", "dailylog", basePermission+".shopping",
+				"/sale shopping dailylog [number] [player]", "/sale shopping dailylog", false,
+				"&c/sale shopping dailylog [Zahl] [Spieler] &f| Zeigt die Shopping Tagesaktivitäten des Spielers an.",
+				"&c/sale shopping dailylog [number] [player] &f| Displays the shopping dailyactivities of the player.",
+				"&bBefehlsrecht für &f/sale shopping dailylog",
+				"&bCommandright for &f/sale shopping dailylog",
+				"&eBefehl zeigt die Shop Aktivitäten des Eigentümer an.",
+				"&eCommand for displays the shop activities of the owner.");
 	}
 	
 	private void comBypass() //INFO:ComBypass
@@ -319,9 +397,6 @@ public class YamlManager
 		commandsKeys.put(path+".Suggestion"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				suggestion}));
-		commandsKeys.put(path+".PutUpCommandPermToBonusMalusSystem"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				putUpCmdPermToBonusMalusSystem}));
 		commandsKeys.put(path+".CommandString"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				commandString}));
@@ -329,11 +404,14 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				helpInfoGerman,
 				helpInfoEnglish}));
-		commandsKeys.put(path+".Displayname"
+		commandsKeys.put(path+".BonusMalusSystem.PutUpCommandPerm"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				putUpCmdPermToBonusMalusSystem}));
+		commandsKeys.put(path+".BonusMalusSystem.Displayname"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				dnGerman,
 				dnEnglish}));
-		commandsKeys.put(path+".Explanation"
+		commandsKeys.put(path+".BonusMalusSystem.Explanation"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				exGerman,
 				exEnglish}));
@@ -354,9 +432,6 @@ public class YamlManager
 		commandsKeys.put(path+".Suggestion"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				suggestion}));
-		commandsKeys.put(path+".PutUpCommandPermToBonusMalusSystem"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				putUpCmdPermToBonusMalusSystem}));
 		commandsKeys.put(path+".CommandString"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				commandString}));
@@ -364,11 +439,14 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				helpInfoGerman,
 				helpInfoEnglish}));
-		commandsKeys.put(path+".Displayname"
+		commandsKeys.put(path+".BonusMalusSystem.PutUpCommandPerm"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				putUpCmdPermToBonusMalusSystem}));
+		commandsKeys.put(path+".BonusMalusSystem.Displayname"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				dnGerman,
 				dnEnglish}));
-		commandsKeys.put(path+".Explanation"
+		commandsKeys.put(path+".BonusMalusSystem.Explanation"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				exGerman,
 				exEnglish}));
@@ -794,6 +872,58 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7[&aV&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%",
 						"&7[&aS&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%"}));
+		languageKeys.put("Cmd.OtherCmd",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cBitte nutze den Befehl mit einem weiteren Argument aus der Tabliste!",
+						"&cPlease use the command with another argument from the tab list!"}));
+		languageKeys.put("Cmd.Delete.NoFoundToDelete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cUnter den angegeben Parameter sind keine Shops gefunden worden!",
+						"&cNo stores have been found under the specified parameters!"}));
+		languageKeys.put("Cmd.Delete.Delete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast %shopamount% Shop gelöscht! &rVerlorene Items: %itemlost% | Gelöschte Logs: %log% | Gelöschte DailyLog: %dailylog% | Gelöschte Subs: %subs%",
+						"&eYou have deleted %shopamount% shops! &rLost Items: %itemlost% | Deleted Logs: %log% | Deleted DailyLog: %dailylog% | Deleted Subs: %subs%"}));
+		languageKeys.put("Cmd.BreakToggle.Active", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu kannst nun Shopschilder direkt abbauen!",
+						"&eYou can now take down ShopSigns directly!"}));
+		languageKeys.put("Cmd.BreakToggle.Deactive", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu kannst du nicht mehr Shopschilder direkt abbauen!",
+						"&eYou cannot take down store signs directly anymore!"}));
+		languageKeys.put("Cmd.Toggle.Active", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu kannst nun fremde Shopschilder administrieren!",
+						"&eYou can now administrate foreign shop signs!"}));
+		languageKeys.put("Cmd.Toggle.Deactive", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu kannst du nicht mehr fremde Shopschilder administrieren!",
+						"&eYou cannot administrate other shop signs anymore!"}));
+		languageKeys.put("Cmd.ShopLog.Buy", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7%time% [&#FF8800K&7]&e%player% &#FF8800>> &f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%",
+						"&7%time% [&#FF8800B&7]&e%player% &#FF8800>> &f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%"}));
+		languageKeys.put("Cmd.ShopLog.Sell", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7%time% [&aV&7]&e%player% &a>> &f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%",
+						"&7%time% [&aS&7]&e%player% &a>> &f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%"}));
+		languageKeys.put("Cmd.ShopDailyLog", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7%time% &e>> &f%shop% &e>> [&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| [&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
+						"&7%time% &e>> &f%shop% &e>> [&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| [&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
+		languageKeys.put("Cmd.ShoppingLog.Buy", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7%time% [&#FF8800K&7]&f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%",
+						"&7%time% [&#FF8800B&7]&f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%"}));
+		languageKeys.put("Cmd.ShoppingLog.Sell", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7%time% [&aV&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%",
+						"&7%time% [&aS&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%"}));
+		languageKeys.put("Cmd.ShoppingDailyLog", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7%time% &e>> [&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| [&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
+						"&7%time% &e>> [&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| [&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
 	}
 	
 	public void initBonusMalusLanguage() //INFO:BonusMalusLanguages

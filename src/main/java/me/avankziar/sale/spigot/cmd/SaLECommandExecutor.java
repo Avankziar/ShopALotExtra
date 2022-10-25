@@ -16,6 +16,8 @@ import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandConstructor;
+import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
+import main.java.me.avankziar.sale.spigot.cmdtree.CommandSuggest;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -51,11 +53,10 @@ public class SaLECommandExecutor implements CommandExecutor
 			{
 				if(!player.hasPermission(cc.getPermission()))
 				{
-					///Du hast dafür keine Rechte!
 					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return false;
 				}
-				baseCommands(player, Integer.parseInt(args[0])); //Base and Info Command
+				baseCommands(player, Integer.parseInt(args[0]));
 				return true;
 			}
 		} else if(args.length == 0)
@@ -68,7 +69,6 @@ public class SaLECommandExecutor implements CommandExecutor
 			Player player = (Player) sender;
 			if(!player.hasPermission(cc.getPermission()))
 			{
-				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
@@ -225,6 +225,43 @@ public class SaLECommandExecutor implements CommandExecutor
 			}
 			pages.add(msg1);
 		}
+		MSG.setExtra(pages);	
+		player.spigot().sendMessage(MSG);
+	}
+	
+	public static void pastNextPage(Player player,
+			int page, CommandExecuteType cet, String...objects)
+	{
+		String cmdstring = CommandSuggest.get(cet);
+		int i = page+1;
+		int j = page-1;
+		TextComponent MSG = ChatApi.tctl("");
+		List<BaseComponent> pages = new ArrayList<BaseComponent>();
+		if(page!=0)
+		{
+			TextComponent msg2 = ChatApi.tctl(
+					SaLE.getPlugin().getYamlHandler().getLang().getString("Past"));
+			String cmd = cmdstring+" "+String.valueOf(j);
+			for(String o : objects)
+			{
+				cmd += " "+o;
+			}
+			msg2.setClickEvent( new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
+			pages.add(msg2);
+		}
+		TextComponent msg1 = ChatApi.tctl(
+				SaLE.getPlugin().getYamlHandler().getLang().getString("Next"));
+		String cmd = cmdstring+" "+String.valueOf(i);
+		for(String o : objects)
+		{
+			cmd += " "+o;
+		}
+		msg1.setClickEvent( new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
+		if(pages.size()==1)
+		{
+			pages.add(ChatApi.tc(" | "));
+		}
+		pages.add(msg1);
 		MSG.setExtra(pages);	
 		player.spigot().sendMessage(MSG);
 	}

@@ -208,13 +208,15 @@ public class MysqlSetup
 		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.SIGNSHOPLOG.getValue()
 		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		+ " sign_shop_id int,"
+		+ " player_uuid text,"
 		+ " date_time BIGINT,"
 		+ " itemstack_base64 LONGTEXT,"
 		+ " display_name text,"
 		+ " material text,"
 		+ " way_type text,"
 		+ " amount double,"
-		+ " item_amount int);";
+		+ " item_amount int,"
+		+ " client text);";
 		baseSetup(data);
 		return true;
 	}
@@ -224,6 +226,7 @@ public class MysqlSetup
 		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.SIGNSHOPDAILYLOG.getValue()
 		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		+ " sign_shop_id int,"
+		+ " player_uuid text,"
 		+ " dates BIGINT,"
 		+ " buy_amount double,"
 		+ " sell_amount double,"
@@ -244,7 +247,8 @@ public class MysqlSetup
 		+ " material text,"
 		+ " way_type text,"
 		+ " amount double,"
-		+ " item_amount int);";
+		+ " item_amount int,"
+		+ " sign_shop_id int);";
 		baseSetup(data);
 		return true;
 	}

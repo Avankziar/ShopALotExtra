@@ -29,7 +29,7 @@ public class ArgumentConstructor extends BaseConstructor
     			getPlugin().getYamlHandler().getCommands().getString(path+".CommandString"),
     			getPlugin().getYamlHandler().getCommands().getString(path+".HelpInfo"),
     			canConsoleAccess,
-				getPlugin().getYamlHandler().getCommands().getBoolean(path+".PutUpCommandPermToBonusMalusSystem", false));
+				getPlugin().getYamlHandler().getCommands().getBoolean(path+".BonusMalusSystem.PutUpCommandPerm", false));
         this.minArgsConstructor = minArgs;
         this.maxArgsConstructor = maxArgs;
         this.minArgsTablist = minArgs;
@@ -74,7 +74,7 @@ public class ArgumentConstructor extends BaseConstructor
     			y.getString(path+".CommandString"),
     			y.getString(path+".HelpInfo"),
     			canConsoleAccess,
-				getPlugin().getYamlHandler().getCommands().getBoolean(path+".PutUpCommandPermToBonusMalusSystem", false));
+				getPlugin().getYamlHandler().getCommands().getBoolean(path+".BonusMalusSystem.PutUpCommandPerm", false));
         this.minArgsConstructor = minArgs;
         this.maxArgsConstructor = maxArgs;
         this.minArgsTablist = minArgs;

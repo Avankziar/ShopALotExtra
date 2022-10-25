@@ -1,0 +1,143 @@
+package main.java.me.avankziar.sale.spigot.cmd.shop;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import main.java.me.avankziar.ifh.general.assistance.ChatApi;
+import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
+import main.java.me.avankziar.ifh.spigot.economy.currency.EconomyCurrency;
+import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
+import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
+import main.java.me.avankziar.sale.spigot.assistance.Utility;
+import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
+import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
+import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
+import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
+import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.objects.SignShop;
+import main.java.me.avankziar.sale.spigot.objects.SignShopLog;
+import main.java.me.avankziar.sale.spigot.objects.SignShopLog.WayType;
+import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
+import main.java.me.avankziar.sale.spigot.permission.Bypass.Permission;
+
+public class ARGSLog extends ArgumentModule
+{
+	private SaLE plugin;
+	
+	public ARGSLog(SaLE plugin, ArgumentConstructor argumentConstructor)
+	{
+		super(argumentConstructor);
+		this.plugin = plugin;
+	}
+
+	//sale shop log [Zahl] [shopid] [Spieler] [waytype = true = buy]
+	@Override
+	public void run(CommandSender sender, String[] args) throws IOException
+	{
+		Player player = (Player) sender;
+		int page = 0;
+		int shopid = 0;
+		UUID otherplayer = player.getUniqueId();
+		WayType wt = null;
+		if(args.length >= 3 && MatchApi.isInteger(args[2]))
+		{
+			page = Integer.parseInt(args[2]);
+		}
+		ArrayList<String> pagination = new ArrayList<>();
+		if(args.length >= 4 && MatchApi.isInteger(args[3]))
+		{
+			shopid = Integer.parseInt(args[3]);
+			pagination.add(String.valueOf(shopid));
+		}
+		if(args.length >= 5)
+		{
+			if(args[4].equals(player.getName()) || BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+			{
+				UUID u = Utility.convertNameToUUID(args[4]);
+				if(u != null)
+				{
+					otherplayer = u;
+					pagination.add(args[4]);
+				}
+			}
+		}
+		if(args.length >= 6 && MatchApi.isBoolean(args[5]))
+		{
+			boolean b = Boolean.parseBoolean(args[5]);
+			wt = b ? WayType.BUY : WayType.SELL;
+			pagination.add(String.valueOf(args[5]));
+		}
+		ArrayList<SignShopLog> ssll;
+		if(wt != null && shopid == 0)
+		{
+			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(
+					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page, 10,
+					"`player_uuid` = ? AND `way_type` = ?", otherplayer.toString(), wt.toString()));
+		} else if(wt != null && shopid > 0)
+		{
+			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(
+					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page, 10,
+					"`player_uuid` = ? AND `way_type` = ? AND `sign_shop_id` = ?", otherplayer.toString(), wt.toString(), shopid));
+		} else if(wt == null && shopid > 0)
+		{
+			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(
+					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page, 10,
+					"`player_uuid` = ? AND `sign_shop_id` = ?", otherplayer.toString(), shopid));
+		} else
+		{
+			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(
+					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page, 10,
+					"`player_uuid` = ?", otherplayer.toString()));
+		}
+		ArrayList<String> msg = new ArrayList<>();
+		for(SignShopLog ssl : ssll)
+		{
+			String type;
+			SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssl.getSignShopId());
+			String shopname = ssh != null ? ssh.getSignShopName() : String.valueOf(ssl.getSignShopId());
+			EconomyCurrency ec = ssh != null 
+					? (plugin.getIFHEco().getAccount(ssh.getAccountId()) != null 
+					? plugin.getIFHEco().getAccount(ssh.getAccountId()).getCurrency()
+					: plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL))
+					: plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL);
+			int amo = ssl.getItemAmount();
+			long time = ssl.getDateTime();
+			double cost = ssl.getAmount();
+			ItemStack is = ssl.getItemStack();
+			String client = Utility.convertUUIDToName(ssl.getClient().toString());
+			if(client == null)
+			{
+				client = "/";
+			}
+			if(ssl.getWayType() == WayType.BUY)
+			{
+				type = "Cmd.ShopLog.Buy";
+			} else
+			{
+				type = "Cmd.ShopLog.Sell";
+			}
+			String s = plugin.getYamlHandler().getLang().getString(type)
+					.replace("%player%", client)
+					.replace("%time%", TimeHandler.getDateTime(time, plugin.getYamlHandler().getConfig().getString("SignShop.ShopLog.TimePattern")))
+					.replace("%amount%", String.valueOf(amo))
+					.replace("%item%", is.getItemMeta().hasDisplayName() 
+							? is.getItemMeta().getDisplayName() 
+							: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))
+					.replace("%shop%", shopname)
+					.replace("%format%", plugin.getIFHEco().format(cost,
+							ec));
+			msg.add(s);
+		}
+		for(String s : msg)
+		{
+			player.sendMessage(ChatApi.tl(s));
+		}
+		SaLECommandExecutor.pastNextPage(player, page, CommandExecuteType.SALE_SHOP_LOG, pagination.toArray(new String[pagination.size()]));
+	}
+}
