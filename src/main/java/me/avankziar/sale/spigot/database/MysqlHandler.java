@@ -25,7 +25,7 @@ public class MysqlHandler
 		//SingShop
 		SIGNSHOP("saleSignShop", new SignShop()),
 		//SignShopLogs
-		SIGNSHOPLOG("saleShopLog", new SignShopLog()),
+		SIGNSHOPLOG("saleSignShopLog", new SignShopLog()),
 		SIGNSHOPDAILYLOG("saleSignShopDailyLog", new SignShopDailyLog()),
 		//Player Shopping Log
 		SHOPPINGLOG("saleShoppingLog", new ShoppingLog()),

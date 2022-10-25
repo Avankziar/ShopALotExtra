@@ -41,6 +41,7 @@ import main.java.me.avankziar.sale.spigot.cmd.shop.ARGBreakToggle;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARGSDailyLog;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARGSLog;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARGToggle;
+import main.java.me.avankziar.sale.spigot.cmd.shopping.ARGSPDailyLog;
 import main.java.me.avankziar.sale.spigot.cmd.shopping.ARGSPLog;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
@@ -139,11 +140,14 @@ public class SaLE extends JavaPlugin
 	
 	public void onDisable()
 	{
+		log.info(pluginName + " despawn all Holograms");
 		for(Entry<String, ItemHologram> e : ItemHologramHandler.taskMap.entrySet())
 		{
 			e.getValue().despawn();
 		}
+		log.info(pluginName + " do all open Shoplogs!");
 		backgroundTask.doShopLog();
+		log.info(pluginName + " done all open Shoplogs!");
 		Bukkit.getScheduler().cancelTasks(this);
 		HandlerList.unregisterAll(this);
 		log.info(pluginName + " is disabled!");
@@ -197,36 +201,39 @@ public class SaLE extends JavaPlugin
 	
 	private void setupCommandTree()
 	{		
-		infoCommand += plugin.getYamlHandler().getCommands().getString("base.Name");
+		infoCommand += plugin.getYamlHandler().getCommands().getString("sale.Name");
 		
 		TabCompletion tab = new TabCompletion(plugin);
 		
-		ArgumentConstructor delete = new ArgumentConstructor(CommandExecuteType.SALE_DELETE, "sale_delete", 0, 1, 99, false, null);
+		ArgumentConstructor delete = new ArgumentConstructor(CommandExecuteType.SALE_DELETE, "sale_signshop_delete", 1, 1, 99, false, null);
 		new ARGDelete(plugin, delete);
 		
-		ArgumentConstructor breaktoggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_BREAKTOGGLE, "sale_shop_breaktoggle", 1, 1, 1, false, null);
+		ArgumentConstructor breaktoggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_BREAKTOGGLE, "sale_signshop_breaktoggle",
+				1, 1, 1, false, null);
 		new ARGBreakToggle(plugin, breaktoggle);
-		ArgumentConstructor toggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_TOGGLE, "sale_shop_toggle", 1, 1, 1, false, null);
+		ArgumentConstructor toggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_TOGGLE, "sale_signshop_toggle", 1, 1, 1, false, null);
 		new ARGToggle(plugin, toggle);
-		ArgumentConstructor slog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_LOG, "sale_shop_log", 1, 1, 5, false, null);
+		ArgumentConstructor slog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_LOG, "sale_signshop_log", 1, 1, 5, false, null);
 		new ARGSLog(plugin, slog);
-		ArgumentConstructor sdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_DAILYLOG, "sale_shop_dailylog", 1, 1, 5, false, null);
+		ArgumentConstructor sdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_DAILYLOG, "sale_signshop_dailylog", 1, 1, 4, false, null);
 		new ARGSDailyLog(plugin, sdailylog);
-		ArgumentConstructor shop = new ArgumentConstructor(CommandExecuteType.SALE_SHOP, "sale_shop", 0, 0, 0, false, null,
-				breaktoggle, toggle, slog, sdailylog);
+		ArgumentConstructor shop = new ArgumentConstructor(CommandExecuteType.SALE_SHOP, "sale_signshop", 0, 0, 0, false, null,
+				breaktoggle, delete, toggle, slog, sdailylog);
 		new ARGShop(plugin, shop);
 		
 		
-		ArgumentConstructor splog = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING_LOG, "sale_shopping_log", 1, 1, 5, false, null);
+		ArgumentConstructor splog = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING_LOG, "sale_shopping_log",
+				1, 1, 4, false, null);
 		new ARGSPLog(plugin, splog);
+		ArgumentConstructor spdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING_DAILYLOG, "sale_shopping_dailylog",
+				1, 1, 3, false, null);
+		new ARGSPDailyLog(plugin, spdailylog);
 		ArgumentConstructor shopping = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING, "sale_shopping", 0, 0, 0, false, null,
-				splog);
-		new ARGShopping(plugin, shopping);
-		
-		
+				splog, spdailylog);
+		new ARGShopping(plugin, shopping);		
 		
 		CommandConstructor sale = new CommandConstructor(CommandExecuteType.SALE, "sale", false,
-				delete, shop);
+				shop, shopping);
 		registerCommand(sale.getPath(), sale.getName());
 		getCommand(sale.getName()).setExecutor(new SaLECommandExecutor(plugin, sale));
 		getCommand(sale.getName()).setTabCompleter(tab);

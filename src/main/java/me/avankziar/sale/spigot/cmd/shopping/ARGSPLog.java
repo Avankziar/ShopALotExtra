@@ -70,15 +70,24 @@ public class ARGSPLog extends ArgumentModule
 		if(wt != null)
 		{
 			spll = ShoppingLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SHOPPINGLOG, "`date_time` DESC", page, 10,
+					MysqlHandler.Type.SHOPPINGLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ? AND `way_type` = ?", otherplayer.toString(), wt.toString()));
 		} else
 		{
 			spll = ShoppingLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SHOPPINGLOG, "`date_time` DESC", page, 10,
+					MysqlHandler.Type.SHOPPINGLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ?", otherplayer.toString()));
 		}
+		if(spll.size() == 0)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.ShoppingLog.NoLogs")));
+			return;
+		}
 		ArrayList<String> msg = new ArrayList<>();
+		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ShoppingLog.Headline")
+				.replace("%page%", String.valueOf(page))
+				.replace("%player%", Utility.convertUUIDToName(otherplayer.toString()))
+				.replace("%waytype%", wt == null ? "-" : wt.toString()));
 		for(ShoppingLog spl : spll)
 		{
 			String type;

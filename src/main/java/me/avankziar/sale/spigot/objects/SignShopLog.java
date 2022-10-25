@@ -184,11 +184,11 @@ public class SignShopLog implements MysqlHandable
 		try
 		{
 			String sql = "INSERT INTO `" + tablename
-					+ "`(`sign_shop_id`, `date_time`, `itemstack_base64`, `display_name`, "
+					+ "`(`sign_shop_id`, `date_time`,"
 					+ "`itemstack_base64`, `display_name`, `material`, "
-					+ "`way_type`, `amount double`, `item_amount`, `client`, `player`) " 
+					+ "`way_type`, `amount`, `item_amount`, `client`, `player_uuid`) " 
 					+ "VALUES("
-					+ "?, ?, ?, ?, "
+					+ "?, ?, "
 					+ "?, ?, ?, "
 					+ "?, ?, ?, ?, ?"
 					+ ")";
@@ -219,9 +219,9 @@ public class SignShopLog implements MysqlHandable
 		try
 		{
 			String sql = "UPDATE `" + tablename
-				+ "` SET `sign_shop_id` = ?, `date_time` = ?, `itemstack_base64` = ?, `display_name` = ?, "
+				+ "` SET `sign_shop_id` = ?, `date_time` = ?, "
 				+ "`itemstack_base64` = ?, `display_name` = ?, `material` = ?, "
-				+ "`way_type` = ?, `amount double` = ?, `item_amount` = ?, `client` = ?, `player` = ?" 
+				+ "`way_type` = ?, `amount` = ?, `item_amount` = ?, `client` = ?, `player_uuid` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, getSignShopId());
@@ -280,7 +280,7 @@ public class SignShopLog implements MysqlHandable
 						rs.getDouble("amount"),
 						rs.getInt("item_amount"),
 						UUID.fromString(rs.getString("client")),
-						UUID.fromString(rs.getString("player"))));
+						UUID.fromString(rs.getString("player_uuid"))));
 			}
 			return al;
 		} catch (SQLException e)

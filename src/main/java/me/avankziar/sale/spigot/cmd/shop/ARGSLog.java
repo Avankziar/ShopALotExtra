@@ -77,25 +77,35 @@ public class ARGSLog extends ArgumentModule
 		if(wt != null && shopid == 0)
 		{
 			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page, 10,
+					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ? AND `way_type` = ?", otherplayer.toString(), wt.toString()));
 		} else if(wt != null && shopid > 0)
 		{
 			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page, 10,
+					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ? AND `way_type` = ? AND `sign_shop_id` = ?", otherplayer.toString(), wt.toString(), shopid));
 		} else if(wt == null && shopid > 0)
 		{
 			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page, 10,
+					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ? AND `sign_shop_id` = ?", otherplayer.toString(), shopid));
 		} else
 		{
 			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page, 10,
+					MysqlHandler.Type.SIGNSHOPLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ?", otherplayer.toString()));
 		}
+		if(ssll.size() == 0)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.ShopLog.NoLogs")));
+			return;
+		}
 		ArrayList<String> msg = new ArrayList<>();
+		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ShopLog.Headline")
+				.replace("%page%", String.valueOf(page))
+				.replace("%shopid%", shopid == 0 ? "-" : String.valueOf(shopid))
+				.replace("%player%", Utility.convertUUIDToName(otherplayer.toString()))
+				.replace("%waytype%", wt == null ? "-" : wt.toString()));
 		for(SignShopLog ssl : ssll)
 		{
 			String type;

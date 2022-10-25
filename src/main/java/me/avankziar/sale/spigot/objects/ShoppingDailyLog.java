@@ -118,7 +118,7 @@ public class ShoppingDailyLog implements MysqlHandable
 					+ "VALUES("
 					+ "?, ?, "
 					+ "?, ?, "
-					+ "?, ?, "
+					+ "?, ?"
 					+ ")";
 			PreparedStatement ps = conn.prepareStatement(sql);
 	        ps.setString(1, getPlayer().toString());

@@ -40,6 +40,7 @@ public class ShoppingLog implements MysqlHandable
 			WayType wayType, double amount, int itemAmount, int signShopId)
 	{
 		setId(id);
+		setOwner(owner);
 		setDateTime(dateTime);
 		setItemStack(itemStack);
 		setDisplayName(displayName);
@@ -55,6 +56,7 @@ public class ShoppingLog implements MysqlHandable
 			String wayType, double amount, int itemAmount, int signShopId)
 	{
 		setId(id);
+		setOwner(owner);
 		setDateTime(dateTime);
 		setItemStack(new Base64Handler(itemStack).fromBase64());
 		setDisplayName(displayName);
@@ -171,11 +173,11 @@ public class ShoppingLog implements MysqlHandable
 		try
 		{
 			String sql = "INSERT INTO `" + tablename
-					+ "`(`player_uuid`, `date_time`, `itemstack_base64`, `display_name`, "
+					+ "`(`player_uuid`, `date_time`, "
 					+ "`itemstack_base64`, `display_name`, `material`, "
-					+ "`way_type`, `amount double`, `item_amount`, `sign_shop_id`) " 
+					+ "`way_type`, `amount`, `item_amount`, `sign_shop_id`) " 
 					+ "VALUES("
-					+ "?, ?, ?, ?, "
+					+ "?, ?, "
 					+ "?, ?, ?, "
 					+ "?, ?, ?, ?"
 					+ ")";
@@ -206,9 +208,9 @@ public class ShoppingLog implements MysqlHandable
 		try
 		{
 			String sql = "UPDATE `" + tablename
-				+ "` SET `player_uuid` = ?, `date_time` = ?, `itemstack_base64` = ?, `display_name` = ?, "
+				+ "` SET `player_uuid` = ?, `date_time` = ?, "
 				+ "`itemstack_base64` = ?, `display_name` = ?, `material` = ?, "
-				+ "`way_type` = ?, `amount double` = ?, `item_amount` = ?, `sign_shop_id` = ?" 
+				+ "`way_type` = ?, `amount` = ?, `item_amount` = ?, `sign_shop_id` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, getOwner().toString());

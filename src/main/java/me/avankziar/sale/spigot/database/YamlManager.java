@@ -281,60 +281,60 @@ public class YamlManager
 				"&eBasisbefehl für das Sale Plugin.",
 				"&eGroundcommand for the Sale Plugin.");
 		String basePermission = "sale.cmd.";
-		argumentInput("sale_delete", "delete", basePermission,
-				"/sale delete <xxx:yyy...>", "/sale delete ", false,
-				"&c/sale delete <xxx:yyy...> &f| Löscht alle Shops nach den Parameter(xxx). Param. sind id, player, server, world, item, radius.",
-				"&c/sale delete <xxx:yyy...> &f| Deletes all stores after the parameter(xxx). Param. are id, player, server, world, item, radius.",
-				"&bBefehlsrecht für &f/sale delete",
-				"&bCommandright for &f/sale delete",
+		argumentInput("sale_signshop_delete", "delete", basePermission,
+				"/sale signshop delete <xxx:yyy...>", "/sale delete ", false,
+				"&c/sale signshop delete <xxx:yyy...> &f| Löscht alle Shops nach den Parameter(xxx). Param. sind id, player, server, world, item, radius.",
+				"&c/sale signshop delete <xxx:yyy...> &f| Deletes all stores after the parameter(xxx). Param. are id, player, server, world, item, radius.",
+				"&bBefehlsrecht für &f/sale signshop delete",
+				"&bCommandright for &f/sale signshop delete",
 				"&eBefehl zum Löschen von Shops über Parameterangaben.",
 				"&eCommand to delete stores via parameter specifications.");
-		argumentInput("sale_shop", "shop", basePermission,
-				"/sale shop", "/sale shop ", false,
-				"&c/sale shop &f| Zwischenbefehl.",
-				"&c/sale shop &f| Intermediate command.",
-				"&bBefehlsrecht für &f/sale shop",
-				"&bCommandright for &f/sale shop",
+		argumentInput("sale_signshop", "signshop", basePermission,
+				"/sale signshop", "/sale signshop ", false,
+				"&c/sale signshop &f| Zwischenbefehl.",
+				"&c/sale signshop &f| Intermediate command.",
+				"&bBefehlsrecht für &f/sale signshop",
+				"&bCommandright for &f/sale signshop",
 				"&eBefehl für den Zwischenbefehl.",
 				"&eCommand for the intermediate command.");
-		argumentInput("sale_shop_breaktoggle", "breaktoggle", basePermission,
-				"/sale shop breaktoggle", "/sale shop breaktoggle ", false,
-				"&c/sale shop breaktoggle &f| Togglet ob man Shops direkt löschen durch das Abbauen kann.",
-				"&c/sale shop breaktoggle &f| Togglet whether you can delete stores directly by dismantling.",
-				"&bBefehlsrecht für &f/sale shop breaktoggle",
-				"&bCommandright for &f/sale shop breaktoggle",
+		argumentInput("sale_signshop_breaktoggle", "breaktoggle", basePermission,
+				"/sale signshop breaktoggle", "/sale signshop breaktoggle ", false,
+				"&c/sale signshop breaktoggle &f| Togglet ob man Shops direkt löschen durch das Abbauen kann.",
+				"&c/sale signshop breaktoggle &f| Togglet whether you can delete stores directly by dismantling.",
+				"&bBefehlsrecht für &f/sale signshop breaktoggle",
+				"&bCommandright for &f/sale signshop breaktoggle",
 				"&eBefehl für die direkte",
 				"&eCommand for the intermediate command.");
-		argumentInput("sale_shop_toggle", "toggle", basePermission,
-				"/sale shop toggle", "/sale shop toggle ", false,
-				"&c/sale shop toggle &f| Togglet ob man fremde Shops durch das Gui administrieren kann.",
-				"&c/sale shop toggle &f| Toggle whether you can administrate foreign stores through the gui.",
-				"&bBefehlsrecht für &f/sale shop toggle",
-				"&bCommandright for &f/sale shop toggle",
+		argumentInput("sale_signshop_toggle", "toggle", basePermission,
+				"/sale signshop toggle", "/sale signshop toggle ", false,
+				"&c/sale signshop toggle &f| Togglet ob man fremde Shops durch das Gui administrieren kann.",
+				"&c/sale signshop toggle &f| Toggle whether you can administrate foreign stores through the gui.",
+				"&bBefehlsrecht für &f/sale signshop toggle",
+				"&bCommandright for &f/sale signshop toggle",
 				"&eBefehl zum togglet ob man fremde Shops durch das Gui administrieren kann.",
 				"&eCommand to toggle whether you can administrate foreign stores through the gui.");
-		argumentInput("sale_shop_toggle", "toggle", basePermission,
-				"/sale shop toggle", "/sale shop toggle ", false,
-				"&c/sale shop toggle &f| Togglet ob man fremde Shops durch das Gui administrieren kann.",
-				"&c/sale shop toggle &f| Toggle whether you can administrate foreign stores through the gui.",
-				"&bBefehlsrecht für &f/sale shop toggle",
-				"&bCommandright for &f/sale shop toggle",
+		argumentInput("sale_signshop_toggle", "toggle", basePermission,
+				"/sale signshop toggle", "/sale signshop toggle ", false,
+				"&c/sale signshop toggle &f| Togglet ob man fremde Shops durch das Gui administrieren kann.",
+				"&c/sale signshop toggle &f| Toggle whether you can administrate foreign stores through the gui.",
+				"&bBefehlsrecht für &f/sale signshop toggle",
+				"&bCommandright for &f/sale signshop toggle",
 				"&eBefehl zum togglet ob man fremde Shops durch das Gui administrieren kann.",
 				"&eCommand to toggle whether you can administrate foreign stores through the gui.");
-		argumentInput("sale_shop_log", "log", basePermission+".shop",
-				"/sale shop log [number] [shopid] [player] [boolean]", "/sale shop log", false,
-				"&c/sale shop log [Zahl] [Shopid] [Spieler] [boolean] &f| Zeigt die Shop Aktivitäten des Eigentümer an. True für Buy.",
-				"&c/sale shop log [number] [shopid] [player] [boolean] &f| Displays the shop activities of the owner. True for Buy.",
-				"&bBefehlsrecht für &f/sale shop log",
-				"&bCommandright for &f/sale shop log",
+		argumentInput("sale_signshop_log", "log", basePermission+".shop",
+				"/sale signshop log [number] [shopid] [player] [boolean]", "/sale signshop log", false,
+				"&c/sale signshop log [Zahl] [Shopid] [Spieler] [boolean] &f| Zeigt die Shop Aktivitäten des Eigentümer an. True für Buy.",
+				"&c/sale signshop log [number] [shopid] [player] [boolean] &f| Displays the shop activities of the owner. True for Buy.",
+				"&bBefehlsrecht für &f/sale signshop log",
+				"&bCommandright for &f/sale signshop log",
 				"&eBefehl zeigt die Shop Aktivitäten des Eigentümer an.",
 				"&eCommand for displays the shop activities of the owner.");
-		argumentInput("sale_shop_dailylog", "dailylog", basePermission+".shop",
-				"/sale shop dailylog [number] [shopid] [player]", "/sale shop dailylog", false,
-				"&c/sale shop dailylog [Zahl] [Shopid] [Spieler] &f| Zeigt die Shop Tagesaktivitäten des Eigentümer an.",
-				"&c/sale shop dailylog [number] [shopid] [player] &f| Displays the shop dailyactivities of the owner.",
-				"&bBefehlsrecht für &f/sale shop dailylog",
-				"&bCommandright for &f/sale shop dailylog",
+		argumentInput("sale_signshop_dailylog", "dailylog", basePermission+".signshop",
+				"/sale signshop dailylog [number] [shopid] [player]", "/sale signshop dailylog", false,
+				"&c/sale signshop dailylog [Zahl] [Shopid] [Spieler] &f| Zeigt die Shop Tagesaktivitäten des Eigentümer an.",
+				"&c/sale signshop dailylog [number] [shopid] [player] &f| Displays the shop dailyactivities of the owner.",
+				"&bBefehlsrecht für &f/sale signshop dailylog",
+				"&bCommandright for &f/sale signshop dailylog",
 				"&eBefehl zeigt die Shop Aktivitäten des Eigentümer an.",
 				"&eCommand for displays the shop activities of the owner.");
 		argumentInput("sale_shopping", "shopping", basePermission,
@@ -900,6 +900,14 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu kannst du nicht mehr fremde Shopschilder administrieren!",
 						"&eYou cannot administrate other shop signs anymore!"}));
+		languageKeys.put("Cmd.ShopLog.NoLogs", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cKeine Signshoplogs vorhanden!",
+						"&cNo Signshoplogs available!"}));
+		languageKeys.put("Cmd.ShopLog.Headline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&f===&eShopLog %shopid%/%player%, Seite %page%, Type %waytype%&f===",
+						"&f===&eShopLog %shopid%/%player%, page %page%, Type %waytype%&f==="}));
 		languageKeys.put("Cmd.ShopLog.Buy", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% [&#FF8800K&7]&e%player% &#FF8800>> &f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%",
@@ -908,10 +916,26 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% [&aV&7]&e%player% &a>> &f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%",
 						"&7%time% [&aS&7]&e%player% &a>> &f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%"}));
-		languageKeys.put("Cmd.ShopDailyLog", 
+		languageKeys.put("Cmd.ShopDailyLog.NoLogs", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&7%time% &e>> &f%shop% &e>> [&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| [&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
-						"&7%time% &e>> &f%shop% &e>> [&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| [&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
+						"&cKeine täglichen Signshoplogs vorhanden!",
+						"&cNo daily Signshoplogs available!"}));
+		languageKeys.put("Cmd.ShopDailyLog.Headline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&f===&eShopDailyLog %shopid%/%player%, Seite %page%&f===",
+						"&f===&eShopDailyLog %shopid%/%player%, page %page%&f==="}));
+		languageKeys.put("Cmd.ShopDailyLog.Log", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7%time% &e>> &f%shop% &e>> &7[&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
+						"&7%time% &e>> &f%shop% &e>> &7[&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
+		languageKeys.put("Cmd.ShoppingLog.NoLogs", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cKeine Shoppinglogs vorhanden!",
+						"&cNo Shoppinglogs available!"}));
+		languageKeys.put("Cmd.ShoppingLog.Headline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&f===&eShoppingLog %player%, Seite %page%, Type %waytype%&f===",
+						"&f===&eShoppingLog %player%, page %page%, Type %waytype%&f==="}));
 		languageKeys.put("Cmd.ShoppingLog.Buy", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% [&#FF8800K&7]&f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%",
@@ -920,10 +944,18 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% [&aV&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%",
 						"&7%time% [&aS&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%"}));
-		languageKeys.put("Cmd.ShoppingDailyLog", 
+		languageKeys.put("Cmd.ShoppingDailyLog.NoLogs", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&7%time% &e>> [&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| [&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
-						"&7%time% &e>> [&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| [&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
+						"&cKeine täglichen Signshoplogs vorhanden!",
+						"&cNo daily Signshoplogs available!"}));
+		languageKeys.put("Cmd.ShoppingDailyLog.Headline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&f===&eShopLog %player%, Seite %page%&f===",
+						"&f===&eShopLog %player%, page %page%&f==="}));
+		languageKeys.put("Cmd.ShoppingDailyLog.Log", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7%time% &e>> &7[&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
+						"&7%time% &e>> &7[&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
 	}
 	
 	public void initBonusMalusLanguage() //INFO:BonusMalusLanguages

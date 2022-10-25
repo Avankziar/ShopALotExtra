@@ -72,7 +72,7 @@ public class TimeHandler
 		ZoneId systemZone = ZoneId.systemDefault();
 		ZoneOffset currentOffsetForMyZone = systemZone.getRules().getOffset(instant);
 		
-		return LocalDate.parse(l, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+		return LocalDate.parse(l, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
 				.atTime(LocalTime.MIDNIGHT).toEpochSecond(currentOffsetForMyZone)*1000;
 	}
 	

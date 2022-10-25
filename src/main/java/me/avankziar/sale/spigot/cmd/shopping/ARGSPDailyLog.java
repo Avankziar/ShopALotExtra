@@ -56,9 +56,17 @@ public class ARGSPDailyLog extends ArgumentModule
 			}
 		}
 		ArrayList<ShoppingDailyLog> ssdll = ShoppingDailyLog.convert(plugin.getMysqlHandler().getList(
-				MysqlHandler.Type.SHOPPINGLOG, "`dates` DESC", page, 10,
+				MysqlHandler.Type.SHOPPINGDAILYLOG, "`dates` DESC", page*10, 10,
 				"`player_uuid` = ?", otherplayer.toString()));
+		if(ssdll.size() == 0)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.ShoppingDailyLog.NoLogs")));
+			return;
+		}
 		ArrayList<String> msg = new ArrayList<>();
+		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ShoppingDailyLog.Headline")
+				.replace("%page%", String.valueOf(page))
+				.replace("%player%", Utility.convertUUIDToName(otherplayer.toString())));
 		for(ShoppingDailyLog ssdl : ssdll)
 		{
 			int bamo = ssdl.getBuyItemAmount();
@@ -66,7 +74,7 @@ public class ARGSPDailyLog extends ArgumentModule
 			long date = ssdl.getDate();
 			double bcost = ssdl.getBuyAmount();
 			double scost = ssdl.getSellAmount();
-			String s = plugin.getYamlHandler().getLang().getString("Cmd.ShoppingDailyLog")
+			String s = plugin.getYamlHandler().getLang().getString("Cmd.ShoppingDailyLog.Log")
 					.replace("%time%", TimeHandler.getDateTime(date,
 							plugin.getYamlHandler().getConfig().getString("SignShop.ShopDailyLog.TimePattern")))
 					.replace("%buyamo%", String.valueOf(bamo))

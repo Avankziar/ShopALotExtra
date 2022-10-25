@@ -55,6 +55,10 @@ public class PlayerInteractListener implements Listener
 		{
 			return;
 		}
+		if(BlockBreakListener.breakToggle.contains(player.getUniqueId().toString()))
+		{
+			return;
+		}
 		PlayerData pd = (PlayerData) plugin.getMysqlHandler().getData(
 				MysqlHandler.Type.PLAYERDATA, "`player_uuid` = ?", player.getUniqueId().toString());
 		if((ssh.getMaterial() == Material.AIR)

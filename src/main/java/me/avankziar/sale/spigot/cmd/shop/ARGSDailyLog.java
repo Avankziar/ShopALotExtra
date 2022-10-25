@@ -66,15 +66,24 @@ public class ARGSDailyLog extends ArgumentModule
 		if(shopid > 0)
 		{
 			ssdll = SignShopDailyLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SIGNSHOPLOG, "`dates` DESC", page, 10,
+					MysqlHandler.Type.SIGNSHOPDAILYLOG, "`dates` DESC", page*10, 10,
 					"`player_uuid` = ? AND `sign_shop_id` = ?", otherplayer.toString(), shopid));
 		} else
 		{
 			ssdll = SignShopDailyLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SIGNSHOPLOG, "`dates` DESC", page, 10,
+					MysqlHandler.Type.SIGNSHOPDAILYLOG, "`dates` DESC", page*10, 10,
 					"`player_uuid` = ?", otherplayer.toString()));
 		}
+		if(ssdll.size() == 0)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.ShopDailyLog.NoLogs")));
+			return;
+		}
 		ArrayList<String> msg = new ArrayList<>();
+		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ShopDailyLog.Headline")
+				.replace("%page%", String.valueOf(page))
+				.replace("%shopid%", shopid == 0 ? "-" : String.valueOf(shopid))
+				.replace("%player%", Utility.convertUUIDToName(otherplayer.toString())));
 		for(SignShopDailyLog ssdl : ssdll)
 		{
 			SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssdl.getSignShopId());
@@ -84,7 +93,7 @@ public class ARGSDailyLog extends ArgumentModule
 			long date = ssdl.getDate();
 			double bcost = ssdl.getBuyAmount();
 			double scost = ssdl.getSellAmount();
-			String s = plugin.getYamlHandler().getLang().getString("Cmd.ShopDailyLog")
+			String s = plugin.getYamlHandler().getLang().getString("Cmd.ShopDailyLog.Log")
 					.replace("%time%", TimeHandler.getDateTime(date,
 							plugin.getYamlHandler().getConfig().getString("SignShop.ShopDailyLog.TimePattern")))
 					.replace("%buyamo%", String.valueOf(bamo))

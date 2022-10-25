@@ -431,7 +431,7 @@ public class BackgroundTask
 							"`sign_shop_id` = ? AND `dates` = ?", shopID, date);
 					if(ssdl == null)
 					{
-						ssdl = new SignShopDailyLog(0, shopID, date, bcostTotal, scostTotal, (int) bsamo, (int) ssamo);
+						ssdl = new SignShopDailyLog(0, shopID, date, bcostTotal, scostTotal, (int) bsamo, (int) ssamo, shopOwner);
 						plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPDAILYLOG, ssdl);
 					} else
 					{

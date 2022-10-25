@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import main.java.me.avankziar.sale.spigot.database.MysqlHandable;
@@ -19,11 +20,12 @@ public class SignShopDailyLog implements MysqlHandable
 	private double sellAmount; //money amount of client sell;
 	private int buyItemAmount; //amount items of client buying
 	private int sellItemAmount; //amount item of client selling
+	private UUID player;
 	
 	public SignShopDailyLog(){}
 	
 	public SignShopDailyLog(int id, int signShopId,
-			long date, double buyAmount, double sellAmount, int buyItemAmount, int sellItemAmount)
+			long date, double buyAmount, double sellAmount, int buyItemAmount, int sellItemAmount, UUID player)
 	{
 		setId(id);
 		setSignShopId(signShopId);
@@ -32,6 +34,7 @@ public class SignShopDailyLog implements MysqlHandable
 		setSellAmount(sellAmount);
 		setBuyItemAmount(buyItemAmount);
 		setSellItemAmount(sellItemAmount);
+		setPlayer(player);
 	}
 
 	public int getId()
@@ -104,6 +107,16 @@ public class SignShopDailyLog implements MysqlHandable
 		this.sellItemAmount = sellItemAmount;
 	}
 	
+	public UUID getPlayer()
+	{
+		return player;
+	}
+
+	public void setPlayer(UUID player)
+	{
+		this.player = player;
+	}
+
 	@Override
 	public boolean create(Connection conn, String tablename)
 	{
@@ -112,11 +125,11 @@ public class SignShopDailyLog implements MysqlHandable
 			String sql = "INSERT INTO `" + tablename
 					+ "`(`sign_shop_id`, `dates`, "
 					+ "`buy_amount`, `sell_amount`, "
-					+ "`buy_item_amount`, `sell_item_amount`) " 
+					+ "`buy_item_amount`, `sell_item_amount`, `player_uuid`) " 
 					+ "VALUES("
 					+ "?, ?, "
 					+ "?, ?, "
-					+ "?, ?, "
+					+ "?, ?, ?"
 					+ ")";
 			PreparedStatement ps = conn.prepareStatement(sql);
 	        ps.setInt(1, getSignShopId());
@@ -125,6 +138,7 @@ public class SignShopDailyLog implements MysqlHandable
 	        ps.setDouble(4, getSellAmount());
 	        ps.setInt(5, getBuyItemAmount());
 	        ps.setInt(6, getSellItemAmount());
+	        ps.setString(7, getPlayer().toString());
 	        
 	        int i = ps.executeUpdate();
 	        MysqlHandler.addRows(MysqlHandler.QueryType.INSERT, i);
@@ -144,7 +158,7 @@ public class SignShopDailyLog implements MysqlHandable
 			String sql = "UPDATE `" + tablename
 				+ "` SET `sign_shop_id` = ?, `dates` = ?, "
 				+ "`buy_amount` = ?, `sell_amount` = ?, "
-				+ "`buy_item_amount` = ?, `sell_item_amount` = ?" 
+				+ "`buy_item_amount` = ?, `sell_item_amount` = ?, `player_uuid` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, getSignShopId());
@@ -153,7 +167,8 @@ public class SignShopDailyLog implements MysqlHandable
 	        ps.setDouble(4, getSellAmount());
 	        ps.setInt(5, getBuyItemAmount());
 	        ps.setInt(6, getSellItemAmount());
-			int i = 7;
+	        ps.setString(7, getPlayer().toString());
+			int i = 8;
 			for(Object o : whereObject)
 			{
 				ps.setObject(i, o);
@@ -196,7 +211,8 @@ public class SignShopDailyLog implements MysqlHandable
 						rs.getDouble("buy_amount"),
 						rs.getDouble("sell_amount"),
 						rs.getInt("buy_item_amount"),
-						rs.getInt("sell_item_amount")));
+						rs.getInt("sell_item_amount"),
+						UUID.fromString(rs.getString("player_uuid"))));
 			}
 			return al;
 		} catch (SQLException e)
