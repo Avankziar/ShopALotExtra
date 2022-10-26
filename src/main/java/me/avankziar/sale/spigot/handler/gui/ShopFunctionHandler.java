@@ -244,7 +244,7 @@ public class ShopFunctionHandler
 		
 		if(plugin.getBonusMalus() != null)
 		{
-			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BoniMali.SHOP_BUYING_TAX.getBonusMalus());
+			taxation = plugin.getBonusMalus().getResult(ssh.getOwner(), taxation, BoniMali.SHOP_BUYING_TAX.getBonusMalus());
 		}
 		ShopPreTransactionEvent sprte = new ShopPreTransactionEvent(ssh, samo, d.doubleValue(), taxation, true, player);
 		Bukkit.getPluginManager().callEvent(sprte);

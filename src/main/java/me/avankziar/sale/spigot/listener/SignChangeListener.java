@@ -47,6 +47,10 @@ public class SignChangeListener implements Listener
 		{
 			return;
 		}
+		if(!plugin.getYamlHandler().getConfig().getBoolean("Enable.SignShop", false))
+		{
+			return;
+		}
 		Player player = event.getPlayer();
 		if(plugin.getYamlHandler().getConfig().getStringList("SignShop.ForbiddenWorld").contains(event.getBlock().getWorld().getName()))
 		{

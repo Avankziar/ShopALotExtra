@@ -61,7 +61,7 @@ public class BonusMalusPermission
 		switch(ct)
 		{
 		case ADDUP:
-			for(int i = 1000; i >= 0; i--)
+			for(int i = 5000; i >= 0; i--)
 			{
 				if(player.hasPermission(Bypass.get(bypassCountPermission)+i))
 				{
@@ -70,7 +70,7 @@ public class BonusMalusPermission
 			}
 			break;
 		case HIGHEST:
-			for(int i = 1000; i >= 0; i--)
+			for(int i = 5000; i >= 0; i--)
 			{
 				if(player.hasPermission(Bypass.get(bypassCountPermission)+i))
 				{

@@ -20,6 +20,8 @@ import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.handler.SignHandler;
+import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SignShopLog;
 import main.java.me.avankziar.sale.spigot.objects.SignShopLog.WayType;
@@ -57,7 +59,7 @@ public class ARGSLog extends ArgumentModule
 		}
 		if(args.length >= 5)
 		{
-			if(args[4].equals(player.getName()) || BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+			if(args[4].equals(player.getName()))
 			{
 				UUID u = Utility.convertNameToUUID(args[4]);
 				if(u != null)
@@ -74,6 +76,35 @@ public class ARGSLog extends ArgumentModule
 			pagination.add(String.valueOf(args[5]));
 		}
 		ArrayList<SignShopLog> ssll;
+		if(shopid > 0 || !otherplayer.toString().equals(player.getUniqueId().toString()))
+		{
+			if(shopid > 0 && !otherplayer.toString().equals(player.getUniqueId().toString()))
+			{
+				SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", shopid);
+				if(!SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId())
+						|| !BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
+					return;
+				}
+			} else if(shopid > 0)
+			{
+				SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", shopid);
+				if(!SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId())
+						|| !BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
+					return;
+				}
+			} else if(!otherplayer.toString().equals(player.getUniqueId().toString()))
+			{
+				if(!BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
+					return;
+				}
+			}
+		}
 		if(wt != null && shopid == 0)
 		{
 			ssll = SignShopLog.convert(plugin.getMysqlHandler().getList(

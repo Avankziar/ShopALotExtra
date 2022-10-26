@@ -253,9 +253,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		List<String> costPerOne = plugin.getYamlHandler().getConfig().get("SignShop.CostToAdd"+amount+"Storage") != null 
-				? plugin.getYamlHandler().getConfig().getStringList("SignShop.CostToAdd"+amount+"Storage")
-				: plugin.getYamlHandler().getConfig().getStringList("SignShop.CostToAdd1Storage");
+		List<String> costPerOne = plugin.getYamlHandler().getConfig().getStringList("SignShop.CostToAdd1Storage");
 		long maxStorage = ssh.getItemStorageTotal();
 		long maxPossibleStorage = (long) BonusMalusPermission.getPermissionCount(player, Bypass.CountPermission.SHOP_ITEMSTORAGE_AMOUNT_);
 		if(maxStorage >= maxPossibleStorage)
@@ -428,7 +426,7 @@ public class AdminstrationFunctionHandler
 	private static void openShopLog(Player player, SignShop ssh)
 	{
 		player.closeInventory();
-		Bukkit.dispatchCommand(player, CommandSuggest.get(CommandExecuteType.SALE_SHOP_LOG)+" "+ssh.getSignShopName());
+		Bukkit.dispatchCommand(player, CommandSuggest.get(CommandExecuteType.SALE_SHOP_LOG)+" "+0+" "+ssh.getId());
 		return;
 	}
 	

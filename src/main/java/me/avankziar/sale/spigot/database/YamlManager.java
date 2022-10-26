@@ -183,9 +183,9 @@ public class YamlManager
 		configSpigotKeys.put("Enable.SignShop"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
-		configSpigotKeys.put("Enable.Auction"
+		/*configSpigotKeys.put("Enable.Auction"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
+				true}));*/
 		configSpigotKeys.put("EnableMechanic.BonusMalus"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
