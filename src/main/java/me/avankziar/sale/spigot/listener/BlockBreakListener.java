@@ -1,7 +1,5 @@
 package main.java.me.avankziar.sale.spigot.listener;
 
-import java.util.ArrayList;
-
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -19,7 +17,7 @@ import main.java.me.avankziar.sale.spigot.objects.SignShop;
 public class BlockBreakListener implements Listener
 {
 	private SaLE plugin;
-	public static ArrayList<String> breakToggle = new ArrayList<>();
+	
 	
 	public BlockBreakListener(SaLE plugin)
 	{
@@ -39,7 +37,7 @@ public class BlockBreakListener implements Listener
 		{
 			return;
 		}
-		if(!breakToggle.contains(player.getUniqueId().toString()))
+		if(!SignHandler.isBreakToggle(player.getUniqueId()))
 		{
 			if(plugin.getMysqlHandler().exist(MysqlHandler.Type.SIGNSHOP,
 					"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",

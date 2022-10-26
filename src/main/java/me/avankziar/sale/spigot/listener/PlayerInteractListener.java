@@ -55,7 +55,7 @@ public class PlayerInteractListener implements Listener
 		{
 			return;
 		}
-		if(BlockBreakListener.breakToggle.contains(player.getUniqueId().toString()))
+		if(SignHandler.isBreakToggle(player.getUniqueId()))
 		{
 			return;
 		}

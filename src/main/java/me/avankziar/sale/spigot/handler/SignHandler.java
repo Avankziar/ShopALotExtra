@@ -23,6 +23,7 @@ public class SignHandler
 {
 	private static SaLE plugin = SaLE.getPlugin();
 	public static ArrayList<String> bypassToggle = new ArrayList<>();
+	public static ArrayList<String> breakToggle = new ArrayList<>();
 	
 	public static Sign getSign(SignShop ssh)
 	{
@@ -264,6 +265,11 @@ public class SignHandler
 	public static boolean isBypassToggle(UUID uuid)
 	{
 		return bypassToggle.contains(uuid.toString());
+	}
+	
+	public static boolean isBreakToggle(UUID uuid)
+	{
+		return breakToggle.contains(uuid.toString());
 	}
 	
 	public static boolean isListed(ListedType listedType, SignShop ssh, UUID uuid)
