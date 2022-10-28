@@ -44,6 +44,9 @@ import main.java.me.avankziar.sale.spigot.objects.ShoppingLog.WayType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SubscribedShop;
 import main.java.me.avankziar.sale.spigot.permission.BoniMali;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ShopFunctionHandler
 {
@@ -155,7 +158,38 @@ public class ShopFunctionHandler
 			{
 				String msg = plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NoGoodsInStockII")
 						.replace("%shopname%", ssh.getSignShopName());
-				new MessageHandler().sendMessageToOwnerAndMember(ssh, msg);
+				StringBuilder sb = new StringBuilder();
+				int i = 0;
+				for(String s : plugin.getYamlHandler().getLang().getStringList("ShopFunctionHandler.InfoHover"))
+				{
+					if(i > 0)
+					{
+						sb.append("~!~");
+					}
+					sb.append(s
+							.replace("%client%", player.getName())
+							.replace("%item%", ssh.getDisplayName())
+							.replace("%amount%", String.valueOf(amount))
+							.replace("%price%", isDiscount(ssh, System.currentTimeMillis()) 
+									? String.valueOf(amount*ssh.getDiscountBuyAmount()) : String.valueOf(amount*ssh.getBuyAmount()))
+							.replace("%server%", ssh.getServer())
+							.replace("%world%", ssh.getWorld())
+							.replace("%x%", String.valueOf(ssh.getX()))
+							.replace("%y%", String.valueOf(ssh.getY()))
+							.replace("%z%", String.valueOf(ssh.getZ()))
+							);
+					i++;
+				}
+				TextComponent tc1 = ChatApi.tctl(msg);
+				TextComponent tc2 = ChatApi.hoverEvent(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.InfoAddition"),
+						HoverEvent.Action.SHOW_TEXT, sb.toString());
+				ArrayList<BaseComponent> list = new ArrayList<>();
+				list.add(tc1);
+				list.add(tc2);
+				ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+				listInList.add(list);
+				new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
 			}
 			return;
 		}
@@ -170,7 +204,7 @@ public class ShopFunctionHandler
 				return;
 			} else
 			{
-				d = ssh.getBuyAmount();
+				d = ssh.getDiscountBuyAmount();
 			}
 			if(ssh.getDiscountPossibleBuy() == 0)
 			{
@@ -276,14 +310,17 @@ public class ShopFunctionHandler
 		{
 			return;
 		}
-		if(ssh.getPossibleBuy() >= 0 || ssh.getDiscountPossibleBuy() >= 0)
+		if(!ssh.isUnlimitedBuy())
 		{
-			if(isDiscount(ssh, now) && ssh.getDiscountPossibleBuy() > 0)
+			if(ssh.getPossibleBuy() >= 0 || ssh.getDiscountPossibleBuy() >= 0)
 			{
-				ssh.setDiscountPossibleBuy(ssh.getDiscountPossibleBuy()-quantity);
-			} else if(ssh.getPossibleBuy() > 0)
-			{
-				ssh.setPossibleBuy(ssh.getPossibleBuy()-quantity);
+				if(isDiscount(ssh, now) && ssh.getDiscountPossibleBuy() > 0)
+				{
+					ssh.setDiscountPossibleBuy(ssh.getDiscountPossibleBuy()-samo);
+				} else if(ssh.getPossibleBuy() > 0)
+				{
+					ssh.setPossibleBuy(ssh.getPossibleBuy()-samo);
+				}
 			}
 		}
 		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
@@ -349,7 +386,38 @@ public class ShopFunctionHandler
 			{
 				String msg = plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopIsFullII")
 						.replace("%shopname%", ssh.getSignShopName());
-				new MessageHandler().sendMessageToOwnerAndMember(ssh, msg);
+				StringBuilder sb = new StringBuilder();
+				int i = 0;
+				for(String s : plugin.getYamlHandler().getLang().getStringList("ShopFunctionHandler.InfoHover"))
+				{
+					if(i > 0)
+					{
+						sb.append("~!~");
+					}
+					sb.append(s
+							.replace("%client%", player.getName())
+							.replace("%item%", ssh.getDisplayName())
+							.replace("%amount%", String.valueOf(amount))
+							.replace("%price%", isDiscount(ssh, System.currentTimeMillis()) 
+									? String.valueOf(amount*ssh.getDiscountSellAmount()) : String.valueOf(amount*ssh.getSellAmount()))
+							.replace("%server%", ssh.getServer())
+							.replace("%world%", ssh.getWorld())
+							.replace("%x%", String.valueOf(ssh.getX()))
+							.replace("%y%", String.valueOf(ssh.getY()))
+							.replace("%z%", String.valueOf(ssh.getZ()))
+							);
+					i++;
+				}
+				TextComponent tc1 = ChatApi.tctl(msg);
+				TextComponent tc2 = ChatApi.hoverEvent(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.InfoAddition"),
+						HoverEvent.Action.SHOW_TEXT, sb.toString());
+				ArrayList<BaseComponent> list = new ArrayList<>();
+				list.add(tc1);
+				list.add(tc2);
+				ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+				listInList.add(list);
+				new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
 			}
 			return;
 		}
@@ -364,7 +432,7 @@ public class ShopFunctionHandler
 				return;
 			} else
 			{
-				d = ssh.getSellAmount();
+				d = ssh.getDiscountSellAmount();
 			}
 			if(ssh.getDiscountPossibleSell() == 0)
 			{
@@ -473,14 +541,17 @@ public class ShopFunctionHandler
 		}
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.SellInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.SellInPercent") : null;
-		if(ssh.getPossibleSell() >= 0 || ssh.getDiscountPossibleSell() >= 0)
+		if(!ssh.isUnlimitedSell())
 		{
-			if(isDiscount(ssh, now) && ssh.getDiscountPossibleSell() > 0)
+			if(ssh.getPossibleSell() >= 0 || ssh.getDiscountPossibleSell() >= 0)
 			{
-				ssh.setDiscountPossibleSell(ssh.getDiscountPossibleSell()-quantity);
-			} else if(ssh.getPossibleSell() > 0)
-			{
-				ssh.setPossibleSell(ssh.getPossibleSell()-quantity);
+				if(isDiscount(ssh, now) && ssh.getDiscountPossibleSell() > 0)
+				{
+					ssh.setDiscountPossibleSell(ssh.getDiscountPossibleSell()-samo);
+				} else if(ssh.getPossibleSell() > 0)
+				{
+					ssh.setPossibleSell(ssh.getPossibleSell()-samo);
+				}
 			}
 		}
 		if(plugin.getBonusMalus() != null)

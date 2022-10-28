@@ -800,6 +800,24 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop &f%shopname% &chat keine Ware mehr zum Kaufen!",
 						"&cThe store &f%shopname% &chas no more goods for sale!"}));
+		languageKeys.put("ShopFunctionHandler.InfoAddition"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						" &7Mehr Infos?",
+						" &7More Infos?"}));
+		languageKeys.put("ShopFunctionHandler.InfoHover"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cKunde: &f%client%",
+						"&cItem: &r%item%",
+						"&cMenge: &r%amount%",
+						"&cPreis: &f%price%",
+						"&cWo: &f%server%, %world%",
+						"      &f%x%, %y% %z%",
+						"&cClient: &f%client%",
+						"&cItem: &r%item%",
+						"&cAmount: &f%amount%",
+						"&cPrice: &f%price%",
+						"&cWhere: &f%server%, %world%",
+						"         &f%x%, %y% %z%",}));
 		languageKeys.put("ShopFunctionHandler.Buy.NotInit"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop hat noch keinen Kauf-Wert festgelegt! Somit kann nicht gekauft werden!",

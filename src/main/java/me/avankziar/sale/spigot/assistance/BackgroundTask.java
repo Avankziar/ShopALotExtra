@@ -391,9 +391,9 @@ public class BackgroundTask
 	public void doShopLog() //TODO fehler bei der erstellung des shoplogs
 	{
 		ArrayList<UUID> del = new ArrayList<>();
-		for(UUID shopOwner : ShopPostTransactionListener.maping.keySet())
+		for(UUID shopOwner : ShopPostTransactionListener.maping2.keySet())
 		{
-			LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>> subB = ShopPostTransactionListener.maping.get(shopOwner);
+			LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>> subB = ShopPostTransactionListener.maping2.get(shopOwner);
 			for(UUID client : subB.keySet())
 			{
 				LinkedHashMap<String, ShopLogVar> sub2 = subB.get(client);
@@ -448,7 +448,7 @@ public class BackgroundTask
 		}
 		for(UUID uuid : del)
 		{
-			ShopPostTransactionListener.maping.remove(uuid);
+			ShopPostTransactionListener.maping2.remove(uuid);
 		}
 	}
 }

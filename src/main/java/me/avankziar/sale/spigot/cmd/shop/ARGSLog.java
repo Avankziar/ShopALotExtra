@@ -81,8 +81,8 @@ public class ARGSLog extends ArgumentModule
 			if(shopid > 0 && !otherplayer.toString().equals(player.getUniqueId().toString()))
 			{
 				SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", shopid);
-				if((!SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()) || !SignHandler.isOwner(ssh, player.getUniqueId()))
-						|| !BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+				if(!SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()) && !SignHandler.isOwner(ssh, player.getUniqueId())
+						&& !BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 					return;
@@ -90,8 +90,8 @@ public class ARGSLog extends ArgumentModule
 			} else if(shopid > 0)
 			{
 				SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", shopid);
-				if((!SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()) || !SignHandler.isOwner(ssh, player.getUniqueId()))
-						|| !BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+				if(!SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()) && !SignHandler.isOwner(ssh, player.getUniqueId())
+						&& !BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 					return;
