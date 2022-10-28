@@ -159,8 +159,9 @@ public class ShopFunctionHandler
 			}
 			return;
 		}
+		long now = System.currentTimeMillis();
 		Double d = 0.0;
-		if(isDiscount(ssh, System.currentTimeMillis()))
+		if(isDiscount(ssh, now))
 		{
 			d = ssh.getDiscountBuyAmount();
 			if((d == null && ssh.getBuyAmount() == null) || (d < 0.0 && ssh.getBuyAmount() < 0.0))
@@ -215,6 +216,19 @@ public class ShopFunctionHandler
 				quantity = ssh.getItemStorageCurrent();
 			}
 		}
+		if(isDiscount(ssh, now) && ssh.getDiscountPossibleBuy() > 0)
+		{
+			if(quantity > ssh.getDiscountPossibleBuy())
+			{
+				quantity = ssh.getDiscountPossibleBuy();
+			}
+		} else if(ssh.getPossibleBuy() > 0)
+		{
+			if(quantity > ssh.getPossibleBuy())
+			{
+				quantity = ssh.getPossibleBuy();
+			}
+		}
 		long samo = quantity;
 		while(emptySlot > 0)
 		{
@@ -241,7 +255,6 @@ public class ShopFunctionHandler
 		}
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.BuyInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.BuyInPercent") : null;
-		
 		if(plugin.getBonusMalus() != null)
 		{
 			taxation = plugin.getBonusMalus().getResult(ssh.getOwner(), taxation, BoniMali.SHOP_BUYING_TAX.getBonusMalus());
@@ -262,6 +275,16 @@ public class ShopFunctionHandler
 		if(!doTransaction(player, from, to, samo*d, to.getCurrency(), category, comment, taxation))
 		{
 			return;
+		}
+		if(ssh.getPossibleBuy() >= 0 || ssh.getDiscountPossibleBuy() >= 0)
+		{
+			if(isDiscount(ssh, now) && ssh.getDiscountPossibleBuy() > 0)
+			{
+				ssh.setDiscountPossibleBuy(ssh.getDiscountPossibleBuy()-quantity);
+			} else if(ssh.getPossibleBuy() > 0)
+			{
+				ssh.setPossibleBuy(ssh.getPossibleBuy()-quantity);
+			}
 		}
 		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
@@ -331,7 +354,8 @@ public class ShopFunctionHandler
 			return;
 		}
 		Double d = 0.0;
-		if(isDiscount(ssh, System.currentTimeMillis()))
+		long now = System.currentTimeMillis();
+		if(isDiscount(ssh, now))
 		{
 			d = ssh.getDiscountSellAmount();
 			if((d == null && ssh.getSellAmount() == null) || (d < 0.0 && ssh.getSellAmount() < 0.0))
@@ -385,6 +409,19 @@ public class ShopFunctionHandler
 				quantity = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent();
 			}
 		}
+		if(isDiscount(ssh, now) && ssh.getDiscountPossibleSell() > 0)
+		{
+			if(quantity > ssh.getDiscountPossibleSell())
+			{
+				quantity = ssh.getDiscountPossibleSell();
+			}
+		} else if(ssh.getPossibleSell() > 0)
+		{
+			if(quantity > ssh.getPossibleSell())
+			{
+				quantity = ssh.getPossibleSell();
+			}
+		}
 		long samo = quantity;
 		long count = 0;
 		for(int i = 0; i < player.getInventory().getStorageContents().length; i++)
@@ -436,6 +473,16 @@ public class ShopFunctionHandler
 		}
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.SellInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.SellInPercent") : null;
+		if(ssh.getPossibleSell() >= 0 || ssh.getDiscountPossibleSell() >= 0)
+		{
+			if(isDiscount(ssh, now) && ssh.getDiscountPossibleSell() > 0)
+			{
+				ssh.setDiscountPossibleSell(ssh.getDiscountPossibleSell()-quantity);
+			} else if(ssh.getPossibleSell() > 0)
+			{
+				ssh.setPossibleSell(ssh.getPossibleSell()-quantity);
+			}
+		}
 		if(plugin.getBonusMalus() != null)
 		{
 			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BoniMali.SHOP_SELLING_TAX.getBonusMalus());
@@ -463,8 +510,8 @@ public class ShopFunctionHandler
 		}
 		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
-		long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
-		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), System.currentTimeMillis(),
+		long date = TimeHandler.getDate(TimeHandler.getDate(now));
+		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), now,
 				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.SELL, samo*d, (int) samo,
 				ssh.getId());
 		plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGLOG, sl);

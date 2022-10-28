@@ -63,7 +63,7 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_DELETE_ALL: deleteAll(player, ssh); break;
 		case ADMINISTRATION_DELETE_WITHOUT_ITEMS_IN_STORAGE: deleteSoft(player, ssh); break;
 		case ADMINISTRATION_ITEM_CLEAR: clearItem(player, ssh); break;
-		case ADMINISTRATION_OPEN_SHOPLOG: openShopLog(player, ssh); break;
+		case ADMINISTRATION_OPEN_SHOPLOG: openShopLog(player, ssh); break; //TODO
 		case ADMINISTRATION_NUMPAD_0: numpad(player, ssh, "0", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_NUMPAD_1: numpad(player, ssh, "1", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_NUMPAD_2: numpad(player, ssh, "2", guiType, openInv, settingsLevel); break;

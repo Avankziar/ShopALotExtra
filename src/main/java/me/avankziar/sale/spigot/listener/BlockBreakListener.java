@@ -1,11 +1,16 @@
 package main.java.me.avankziar.sale.spigot.listener;
 
+import java.util.ArrayList;
+
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
@@ -72,5 +77,70 @@ public class BlockBreakListener implements Listener
 			SignHandler.clearSign(event.getBlock());
 			return;
 		}		
+	}
+	
+	
+	@EventHandler
+	public void onTNT(BlockExplodeEvent event)
+	{
+		if(event.isCancelled())
+		{
+			return;
+		}
+		ArrayList<Integer> indexs = new ArrayList<>();
+		int i = 0;
+		for(Block b : event.blockList())
+		{
+			BlockState bs = b.getState();
+			if(!(bs instanceof Sign))
+			{
+				continue;
+			}
+			SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
+					"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+					plugin.getServername(), b.getWorld().getName(),	b.getX(), b.getY(), b.getZ());
+			if(ssh == null)
+			{
+				continue;
+			}
+			indexs.add(i);
+			i++;
+		}
+		for(Integer index : indexs)
+		{
+			event.blockList().remove(index.intValue());
+		}
+	}
+	
+	@EventHandler
+	public void onCreeper(EntityExplodeEvent event)
+	{
+		if(event.isCancelled())
+		{
+			return;
+		}
+		ArrayList<Integer> indexs = new ArrayList<>();
+		int i = 0;
+		for(Block b : event.blockList())
+		{
+			BlockState bs = b.getState();
+			if(!(bs instanceof Sign))
+			{
+				continue;
+			}
+			SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
+					"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+					plugin.getServername(), b.getWorld().getName(),	b.getX(), b.getY(), b.getZ());
+			if(ssh == null)
+			{
+				continue;
+			}
+			indexs.add(i);
+			i++;
+		}
+		for(Integer index : indexs)
+		{
+			event.blockList().remove(index.intValue());
+		}
 	}
 }

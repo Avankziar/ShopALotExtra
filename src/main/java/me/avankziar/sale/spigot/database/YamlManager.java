@@ -794,15 +794,15 @@ public class YamlManager
 		
 		languageKeys.put("ShopFunctionHandler.Buy.NoGoodsInStock"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDer Shop hat keine Ware mehr zum verkaufen!",
+						"&cDer Shop hat keine Ware mehr zum Kaufen!",
 						"&cThe store has no more goods for sale!"}));
 		languageKeys.put("ShopFunctionHandler.Buy.NoGoodsInStockII"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDer Shop &f%shopname% &chat keine Ware mehr zum verkaufen!",
+						"&cDer Shop &f%shopname% &chat keine Ware mehr zum Kaufen!",
 						"&cThe store &f%shopname% &chas no more goods for sale!"}));
 		languageKeys.put("ShopFunctionHandler.Buy.NotInit"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDer Shop hat noch keinen Verkauf-Wert festgelegt! Somit kann nicht gekauft werden!",
+						"&cDer Shop hat noch keinen Kauf-Wert festgelegt! Somit kann nicht gekauft werden!",
 						"&cThe store has not yet set a sale value! Thus can not be bought!"}));
 		languageKeys.put("ShopFunctionHandler.Buy.PossibleIsZero"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -834,11 +834,11 @@ public class YamlManager
 						"&cThe store &f%shopname% &cis full!"}));
 		languageKeys.put("ShopFunctionHandler.Sell.NoItemInInventory"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDu hast keine Items im Inventar zum verkaufen!",
+						"&cDu hast keine Items im Inventar zum Kaufen!",
 						"&cYou have no items in your inventory to sell!"}));
 		languageKeys.put("ShopFunctionHandler.Sell.NotInit"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDer Shop hat noch keinen Ankauf-Wert festgelegt! Somit kann nicht verkauft werden!",
+						"&cDer Shop hat noch keinen Ankauf-Wert festgelegt! Somit kann nicht Kauft werden!",
 						"&cThe store has not yet set a purchase value! Thus can not be sold!"}));
 		languageKeys.put("ShopFunctionHandler.Sell.PossibleIsZero"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1050,11 +1050,11 @@ public class YamlManager
 						"&ebuy tax of the shop. Counts for shop owner."}));
 		bmlanguageKeys.put(BoniMali.SHOP_SELLING_TAX.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eProzentuale Verkaufsteuer",
+						"&eProzentuale Kaufsteuer",
 						"&ePercentage sell tax"}));
 		bmlanguageKeys.put(BoniMali.SHOP_SELLING_TAX.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eZählpermission, welche die prozentualen Verkaufsteuer",
+						"&eZählpermission, welche die prozentualen Kaufsteuer",
 						"&edes Shops definiert. Zählt für Shopeigentümer.",
 						"&eCounting mission, which defines the percentage",
 						"&esell tax of the shop. Counts for shop owner."}));
@@ -1141,8 +1141,8 @@ public class YamlManager
 						"&cShopname: &f%signshopname%",
 						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
 						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
-						"&cVerkaufpreis: &f%buyraw1%",
-						"&cAnkaufpreis: &f%sellraw1%",
+						"&cKaufpreis: &f%buyraw1%",
+						"&cKaufpreis: &f%sellraw1%",
 						
 						"&cOwner: &f%owner%",
 						"&cShopname: &f%signshopname%",
@@ -1158,11 +1158,11 @@ public class YamlManager
 						"&cLeuchtendes Schild: &f%glow%",
 						"&cLager Aktuelle Items: &f%itemstoragecurrent%",
 						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
-						"&cVerkauf Aktiv: &f%buytoggle%",
+						"&cKauf Aktiv: &f%buytoggle%",
 						"&cAnkauf Aktiv: &f%selltoggle%",
-						"&cVerkaufpreis: &f%buyraw1%",
-						"&cAnkaufpreis: &f%sellraw1%",
-						"&cMöglicher Verkauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
+						"&cKaufpreis: &f%buyraw1%",
+						"&cKaufpreis: &f%sellraw1%",
+						"&cMöglicher Kauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
 						
 						"&cOwner: &f%owner%",
 						"&cShopname: &f%signshopname%",
@@ -1187,12 +1187,12 @@ public class YamlManager
 						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
 						"&cLocation: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
 						"&cAccount: &f%accountid% - %accountname%",
-						"&cVerkauf Aktiv: &f%buytoggle%",
+						"&cKauf Aktiv: &f%buytoggle%",
 						"&cAnkauf Aktiv: &f%selltoggle%",
-						"&cVerkaufpreis: &f%buyraw1%",
-						"&cAnkaufpreis: &f%sellraw1%",
-						"&cMöglicher Verkauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
-						"&cUnlimitierter Verkauf: &f%unlimitedbuy%",
+						"&cKaufpreis: &f%buyraw1%",
+						"&cKaufpreis: &f%sellraw1%",
+						"&cMöglicher Kauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
+						"&cUnlimitierter Kauf: &f%unlimitedbuy%",
 						"&cUnlimitierter Ankauf: &f%unlimitedsell%",
 						
 						"&cOwner: &f%owner%",
@@ -1225,19 +1225,19 @@ public class YamlManager
 						"&cLager Gesamter Itemsplatz: &f%itemstoragetotal%",
 						"&cLocation: &f%server%-%world%-&7%x%&f/&7%y%&f/&7%z%",
 						"&cAccount: &f%accountid% - %accountname%",
-						"&cVerkauf Aktiv: &f%buytoggle%",
+						"&cKauf Aktiv: &f%buytoggle%",
 						"&cAnkauf Aktiv: &f%selltoggle%",
-						"&cVerkaufpreis: &f%buyraw1%",
-						"&cAnkaufpreis: &f%sellraw1%",
-						"&cMöglicher Verkauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
+						"&cKaufpreis: &f%buyraw1%",
+						"&cKaufpreis: &f%sellraw1%",
+						"&cMöglicher Kauf/Ankauf: &f%possiblebuy% <> %possiblesell%",
 						"&cRabatt Start: &f%discountstart%",
 						"&cRabatt Ende: %discountend%",
-						"&cRabattverkaufpreis: &f%discountbuy1%",
-						"&cRabattankaufpreis: &f%discountsell1%",
-						"&cMöglicher Rabatt Verkauf: &f%discountpossiblebuy%",
+						"&cRabattkaufpreis: &f%discountbuy1%",
+						"&cRabattKaufpreis: &f%discountsell1%",
+						"&cMöglicher Rabatt Kauf: &f%discountpossiblebuy%",
 						"&cMöglicher Rabatt Ankauf: &f%discountpossiblesell%",
 						"&cLagersystemID: &f%storageid%",
-						"&cUnlimitierter Verkauf: &f%unlimitedbuy%",
+						"&cUnlimitierter Kauf: &f%unlimitedbuy%",
 						"&cUnlimitierter Ankauf: &f%unlimitedsell%",
 						
 						"&cId: &f%id%",
@@ -1301,13 +1301,13 @@ public class YamlManager
 						Material.GOLD_ORE.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dToggel Verkauf (zz. &r%buytoggle%&d)",
+						"&dToggel Kauf (zz. &r%buytoggle%&d)",
 						"&dToggle Buying (atm. &r%buytoggle%&d)"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bToggelt den Verkauf.",
-						"&bSollte der Verkauf ausgeschaltet sein,",
-						"&bist der Verkauf nicht mehr möglich.",
+						"&bToggelt den Kauf.",
+						"&bSollte der Kauf ausgeschaltet sein,",
+						"&bist der Kauf nicht mehr möglich.",
 						"&bToggles the buying",
 						"&bIf the buying is turned off,",
 						"&bthe buying is no longer possible."}));
@@ -1354,7 +1354,7 @@ public class YamlManager
 						Material.GOLD_INGOT.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dEingabe des Verkaufswertes für 1 Item",
+						"&dEingabe des Kaufswertes für 1 Item",
 						"&dEnter the buy value for 1 item"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1784,14 +1784,14 @@ public class YamlManager
 						Material.GOLD_BLOCK.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dToggel Unlimitierter Verkauf",
+						"&dToggel Unlimitierter Kauf",
 						"&dToggle unlimited Buying"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bZz. &f%unlimitedbuy%",
-						"&bToggelt den unlimitierten Verkauf.",
-						"&bSollte der unlimitierter Verkauf angeschaltet sein,",
-						"&bkönnen unbegrenzt Items verkauft werden,",
+						"&bToggelt den unlimitierten Kauf.",
+						"&bSollte der unlimitierter Kauf angeschaltet sein,",
+						"&bkönnen unbegrenzt Items Kauft werden,",
 						"&bohne jedweden Vorrat.",
 						"&bAtm. &f%unlimitedbuy%",
 						"&bToggles the unlimited buying",
@@ -1858,7 +1858,7 @@ public class YamlManager
 						"&bZz.: &f%possiblebuy%",
 						"&bVerbleibene Verkäufe, sind die Anzahl",
 						"&ban Verkäufe die noch getätig werden können.",
-						"&bIst die Zahl auf 0 können keine Items mehr verkauft werden.",
+						"&bIst die Zahl auf 0 können keine Items mehr Kauft werden.",
 						"&cQ &bfür das Zurücksetzen.",
 						"&cLinks/Rechtsklick &bzum öffnen des Numpad Gui.",
 						"&bAtm.: &f%possiblebuy%",
@@ -2064,7 +2064,7 @@ public class YamlManager
 						"&bVerbleibene Verkäufe, sind die Anzahl an",
 						"&bRabattverkäufe die noch getätig werden können.",
 						"&bIst die Zahl auf 0 können keine Items mehr",
-						"&bverkauft werden solange die Rabattaktion läuft.",
+						"&bKauft werden solange die Rabattaktion läuft.",
 						"&cQ &bfür das Zurücksetzen.",
 						"&cLinks/Rechtsklick &böffnet das Numpad Gui.",
 						
@@ -2135,7 +2135,7 @@ public class YamlManager
 						Material.LAPIS_LAZULI.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dEingabe des Rabattverkaufswertes für 1 Item",
+						"&dEingabe des RabattKaufswertes für 1 Item",
 						"&dEnter the discount sale value for 1 item"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -3046,12 +3046,12 @@ public class YamlManager
 						Material.SMALL_AMETHYST_BUD.toString()}));
 		shop.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eVerkaufe x1 Item",
+						"&eKaufe x1 Item",
 						"&eSell x1 Item"}));
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell1%",
-						"&bVerkaufe x1 Items",
+						"&bKaufe x1 Items",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell1%",
@@ -3076,12 +3076,12 @@ public class YamlManager
 						Material.MEDIUM_AMETHYST_BUD.toString()}));
 		shop.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eVerkaufe x8 Item",
+						"&eKaufe x8 Item",
 						"&eSell x8 Item"}));
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell8%",
-						"&bVerkaufe x8 Items",
+						"&bKaufe x8 Items",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell8%",
@@ -3106,12 +3106,12 @@ public class YamlManager
 						Material.LARGE_AMETHYST_BUD.toString()}));
 		shop.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eVerkaufe x16 Item",
+						"&eKaufe x16 Item",
 						"&eSell x16 Item"}));
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell16%",
-						"&bVerkaufe x16 Items",
+						"&bKaufe x16 Items",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell16%",
@@ -3136,12 +3136,12 @@ public class YamlManager
 						Material.AMETHYST_CLUSTER.toString()}));
 		shop.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eVerkaufe x32 Item",
+						"&eKaufe x32 Item",
 						"&eSell x32 Item"}));
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell32%",
-						"&bVerkaufe x32 Items",
+						"&bKaufe x32 Items",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell32%",
@@ -3166,12 +3166,12 @@ public class YamlManager
 						Material.RAW_IRON.toString()}));
 		shop.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eVerkaufe x64 Item",
+						"&eKaufe x64 Item",
 						"&eSell x64 Item"}));
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell64%",
-						"&bVerkaufe x64 Items",
+						"&bKaufe x64 Items",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell64%",
@@ -3196,12 +3196,12 @@ public class YamlManager
 						Material.IRON_NUGGET.toString()}));
 		shop.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eVerkaufe x576 Item",
+						"&eKaufe x576 Item",
 						"&eSell x576 Item"}));
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell576%",
-						"&bVerkaufe x576 Items (9x Stack)",
+						"&bKaufe x576 Items (9x Stack)",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell576%",
@@ -3226,12 +3226,12 @@ public class YamlManager
 						Material.IRON_INGOT.toString()}));
 		shop.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eVerkaufe x1728 Item",
+						"&eKaufe x1728 Item",
 						"&eSell x1728 Item"}));
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell1728%",
-						"&bVerkaufe x1728 Items (27x Stack)",
+						"&bKaufe x1728 Items (27x Stack)",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell1728%",
@@ -3256,12 +3256,12 @@ public class YamlManager
 						Material.IRON_BLOCK.toString()}));
 		shop.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eVerkaufe x2304 Item",
+						"&eKaufe x2304 Item",
 						"&eSell x2304 Item"}));
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell2304%",
-						"&bVerkaufe x2304 Items (36x Stack)",
+						"&bKaufe x2304 Items (36x Stack)",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell2304%",
