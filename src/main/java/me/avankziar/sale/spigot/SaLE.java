@@ -36,6 +36,8 @@ import main.java.me.avankziar.sale.spigot.assistance.BackgroundTask;
 import main.java.me.avankziar.sale.spigot.assistance.Utility;
 import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
 import main.java.me.avankziar.sale.spigot.cmd.TabCompletion;
+import main.java.me.avankziar.sale.spigot.cmd.client.ARGSPDailyLog;
+import main.java.me.avankziar.sale.spigot.cmd.client.ARGSPLog;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGDelete;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShop;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShopping;
@@ -43,8 +45,6 @@ import main.java.me.avankziar.sale.spigot.cmd.shop.ARGBreakToggle;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARGSDailyLog;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARGSLog;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARGToggle;
-import main.java.me.avankziar.sale.spigot.cmd.shopping.ARGSPDailyLog;
-import main.java.me.avankziar.sale.spigot.cmd.shopping.ARGSPLog;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
@@ -209,30 +209,30 @@ public class SaLE extends JavaPlugin
 		
 		TabCompletion tab = new TabCompletion(plugin);
 		
-		ArgumentConstructor delete = new ArgumentConstructor(CommandExecuteType.SALE_DELETE, "sale_signshop_delete", 1, 1, 99, false, null);
+		ArgumentConstructor delete = new ArgumentConstructor(CommandExecuteType.SALE_DELETE, "sale_shop_delete", 1, 1, 99, false, null);
 		new ARGDelete(plugin, delete);
 		
-		ArgumentConstructor breaktoggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_BREAKTOGGLE, "sale_signshop_breaktoggle",
+		ArgumentConstructor breaktoggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_BREAKTOGGLE, "sale_shop_breaktoggle",
 				1, 1, 1, false, null);
 		new ARGBreakToggle(plugin, breaktoggle);
-		ArgumentConstructor toggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_TOGGLE, "sale_signshop_toggle", 1, 1, 1, false, null);
+		ArgumentConstructor toggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_TOGGLE, "sale_shop_toggle", 1, 1, 1, false, null);
 		new ARGToggle(plugin, toggle);
-		ArgumentConstructor slog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_LOG, "sale_signshop_log", 1, 1, 5, false, null);
+		ArgumentConstructor slog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_LOG, "sale_shop_log", 1, 1, 5, false, null);
 		new ARGSLog(plugin, slog);
-		ArgumentConstructor sdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_DAILYLOG, "sale_signshop_dailylog", 1, 1, 4, false, null);
+		ArgumentConstructor sdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_DAILYLOG, "sale_shop_dailylog", 1, 1, 4, false, null);
 		new ARGSDailyLog(plugin, sdailylog);
-		ArgumentConstructor shop = new ArgumentConstructor(CommandExecuteType.SALE_SHOP, "sale_signshop", 0, 0, 0, false, null,
+		ArgumentConstructor shop = new ArgumentConstructor(CommandExecuteType.SALE_SHOP, "sale_shop", 0, 0, 0, false, null,
 				breaktoggle, delete, toggle, slog, sdailylog);
 		new ARGShop(plugin, shop);
 		
 		
-		ArgumentConstructor splog = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING_LOG, "sale_shopping_log",
+		ArgumentConstructor splog = new ArgumentConstructor(CommandExecuteType.SALE_CLIENT_LOG, "sale_client_log",
 				1, 1, 4, false, null);
 		new ARGSPLog(plugin, splog);
-		ArgumentConstructor spdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING_DAILYLOG, "sale_shopping_dailylog",
+		ArgumentConstructor spdailylog = new ArgumentConstructor(CommandExecuteType.SALE_CLIENT_DAILYLOG, "sale_client_dailylog",
 				1, 1, 3, false, null);
 		new ARGSPDailyLog(plugin, spdailylog);
-		ArgumentConstructor shopping = new ArgumentConstructor(CommandExecuteType.SALE_SHOPPING, "sale_shopping", 0, 0, 0, false, null,
+		ArgumentConstructor shopping = new ArgumentConstructor(CommandExecuteType.SALE_CLIENT, "sale_client", 0, 0, 0, false, null,
 				splog, spdailylog);
 		new ARGShopping(plugin, shopping);		
 		
@@ -675,7 +675,7 @@ public class SaLE extends JavaPlugin
 							case SHOP_CREATION:
 							case SHOP_GUI_BYPASS:
 							case SHOP_LOG_OTHERPLAYER:								
-							case SHOPPING_LOG_OTHERPLAYER:
+							case CLIENT_LOG_OTHERPLAYER:
 								bmt = BonusMalusType.UP;
 								break;
 							}

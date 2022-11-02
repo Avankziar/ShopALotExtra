@@ -18,7 +18,7 @@ public enum CommandExecuteType
 	//TODO Worldguard shop search. mit angabe des Spielername und des grundstücknamens.
 	SALE_SHOP_LOG,
 	SALE_SHOP_DAILYLOG,
-	SALE_SHOPPING,
-	SALE_SHOPPING_LOG,
-	SALE_SHOPPING_DAILYLOG,
+	SALE_CLIENT,
+	SALE_CLIENT_LOG,
+	SALE_CLIENT_DAILYLOG,
 }

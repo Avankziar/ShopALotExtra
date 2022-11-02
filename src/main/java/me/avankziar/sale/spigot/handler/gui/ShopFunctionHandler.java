@@ -204,7 +204,7 @@ public class ShopFunctionHandler
 				return;
 			} else
 			{
-				d = ssh.getDiscountBuyAmount();
+				d = ssh.getBuyAmount();
 			}
 			if(ssh.getDiscountPossibleBuy() == 0)
 			{
@@ -432,7 +432,7 @@ public class ShopFunctionHandler
 				return;
 			} else
 			{
-				d = ssh.getDiscountSellAmount();
+				d = ssh.getSellAmount();
 			}
 			if(ssh.getDiscountPossibleSell() == 0)
 			{

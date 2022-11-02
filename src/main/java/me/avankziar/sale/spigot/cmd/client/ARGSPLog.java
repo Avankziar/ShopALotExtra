@@ -1,4 +1,4 @@
-package main.java.me.avankziar.sale.spigot.cmd.shopping;
+package main.java.me.avankziar.sale.spigot.cmd.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class ARGSPLog extends ArgumentModule
 		ArrayList<String> pagination = new ArrayList<>();
 		if(args.length >= 4)
 		{
-			if(args[3].equals(player.getName()) || BonusMalusPermission.hasPermission(player, Permission.SHOPPING_LOG_OTHERPLAYER))
+			if(args[3].equals(player.getName()) || BonusMalusPermission.hasPermission(player, Permission.CLIENT_LOG_OTHERPLAYER))
 			{
 				UUID u = Utility.convertNameToUUID(args[3]);
 				if(u != null)
@@ -124,6 +124,6 @@ public class ARGSPLog extends ArgumentModule
 		{
 			player.sendMessage(ChatApi.tl(s));
 		}
-		SaLECommandExecutor.pastNextPage(player, page, CommandExecuteType.SALE_SHOPPING_LOG, pagination.toArray(new String[pagination.size()]));
+		SaLECommandExecutor.pastNextPage(player, page, CommandExecuteType.SALE_CLIENT_LOG, pagination.toArray(new String[pagination.size()]));
 	}
 }

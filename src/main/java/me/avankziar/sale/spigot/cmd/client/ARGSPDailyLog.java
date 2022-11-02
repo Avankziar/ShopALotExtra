@@ -1,4 +1,4 @@
-package main.java.me.avankziar.sale.spigot.cmd.shopping;
+package main.java.me.avankziar.sale.spigot.cmd.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class ARGSPDailyLog extends ArgumentModule
 		ArrayList<String> pagination = new ArrayList<>();
 		if(args.length >= 4)
 		{
-			if(args[3].equals(player.getName()) || BonusMalusPermission.hasPermission(player, Permission.SHOPPING_LOG_OTHERPLAYER))
+			if(args[3].equals(player.getName()) || BonusMalusPermission.hasPermission(player, Permission.CLIENT_LOG_OTHERPLAYER))
 			{
 				UUID u = Utility.convertNameToUUID(args[3]);
 				if(u != null)
@@ -79,14 +79,14 @@ public class ARGSPDailyLog extends ArgumentModule
 							plugin.getYamlHandler().getConfig().getString("SignShop.ShopDailyLog.TimePattern")))
 					.replace("%buyamo%", String.valueOf(bamo))
 					.replace("%sellamo%", String.valueOf(samo))
-					.replace("%buyformat%", String.valueOf(bcost))
-					.replace("%sellformat%", String.valueOf(scost));
+					.replace("%buyformat%", String.valueOf(Utility.getNumberFormat(bcost, 2)))
+					.replace("%sellformat%", String.valueOf(Utility.getNumberFormat(scost, 2)));
 			msg.add(s);
 		}
 		for(String s : msg)
 		{
 			player.sendMessage(ChatApi.tl(s));
 		}
-		SaLECommandExecutor.pastNextPage(player, page, CommandExecuteType.SALE_SHOPPING_DAILYLOG, pagination.toArray(new String[pagination.size()]));
+		SaLECommandExecutor.pastNextPage(player, page, CommandExecuteType.SALE_CLIENT_DAILYLOG, pagination.toArray(new String[pagination.size()]));
 	}
 }

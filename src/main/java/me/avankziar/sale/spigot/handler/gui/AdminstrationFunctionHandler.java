@@ -263,7 +263,7 @@ public class AdminstrationFunctionHandler
 			return;
 		}
 		long ca = amount;
-		if(maxPossibleStorage-maxStorage > ca)
+		if(maxPossibleStorage-maxStorage > amount)
 		{
 			ca = maxPossibleStorage - maxStorage;
 		}
@@ -306,7 +306,7 @@ public class AdminstrationFunctionHandler
 		for(Entry<EconomyCurrency, Double> e : moneymap.entrySet())
 		{
 			EconomyCurrency ec = e.getKey();
-			double d = e.getValue()*amount;
+			double d = e.getValue()*ca;
 			Account from = plugin.getIFHEco().getAccount(ssh.getAccountId());
 			if(from == null)
 			{

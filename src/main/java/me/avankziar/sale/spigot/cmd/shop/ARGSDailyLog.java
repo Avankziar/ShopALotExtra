@@ -99,8 +99,8 @@ public class ARGSDailyLog extends ArgumentModule
 					.replace("%buyamo%", String.valueOf(bamo))
 					.replace("%sellamo%", String.valueOf(samo))
 					.replace("%shop%", shopname)
-					.replace("%buyformat%", String.valueOf(bcost))
-					.replace("%sellformat%", String.valueOf(scost));
+					.replace("%buyformat%", String.valueOf(Utility.getNumberFormat(bcost, 2)))
+					.replace("%sellformat%", String.valueOf(Utility.getNumberFormat(scost, 2)));
 			msg.add(s);
 		}
 		for(String s : msg)
