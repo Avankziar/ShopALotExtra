@@ -329,18 +329,18 @@ public class ShopFunctionHandler
 		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), System.currentTimeMillis(),
 				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.BUY, samo*d, (int) samo,
 				ssh.getId());
-		plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGLOG, sl);
-		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SHOPPINGDAILYLOG,
+		plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTLOG, sl);
+		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.CLIENTDAILYLOG,
 				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId().toString(), date);
 		if(sdl == null)
 		{
 			sdl = new ShoppingDailyLog(0, player.getUniqueId(), date, samo*d, 0, (int) samo, 0);
-			plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGDAILYLOG, sdl);
+			plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTDAILYLOG, sdl);
 		} else
 		{
 			sdl.setBuyAmount(sdl.getBuyAmount()+samo*d);
 			sdl.setBuyItemAmount(sdl.getBuyItemAmount()+(int) samo);
-			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SHOPPINGDAILYLOG, sdl, "`id` = ?", sdl.getId());
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.CLIENTDAILYLOG, sdl, "`id` = ?", sdl.getId());
 		}
 		ShopPostTransactionEvent spote = new ShopPostTransactionEvent(ssh, samo, d.doubleValue(), true, player, category, comment);
 		Bukkit.getPluginManager().callEvent(spote);
@@ -585,18 +585,18 @@ public class ShopFunctionHandler
 		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), now,
 				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.SELL, samo*d, (int) samo,
 				ssh.getId());
-		plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGLOG, sl);
-		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.SHOPPINGDAILYLOG,
+		plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTLOG, sl);
+		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.CLIENTDAILYLOG,
 				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId().toString(), date);
 		if(sdl == null)
 		{
 			sdl = new ShoppingDailyLog(0, player.getUniqueId(), date, 0, samo*d, 0, (int) samo);
-			plugin.getMysqlHandler().create(MysqlHandler.Type.SHOPPINGDAILYLOG, sdl);
+			plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTDAILYLOG, sdl);
 		} else
 		{
 			sdl.setSellAmount(sdl.getSellAmount()+samo*d);
 			sdl.setSellItemAmount(sdl.getSellItemAmount()+(int) samo);
-			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SHOPPINGDAILYLOG, sdl, "`id` = ?", sdl.getId());
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.CLIENTDAILYLOG, sdl, "`id` = ?", sdl.getId());
 		}
 		ShopPostTransactionEvent spote = new ShopPostTransactionEvent(ssh, samo, d.doubleValue(), false, player, category, comment);
 		Bukkit.getPluginManager().callEvent(spote);

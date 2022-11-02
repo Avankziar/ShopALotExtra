@@ -148,6 +148,9 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"sale"}));
 		
+		configSpigotKeys.put("Language"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"ENG"}));
 		configSpigotKeys.put("ServerName"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"hub"}));
@@ -208,16 +211,16 @@ public class YamlManager
 		configSpigotKeys.put("CleanUpTask.ShopDailyLog.DeleteAfterXDays"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				365}));
-		configSpigotKeys.put("CleanUpTask.clientLog.Active"
+		configSpigotKeys.put("CleanUpTask.ClientLog.Active"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
-		configSpigotKeys.put("CleanUpTask.clientLog.DeleteAfterXDays"
+		configSpigotKeys.put("CleanUpTask.ClientLog.DeleteAfterXDays"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				365}));
-		configSpigotKeys.put("CleanUpTask.clientDailyLog.Active"
+		configSpigotKeys.put("CleanUpTask.ClientDailyLog.Active"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
-		configSpigotKeys.put("CleanUpTask.clientDailyLog.DeleteAfterXDays"
+		configSpigotKeys.put("CleanUpTask.ClientDailyLog.DeleteAfterXDays"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				365}));
 		

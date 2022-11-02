@@ -70,12 +70,12 @@ public class ARGSPLog extends ArgumentModule
 		if(wt != null)
 		{
 			spll = ShoppingLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SHOPPINGLOG, "`date_time` DESC", page*10, 10,
+					MysqlHandler.Type.CLIENTLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ? AND `way_type` = ?", otherplayer.toString(), wt.toString()));
 		} else
 		{
 			spll = ShoppingLog.convert(plugin.getMysqlHandler().getList(
-					MysqlHandler.Type.SHOPPINGLOG, "`date_time` DESC", page*10, 10,
+					MysqlHandler.Type.CLIENTLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ?", otherplayer.toString()));
 		}
 		if(spll.size() == 0)

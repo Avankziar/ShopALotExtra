@@ -28,8 +28,8 @@ public class MysqlHandler
 		SIGNSHOPLOG("saleSignShopLog", new SignShopLog()),
 		SIGNSHOPDAILYLOG("saleSignShopDailyLog", new SignShopDailyLog()),
 		//Player Shopping Log
-		SHOPPINGLOG("saleShoppingLog", new ShoppingLog()),
-		SHOPPINGDAILYLOG("saleShoppingDailyLog", new ShoppingDailyLog()),
+		CLIENTLOG("saleShoppingLog", new ShoppingLog()),
+		CLIENTDAILYLOG("saleShoppingDailyLog", new ShoppingDailyLog()),
 		//Sonstiges
 		SUBSCRIBEDSHOP("saleSubscribedShop", new SubscribedShop()),
 		SHOPACCESSTYPE("saleShopAccesType", new ShopAccessType())

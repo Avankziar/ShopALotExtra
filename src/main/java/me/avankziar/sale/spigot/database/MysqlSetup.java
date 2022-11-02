@@ -238,7 +238,7 @@ public class MysqlSetup
 	
 	public boolean setupDatabaseV() 
 	{
-		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.SHOPPINGLOG.getValue()
+		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.CLIENTLOG.getValue()
 		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		+ " player_uuid char(36) NOT NULL,"
 		+ " date_time BIGINT,"
@@ -255,7 +255,7 @@ public class MysqlSetup
 	
 	public boolean setupDatabaseVI() 
 	{
-		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.SHOPPINGDAILYLOG.getValue()
+		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.CLIENTDAILYLOG.getValue()
 		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		+ " player_uuid char(36) NOT NULL,"
 		+ " dates BIGINT,"

@@ -42,8 +42,8 @@ public class BackgroundTask
 		cleanUpPlayerData(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.Player.Active", false));
 		cleanUpSignShopLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShopLog.Active", false));
 		cleanUpSignShopDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShopDailyLog.Active", false));
-		cleanUpShoppingLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingLog.Active", false));
-		cleanUpShoppingDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShoppingDailyLog.Active", false));
+		cleanUpClientLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ClientLog.Active", false));
+		cleanUpClientDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ClientgDailyLog.Active", false));
 		removeShopItemHologram();
 		msgTransactionMessageToShopOwnerTimer();
 		transactionShopLogTimer();
@@ -70,8 +70,8 @@ public class BackgroundTask
 				}
 				int signShopCount = 0;
 				long itemLost = 0;
-				int shoppingLogCount = 0;
-				int shoppingDailyLogCount = 0;
+				int ClientLogCount = 0;
+				int ClientDailyLogCount = 0;
 				int signShopLogCount = 0;
 				int signShopDailyLogCount = 0;
 				int subscribedShop = 0;
@@ -105,9 +105,9 @@ public class BackgroundTask
 							"`id` ASC", "`player_uuid` = ?", uuid.toString());
 					subscribedShop += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SUBSCRIBEDSHOP,
 							"`id` ASC", "`player_uuid` = ?", uuid.toString());
-					shoppingLogCount += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SHOPPINGLOG,
+					ClientLogCount += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.CLIENTLOG,
 							"`id` ASC", "`player_uuid` = ?", uuid.toString());
-					shoppingDailyLogCount += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SHOPPINGDAILYLOG,
+					ClientDailyLogCount += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.CLIENTDAILYLOG,
 							"`id` ASC", "`player_uuid` = ?", uuid.toString());
 				}
 				for(int ssid : ssIdList)
@@ -123,8 +123,8 @@ public class BackgroundTask
 				}
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
 				plugin.getLogger().info("Deleted PlayerData: "+playerCount);
-				plugin.getLogger().info("Deleted ShoppingLog: "+shoppingLogCount);
-				plugin.getLogger().info("Deleted ShoppingDailyLog: "+shoppingDailyLogCount);
+				plugin.getLogger().info("Deleted ClientLog: "+ClientLogCount);
+				plugin.getLogger().info("Deleted ClientDailyLog: "+ClientDailyLogCount);
 				plugin.getLogger().info("Deleted SubscribedStore: "+subscribedShop);
 				plugin.getLogger().info("Deleted SignShop: "+signShopCount);
 				plugin.getLogger().info("Lost ItemAmount: "+itemLost);
@@ -191,57 +191,57 @@ public class BackgroundTask
 		}.runTaskLaterAsynchronously(plugin, 20L*7);
 	}
 	
-	public void cleanUpShoppingLog(boolean active)
+	public void cleanUpClientLog(boolean active)
 	{
 		if(!active)
 		{
 			return;
 		}
 		final long olderThanAtLeast = System.currentTimeMillis()
-				-1000L*60*60*24*plugin.getYamlHandler().getConfig().getInt("CleanUpTask.ShoppingLog.DeleteAfterXDays");
+				-1000L*60*60*24*plugin.getYamlHandler().getConfig().getInt("CleanUpTask.ClientLog.DeleteAfterXDays");
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
-				int shoppingLogCount = plugin.getMysqlHandler().getCount(MysqlHandler.Type.SHOPPINGLOG,
+				int ClientLogCount = plugin.getMysqlHandler().getCount(MysqlHandler.Type.CLIENTLOG,
 						"`date_time` < ?", olderThanAtLeast);
-				if(shoppingLogCount <= 0)
+				if(ClientLogCount <= 0)
 				{
 					return;
 				}
-				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SHOPPINGLOG,
+				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.CLIENTLOG,
 						"`id` ASC", "`date_time` < ?", olderThanAtLeast);
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
-				plugin.getLogger().info("Deleted ShoppingLog: "+shoppingLogCount);
+				plugin.getLogger().info("Deleted ClientLog: "+ClientLogCount);
 				plugin.getLogger().info("===========================================");
 			}
 		}.runTaskLaterAsynchronously(plugin, 20L*8);
 	}
 	
-	public void cleanUpShoppingDailyLog(boolean active)
+	public void cleanUpClientDailyLog(boolean active)
 	{
 		if(!active)
 		{
 			return;
 		}
 		final long olderThanAtLeast = System.currentTimeMillis()
-				-1000L*60*60*24*plugin.getYamlHandler().getConfig().getInt("CleanUpTask.ShoppingDailyLog.DeleteAfterXDays");
+				-1000L*60*60*24*plugin.getYamlHandler().getConfig().getInt("CleanUpTask.ClientDailyLog.DeleteAfterXDays");
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
-				int shoppingDailyLogCount = plugin.getMysqlHandler().getCount(MysqlHandler.Type.SHOPPINGDAILYLOG,
+				int ClientDailyLogCount = plugin.getMysqlHandler().getCount(MysqlHandler.Type.CLIENTDAILYLOG,
 						"`dates` < ?", olderThanAtLeast);
-				if(shoppingDailyLogCount <= 0)
+				if(ClientDailyLogCount <= 0)
 				{
 					return;
 				}
-				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SHOPPINGDAILYLOG,
+				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.CLIENTDAILYLOG,
 						"`id` ASC", "`dates` < ?", olderThanAtLeast);
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
-				plugin.getLogger().info("Deleted ShoppingDailyLog: "+shoppingDailyLogCount);
+				plugin.getLogger().info("Deleted ClientDailyLog: "+ClientDailyLogCount);
 				plugin.getLogger().info("===========================================");
 			}
 		}.runTaskLaterAsynchronously(plugin, 20L*9);

@@ -56,7 +56,7 @@ public class ARGSPDailyLog extends ArgumentModule
 			}
 		}
 		ArrayList<ShoppingDailyLog> ssdll = ShoppingDailyLog.convert(plugin.getMysqlHandler().getList(
-				MysqlHandler.Type.SHOPPINGDAILYLOG, "`dates` DESC", page*10, 10,
+				MysqlHandler.Type.CLIENTDAILYLOG, "`dates` DESC", page*10, 10,
 				"`player_uuid` = ?", otherplayer.toString()));
 		if(ssdll.size() == 0)
 		{
