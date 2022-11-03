@@ -211,13 +211,19 @@ public class ItemHologram
 			if(im instanceof SpawnEggMeta)
 			{
 				SpawnEggMeta sem = (SpawnEggMeta) im;
-				if(sem.getSpawnedType() != null)
+				try
 				{
-					try
+					if(sem.getSpawnedType() != null)
 					{
 						lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())));
-					} catch(Exception e)
-					{}
+					}
+					
+				} catch(Exception e)
+				{
+					if(sem.getSpawnedType() != null)
+					{
+						lines.add(ChatApi.tl("&7"+GuiHandler.getSpawnEggType(is.getType())));
+					}
 				}
 			}
 			if(im instanceof SuspiciousStewMeta)
