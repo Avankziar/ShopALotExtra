@@ -30,6 +30,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.inventory.meta.TropicalFishBucketMeta;
 import org.bukkit.potion.PotionData;
@@ -371,6 +372,7 @@ public class GuiHandler
 		return list;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static ArrayList<String> getStringPlaceHolder(ItemStack is, UUID uuid)
 	{
 		if(is == null)
@@ -495,6 +497,14 @@ public class GuiHandler
 				}
 			}
 		}
+		if(im instanceof SkullMeta)
+		{
+			SkullMeta sm = (SkullMeta) im;
+			if(sm.getOwningPlayer() != null)
+			{
+				list.add(ChatApi.tl("&7"+sm.getOwningPlayer().getName()));
+			}			
+		}
 		if(im instanceof AxolotlBucketMeta)
 		{
 			AxolotlBucketMeta abm = (AxolotlBucketMeta) im;
@@ -541,22 +551,40 @@ public class GuiHandler
 		if(im instanceof BookMeta)
 		{
 			BookMeta bm = (BookMeta) im;
-			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Title") + bm.getTitle()));
-			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Author") + bm.getAuthor()));
+			if(bm.getTitle() != null)
+			{
+				list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Title") + bm.getTitle()));
+			}
+			if(bm.getAuthor() != null)
+			{
+				list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Author") + bm.getAuthor()));
+			}
 			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Page") + bm.getPageCount()));
+			if(bm.getGeneration() != null)
+			{
+				list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Generation") 
+						+ SaLE.getPlugin().getEnumTl().getLocalization(bm.getGeneration())));
+			}
 		}
 		if(im instanceof LeatherArmorMeta)
 		{
 			LeatherArmorMeta lam = (LeatherArmorMeta) im;
-			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.LeatherArmorMeta") 
-					+ "R"+lam.getColor().getRed()+" G"+lam.getColor().getGreen()+" B"+lam.getColor().getBlue()));
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.LeatherArmorMeta")+ 
+					String.format("#%02x%02x%02x", lam.getColor().getRed(), lam.getColor().getGreen(), lam.getColor().getBlue())));
 		}
-		/*if(im instanceof SpawnEggMeta)
+		if(im instanceof SpawnEggMeta)
 		{
-			SpawnEggMeta sem = (SpawnEggMeta) im; //Wirft Fehler
-			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.SpawnEggMeta") 
-					+ SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())));
-		}*/
+			SpawnEggMeta sem = (SpawnEggMeta) im;
+			if(sem.getSpawnedType() != null)
+			{
+				try
+				{
+					list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.SpawnEggMeta") 
+							+ SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())));
+				} catch(Exception e)
+				{}
+			}
+		}
 		if(im instanceof SuspiciousStewMeta)
 		{
 			SuspiciousStewMeta ssm = (SuspiciousStewMeta) im;

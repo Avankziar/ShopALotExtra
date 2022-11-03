@@ -660,16 +660,16 @@ public class YamlManager
 						"&cMaterial: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.ItemFlag", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cItemFlag: ",
-						"&cItemFlag: "}));
+						"&cItemFlag: &f",
+						"&cItemFlag: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.Enchantment", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cVerzauberungen: ",
-						"&cEnchantments: "}));
+						"&cVerzauberungen: &f",
+						"&cEnchantments: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.StorageEnchantment", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cGelagerte Verzauberungen: ",
-						"&cStored Enchantments: "}));
+						"&cGelagerte Verzauberungen: &f",
+						"&cStored Enchantments: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.Damageable", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cHaltbarkeit: &f",
@@ -684,8 +684,8 @@ public class YamlManager
 						"&cRepair costs: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.AxolotlBucketMeta", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cVerzauberungen: &f",
-						"&cEnchantments: &f"}));
+						"&cAxolotl: &f",
+						"&cAxolotl: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.BannerMeta", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cBannerMuster: &f",
@@ -702,6 +702,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cSeitenzahl: &f",
 						"&cPagenumber: &f"}));
+		languageKeys.put("GuiHandler.InfoLore.BookMeta.Generation", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cVersion: &f",
+						"&cVersion: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.LeatherArmorMeta", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cLederrüstungfärbung: &f",
@@ -726,6 +730,14 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7Seitenzahl: ",
 						"&7Pagenumber: "}));
+		languageKeys.put("GuiHandler.ItemHolo.BookMeta.Generation", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7Version: ",
+						"&7Version: "}));
+		languageKeys.put("GuiHandler.ItemHolo.AxolotlBucketMeta", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7Axolotl: &f",
+						"&7Axolotl: &f"}));
 		languageKeys.put("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast keinen Account um die Kosten abziehen zu können.",

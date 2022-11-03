@@ -17,6 +17,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.AxolotlBucketMeta;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
@@ -99,7 +100,10 @@ public class ItemHologram
 			if(im instanceof SkullMeta)
 			{
 				SkullMeta sm = (SkullMeta) im;
-				lines.add(ChatApi.tl("&7"+sm.getOwningPlayer().getName()));
+				if(sm.getOwningPlayer() != null)
+				{
+					lines.add(ChatApi.tl("&7"+sm.getOwningPlayer().getName()));
+				}			
 			}
 			if(im instanceof PotionMeta)
 			{
@@ -145,6 +149,15 @@ public class ItemHologram
 					}
 				}
 			}
+			if(im instanceof AxolotlBucketMeta)
+			{
+				AxolotlBucketMeta abm = (AxolotlBucketMeta) im;
+				if(abm.getVariant() != null)
+				{
+					lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemLore.AxolotlBucketMeta") 
+							+ abm.getVariant().toString()));
+				}
+			}
 			if(im instanceof BlockStateMeta)
 			{
 				BlockStateMeta bsm = (BlockStateMeta) im;
@@ -174,21 +187,37 @@ public class ItemHologram
 			if(im instanceof BookMeta)
 			{
 				BookMeta bm = (BookMeta) im;
-				lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Title") + bm.getTitle()));
-				lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Author") + bm.getAuthor()));
+				if(bm.getTitle() != null)
+				{
+					lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Title") + bm.getTitle()));
+				}
+				if(bm.getAuthor() != null)
+				{
+					lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Author") + bm.getAuthor()));
+				}
 				lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Page") + bm.getPageCount()));
+				if(bm.getGeneration() != null)
+				{
+					lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Generation") 
+							+ SaLE.getPlugin().getEnumTl().getLocalization(bm.getGeneration())));
+				}
 			}
 			if(im instanceof LeatherArmorMeta)
 			{
 				LeatherArmorMeta lam = (LeatherArmorMeta) im;
-				lines.add("&7R"+lam.getColor().getRed()+" G"+lam.getColor().getGreen()+" B"+lam.getColor().getBlue());
+				lines.add(ChatApi.tl("&7"+String.format("#%02x%02x%02x",
+						lam.getColor().getRed(), lam.getColor().getGreen(), lam.getColor().getBlue())));
 			}
 			if(im instanceof SpawnEggMeta)
 			{
 				SpawnEggMeta sem = (SpawnEggMeta) im;
 				if(sem.getSpawnedType() != null)
 				{
-					lines.add("&7"+SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType()));
+					try
+					{
+						lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())));
+					} catch(Exception e)
+					{}
 				}
 			}
 			if(im instanceof SuspiciousStewMeta)
