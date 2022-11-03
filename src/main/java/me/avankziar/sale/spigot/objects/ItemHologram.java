@@ -19,9 +19,15 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
+import org.bukkit.inventory.meta.SuspiciousStewMeta;
+import org.bukkit.inventory.meta.TropicalFishBucketMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -36,6 +42,7 @@ public class ItemHologram
 {
 	private ArrayList<UUID> entitys = new ArrayList<>();
 	
+	@SuppressWarnings("deprecation")
 	public ItemHologram(ItemStack is, Location loc)
 	{
 		ArrayList<String> lines = new ArrayList<>();
@@ -89,6 +96,11 @@ public class ItemHologram
 					lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(p.getColor(), p.getPattern())));
 				}
 			}
+			if(im instanceof SkullMeta)
+			{
+				SkullMeta sm = (SkullMeta) im;
+				lines.add(ChatApi.tl("&7"+sm.getOwningPlayer().getName()));
+			}
 			if(im instanceof PotionMeta)
 			{
 				PotionMeta pm = (PotionMeta) im;
@@ -115,6 +127,7 @@ public class ItemHologram
 					if(is.getType() == Material.POTION) {pv = 1;}
 					else if(is.getType() == Material.SPLASH_POTION) {pv = 2;}
 					else if(is.getType() == Material.LINGERING_POTION) {pv = 3;}
+					else if(is.getType() == Material.TIPPED_ARROW) {pv = 4;}
 					for(PotionEffect pe : GuiHandler.getBasePotion(pm.getBasePotionData(), pv))
 					{
 						int level = pe.getAmplifier()+1;
@@ -157,6 +170,43 @@ public class ItemHologram
 						lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(ist.getType())+ " x"+e.getValue()));
 					}
 				}
+			}
+			if(im instanceof BookMeta)
+			{
+				BookMeta bm = (BookMeta) im;
+				lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Title") + bm.getTitle()));
+				lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Author") + bm.getAuthor()));
+				lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Page") + bm.getPageCount()));
+			}
+			if(im instanceof LeatherArmorMeta)
+			{
+				LeatherArmorMeta lam = (LeatherArmorMeta) im;
+				lines.add("&7R"+lam.getColor().getRed()+" G"+lam.getColor().getGreen()+" B"+lam.getColor().getBlue());
+			}
+			if(im instanceof SpawnEggMeta)
+			{
+				SpawnEggMeta sem = (SpawnEggMeta) im;
+				if(sem.getSpawnedType() != null)
+				{
+					lines.add("&7"+SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType()));
+				}
+			}
+			if(im instanceof SuspiciousStewMeta)
+			{
+				SuspiciousStewMeta ssm = (SuspiciousStewMeta) im;
+				for(PotionEffect pe : ssm.getCustomEffects())
+				{
+					int level = pe.getAmplifier()+1;
+					long dur = pe.getDuration();
+					String color = GuiHandler.getPotionColor(pe);
+					lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+					+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
+				}
+			}
+			if(im instanceof TropicalFishBucketMeta)
+			{
+				TropicalFishBucketMeta tfbm = (TropicalFishBucketMeta) im;
+				lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(tfbm.getBodyColor(), tfbm.getPattern(), tfbm.getPatternColor())));
 			}
 		}
 		spawn(null, loc.add(0, 0.9, 0), is);

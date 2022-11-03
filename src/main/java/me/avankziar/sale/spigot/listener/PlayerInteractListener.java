@@ -1,5 +1,8 @@
 package main.java.me.avankziar.sale.spigot.listener;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -8,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
@@ -153,5 +157,49 @@ public class PlayerInteractListener implements Listener
 		}
 		GuiHandler.openShop(ssh, player, pd.getLastSettingLevel(), false);
 		SignHandler.updateSign(ssh);
+	}
+	
+	@EventHandler
+	public void OnEditBook(PlayerEditBookEvent event)
+	{
+		Set<Material> set = new HashSet<>();
+		set.add(Material.ACACIA_SIGN);
+		set.add(Material.ACACIA_WALL_SIGN);
+		set.add(Material.BIRCH_SIGN);
+		set.add(Material.BIRCH_WALL_SIGN);
+		set.add(Material.CRIMSON_SIGN);
+		set.add(Material.CRIMSON_WALL_SIGN);
+		set.add(Material.DARK_OAK_SIGN);
+		set.add(Material.DARK_OAK_WALL_SIGN);
+		set.add(Material.JUNGLE_SIGN);
+		set.add(Material.JUNGLE_WALL_SIGN);
+		set.add(Material.MANGROVE_SIGN);
+		set.add(Material.MANGROVE_WALL_SIGN);
+		set.add(Material.OAK_SIGN);
+		set.add(Material.OAK_WALL_SIGN);
+		set.add(Material.SPRUCE_SIGN);
+		set.add(Material.SPRUCE_WALL_SIGN);
+		set.add(Material.WARPED_SIGN);
+		set.add(Material.WARPED_WALL_SIGN);
+		Block b = event.getPlayer().getTargetBlock(set, 4);
+		if(b == null)
+		{
+			return;
+		}
+		BlockState bs = b.getState();
+		if(!(bs instanceof Sign))
+		{
+			return;
+		}
+		Player player = event.getPlayer();
+		SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
+				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+				plugin.getServername(), player.getWorld().getName(),
+				b.getX(), b.getY(), b.getZ());
+		if(ssh == null)
+		{
+			return;
+		}
+		event.setCancelled(true);
 	}
 }

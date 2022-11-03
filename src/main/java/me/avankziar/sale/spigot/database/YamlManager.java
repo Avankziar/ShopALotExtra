@@ -674,38 +674,58 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cHaltbarkeit: &f",
 						"&cDurability: &f"}));
+		languageKeys.put("GuiHandler.InfoLore.SkullMeta.Owner", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cSpielerkopf: &f",
+						"&cPlayerhead: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.Repairable", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cReparaturkosten: &f",
 						"&cRepair costs: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.AxolotlBucketMeta", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cVerzauberungen: ",
-						"&cEnchantments: "}));
+						"&cVerzauberungen: &f",
+						"&cEnchantments: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.BannerMeta", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cBannerMuster: ",
-						"&cBannerPattern: "}));
+						"&cBannerMuster: &f",
+						"&cBannerPattern: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.BookMeta.Title", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cBuchtitle: ",
-						"&cBooktitle: "}));
+						"&cBuchtitle: &f",
+						"&cBooktitle: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.BookMeta.Author", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cBuchautor: ",
-						"&cBookauthor: "}));
+						"&cBuchautor: &f",
+						"&cBookauthor: &f"}));
+		languageKeys.put("GuiHandler.InfoLore.BookMeta.Page", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cSeitenzahl: &f",
+						"&cPagenumber: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.LeatherArmorMeta", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cLederrüstungfärbung: ",
-						"&cLeatherarmordye: "}));
+						"&cLederrüstungfärbung: &f",
+						"&cLeatherarmordye: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.SpawnEggMeta", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cSpawnEi EntityType: ",
-						"&cSpawnEgg EntityType: "}));
+						"&cSpawnEi EntityType: &f",
+						"&cSpawnEgg EntityType: &f"}));
 		languageKeys.put("GuiHandler.InfoLore.TropicalFishBucketMeta", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cTropenfischeimerfärbung: ",
-						"&cTropicalfishbucketdye: "}));
+						"&cTropenfischeimerfärbung: &f",
+						"&cTropicalfishbucketdye: &f"}));
+		languageKeys.put("GuiHandler.ItemHolo.BookMeta.Title", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7Buchtitle: ",
+						"&7Booktitle: "}));
+		languageKeys.put("GuiHandler.ItemHolo.BookMeta.Author", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7Buchautor: ",
+						"&7Bookauthor: "}));
+		languageKeys.put("GuiHandler.ItemHolo.BookMeta.Page", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7Seitenzahl: ",
+						"&7Pagenumber: "}));
 		languageKeys.put("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast keinen Account um die Kosten abziehen zu können.",

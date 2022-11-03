@@ -30,7 +30,6 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.inventory.meta.TropicalFishBucketMeta;
 import org.bukkit.potion.PotionData;
@@ -372,7 +371,6 @@ public class GuiHandler
 		return list;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private static ArrayList<String> getStringPlaceHolder(ItemStack is, UUID uuid)
 	{
 		if(is == null)
@@ -479,6 +477,7 @@ public class GuiHandler
 				if(is.getType() == Material.POTION) {pv = 1;}
 				else if(is.getType() == Material.SPLASH_POTION) {pv = 2;}
 				else if(is.getType() == Material.LINGERING_POTION) {pv = 3;}
+				else if(is.getType() == Material.TIPPED_ARROW) {pv = 4;}
 				for(PotionEffect pe : GuiHandler.getBasePotion(pm.getBasePotionData(), pv))
 				{
 					int level = pe.getAmplifier()+1;
@@ -499,7 +498,10 @@ public class GuiHandler
 		if(im instanceof AxolotlBucketMeta)
 		{
 			AxolotlBucketMeta abm = (AxolotlBucketMeta) im;
-			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.AxolotlBucketMeta") + abm.getVariant().toString()));
+			if(abm.getVariant() != null)
+			{
+				list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.AxolotlBucketMeta") + abm.getVariant().toString()));
+			}
 		}
 		if(im instanceof BannerMeta)
 		{
@@ -541,6 +543,7 @@ public class GuiHandler
 			BookMeta bm = (BookMeta) im;
 			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Title") + bm.getTitle()));
 			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Author") + bm.getAuthor()));
+			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.BookMeta.Page") + bm.getPageCount()));
 		}
 		if(im instanceof LeatherArmorMeta)
 		{
@@ -548,12 +551,12 @@ public class GuiHandler
 			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.LeatherArmorMeta") 
 					+ "R"+lam.getColor().getRed()+" G"+lam.getColor().getGreen()+" B"+lam.getColor().getBlue()));
 		}
-		if(im instanceof SpawnEggMeta)
+		/*if(im instanceof SpawnEggMeta)
 		{
-			SpawnEggMeta sem = (SpawnEggMeta) im;
+			SpawnEggMeta sem = (SpawnEggMeta) im; //Wirft Fehler
 			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.SpawnEggMeta") 
 					+ SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())));
-		}
+		}*/
 		if(im instanceof SuspiciousStewMeta)
 		{
 			SuspiciousStewMeta ssm = (SuspiciousStewMeta) im;
@@ -602,6 +605,9 @@ public class GuiHandler
 			
 			else if(amp == 0 && !ex && pv == 3) {dur = 45*20;}
 			else if(amp == 0 && ex && pv == 3) {dur = 2*60*20;}
+			
+			else if(amp == 0 && !ex && pv == 4) {dur = 22*20;}
+			else if(amp == 0 && ex && pv == 4) {dur = 60*20;}
 			list.add(pt.getEffectType().createEffect(dur, amp));
 			break;
 		case INSTANT_DAMAGE:
@@ -622,6 +628,10 @@ public class GuiHandler
 			else if(amp == 0 && !ex && pv == 3) {dur = 45*20;}
 			else if(amp == 0 && ex && pv == 3) {dur = 2*60*20;}
 			else if(amp == 1 && !ex && pv == 3) {dur = 22*20;}
+			
+			else if(amp == 0 && !ex && pv == 4) {dur = 22*20;}
+			else if(amp == 0 && ex && pv == 4) {dur = 60*20;}
+			else if(amp == 1 && !ex && pv == 4) {dur = 11*20;}
 			list.add(pt.getEffectType().createEffect(dur, amp));
 			break;
 		case POISON:
@@ -634,9 +644,13 @@ public class GuiHandler
 			else if(amp == 0 && ex && pv == 2) {dur = 4*60*20;}
 			else if(amp == 1 && !ex && pv == 2) {dur = 22*20;}
 			
-			else if(amp == 0 && !ex && pv == 3) {dur = 11*20;}
-			else if(amp == 0 && ex && pv == 3) {dur = 22*20;}
-			else if(amp == 1 && !ex && pv == 3) {dur = 5*20;}
+			else if(amp == 0 && !ex && pv == 3) {dur = 45*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 2*60*20;}
+			else if(amp == 1 && !ex && pv == 3) {dur = 22*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 5*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 11*20;}
+			else if(amp == 1 && !ex && pv == 3) {dur = 2*20;}
 			list.add(pt.getEffectType().createEffect(dur, amp));
 			break;
 		case SLOW_FALLING:
@@ -649,6 +663,9 @@ public class GuiHandler
 			
 			else if(amp == 0 && !ex && pv == 3) {dur = 22*20;}
 			else if(amp == 0 && ex && pv == 3) {dur = 60*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 11*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 30*20;}
 			list.add(pt.getEffectType().createEffect(dur, amp));
 			break;
 		case SLOWNESS:
@@ -664,6 +681,10 @@ public class GuiHandler
 			else if(amp == 0 && !ex && pv == 3) {dur = 22*20;}
 			else if(amp == 0 && ex && pv == 3) {dur = 60*20;}
 			else if(amp == 3 && !ex && pv == 3) {dur = 5*20;}
+			
+			else if(amp == 0 && !ex && pv == 3) {dur = 11*20;}
+			else if(amp == 0 && ex && pv == 3) {dur = 30*20;}
+			else if(amp == 3 && !ex && pv == 3) {dur = 2*20;}
 			list.add(pt.getEffectType().createEffect(dur, amp));
 			break;
 		case TURTLE_MASTER:
@@ -679,6 +700,10 @@ public class GuiHandler
 			else if(amp == 3 && !ex && pv == 3) {dur = 5*20;}
 			else if(amp == 3 && ex && pv == 3) {dur = 10*20;}
 			else if(amp == 5 && !ex && pv == 3) {dur = 5*20;}
+			
+			else if(amp == 3 && !ex && pv == 4) {dur = 2*20;}
+			else if(amp == 3 && ex && pv == 4) {dur = 5*20;}
+			else if(amp == 5 && !ex && pv == 4) {dur = 2*20;}
 			list.add(new PotionEffect(PotionEffectType.SLOW, dur, amp));
 			amp = pd.isUpgraded() ? 3 : 2;
 			if(amp == 2 && !ex && pv == 1) {dur = 20*20;}
@@ -692,6 +717,10 @@ public class GuiHandler
 			else if(amp == 2 && !ex && pv == 3) {dur = 5*20;}
 			else if(amp == 2 && ex && pv == 3) {dur = 10*20;}
 			else if(amp == 3 && !ex && pv == 3) {dur = 5*20;}
+			
+			else if(amp == 2 && !ex && pv == 4) {dur = 2*20;}
+			else if(amp == 2 && ex && pv == 4) {dur = 5*20;}
+			else if(amp == 3 && !ex && pv == 4) {dur = 2*20;}
 			list.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, dur, amp));
 			break;
 		case LUCK:
@@ -700,6 +729,8 @@ public class GuiHandler
 			else if(amp == 0 && !ex && pv == 2) {dur = 5*60*20;}
 			
 			else if(amp == 0 && !ex && pv == 3) {dur = 75*20;}
+			
+			else if(amp == 0 && !ex && pv == 4) {dur = 37*20;}
 			list.add(pt.getEffectType().createEffect(dur, amp));
 			break;
 		}
