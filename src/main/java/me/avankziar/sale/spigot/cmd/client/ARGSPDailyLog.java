@@ -60,11 +60,11 @@ public class ARGSPDailyLog extends ArgumentModule
 				"`player_uuid` = ?", otherplayer.toString()));
 		if(ssdll.size() == 0)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.ShoppingDailyLog.NoLogs")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.ClientDailyLog.NoLogs")));
 			return;
 		}
 		ArrayList<String> msg = new ArrayList<>();
-		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ShoppingDailyLog.Headline")
+		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ClientDailyLog.Headline")
 				.replace("%page%", String.valueOf(page))
 				.replace("%player%", Utility.convertUUIDToName(otherplayer.toString())));
 		for(ShoppingDailyLog ssdl : ssdll)
@@ -74,7 +74,7 @@ public class ARGSPDailyLog extends ArgumentModule
 			long date = ssdl.getDate();
 			double bcost = ssdl.getBuyAmount();
 			double scost = ssdl.getSellAmount();
-			String s = plugin.getYamlHandler().getLang().getString("Cmd.ShoppingDailyLog.Log")
+			String s = plugin.getYamlHandler().getLang().getString("Cmd.ClientDailyLog.Log")
 					.replace("%time%", TimeHandler.getDateTime(date,
 							plugin.getYamlHandler().getConfig().getString("SignShop.ShopDailyLog.TimePattern")))
 					.replace("%buyamo%", String.valueOf(bamo))

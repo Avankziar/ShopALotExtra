@@ -80,11 +80,11 @@ public class ARGSPLog extends ArgumentModule
 		}
 		if(spll.size() == 0)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.ShoppingLog.NoLogs")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.ClientLog.NoLogs")));
 			return;
 		}
 		ArrayList<String> msg = new ArrayList<>();
-		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ShoppingLog.Headline")
+		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ClientLog.Headline")
 				.replace("%page%", String.valueOf(page))
 				.replace("%player%", Utility.convertUUIDToName(otherplayer.toString()))
 				.replace("%waytype%", wt == null ? "-" : wt.toString()));
@@ -104,10 +104,10 @@ public class ARGSPLog extends ArgumentModule
 			ItemStack is = spl.getItemStack();
 			if(spl.getWayType() == WayType.BUY)
 			{
-				type = "Cmd.ShoppingLog.Buy";
+				type = "Cmd.ClientLog.Buy";
 			} else
 			{
-				type = "Cmd.ShoppingLog.Sell";
+				type = "Cmd.SClientLog.Sell";
 			}
 			String s = plugin.getYamlHandler().getLang().getString(type)
 					.replace("%time%", TimeHandler.getDateTime(time, plugin.getYamlHandler().getConfig().getString("SignShop.ShopLog.TimePattern")))

@@ -348,13 +348,13 @@ public class AdminstrationFunctionHandler
 				player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
 				return;
 			}
-			ssh.setItemStorageTotal(ssh.getItemStorageTotal()+ca);
-			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 			for(String s : list)
 			{
 				player.sendMessage(ChatApi.tl(s));
 			}
 		}
+		ssh.setItemStorageTotal(ssh.getItemStorageTotal()+ca);
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
 	}
 	

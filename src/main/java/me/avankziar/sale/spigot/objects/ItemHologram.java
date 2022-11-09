@@ -57,7 +57,7 @@ public class ItemHologram
 		}
 		lines.add(ChatApi.tl(im.hasDisplayName() 
 				? im.getDisplayName() 
-				: (ptd != null && pmd != null
+				: (ptd != null && pmd != null && is.getType() != Material.TIPPED_ARROW
 					? SaLE.getPlugin().getEnumTl().getLocalization(ptd, pmd)
 					: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))));
 		if(im.hasLore()) 
@@ -152,11 +152,14 @@ public class ItemHologram
 			if(im instanceof AxolotlBucketMeta)
 			{
 				AxolotlBucketMeta abm = (AxolotlBucketMeta) im;
-				if(abm.getVariant() != null)
+				try
 				{
-					lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemLore.AxolotlBucketMeta") 
-							+ abm.getVariant().toString()));
-				}
+					if(abm.getVariant() != null)
+					{
+						lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemLore.AxolotlBucketMeta") 
+								+ abm.getVariant().toString()));
+					}
+				} catch(Exception e) {}
 			}
 			if(im instanceof BlockStateMeta)
 			{
@@ -206,7 +209,8 @@ public class ItemHologram
 			{
 				LeatherArmorMeta lam = (LeatherArmorMeta) im;
 				lines.add(ChatApi.tl("&7"+String.format("#%02x%02x%02x",
-						lam.getColor().getRed(), lam.getColor().getGreen(), lam.getColor().getBlue())));
+						lam.getColor().getRed(), lam.getColor().getGreen(), lam.getColor().getBlue())
+						.toUpperCase()));
 			}
 			if(im instanceof SpawnEggMeta)
 			{
@@ -220,10 +224,7 @@ public class ItemHologram
 					
 				} catch(Exception e)
 				{
-					if(sem.getSpawnedType() != null)
-					{
-						lines.add(ChatApi.tl("&7"+GuiHandler.getSpawnEggType(is.getType())));
-					}
+					lines.add(ChatApi.tl("&7"+GuiHandler.getSpawnEggType(is.getType())));
 				}
 			}
 			if(im instanceof SuspiciousStewMeta)

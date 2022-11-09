@@ -508,10 +508,13 @@ public class GuiHandler
 		if(im instanceof AxolotlBucketMeta)
 		{
 			AxolotlBucketMeta abm = (AxolotlBucketMeta) im;
-			if(abm.getVariant() != null)
+			try
 			{
-				list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.AxolotlBucketMeta") + abm.getVariant().toString()));
-			}
+				if(abm.getVariant() != null)
+				{
+					list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.AxolotlBucketMeta") + abm.getVariant().toString()));
+				}
+			} catch(Exception e) {}
 		}
 		if(im instanceof BannerMeta)
 		{
@@ -570,7 +573,8 @@ public class GuiHandler
 		{
 			LeatherArmorMeta lam = (LeatherArmorMeta) im;
 			list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.LeatherArmorMeta")+ 
-					String.format("#%02x%02x%02x", lam.getColor().getRed(), lam.getColor().getGreen(), lam.getColor().getBlue())));
+					String.format("#%02x%02x%02x", lam.getColor().getRed(), lam.getColor().getGreen(), lam.getColor().getBlue())
+					.toUpperCase()));
 		}
 		if(im instanceof SpawnEggMeta)
 		{
