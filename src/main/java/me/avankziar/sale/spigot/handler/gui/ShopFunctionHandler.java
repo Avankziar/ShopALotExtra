@@ -38,9 +38,9 @@ import main.java.me.avankziar.sale.spigot.handler.MessageHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
-import main.java.me.avankziar.sale.spigot.objects.ShoppingDailyLog;
-import main.java.me.avankziar.sale.spigot.objects.ShoppingLog;
-import main.java.me.avankziar.sale.spigot.objects.ShoppingLog.WayType;
+import main.java.me.avankziar.sale.spigot.objects.ClientDailyLog;
+import main.java.me.avankziar.sale.spigot.objects.ClientLog;
+import main.java.me.avankziar.sale.spigot.objects.ClientLog.WayType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SubscribedShop;
 import main.java.me.avankziar.sale.spigot.permission.BoniMali;
@@ -326,15 +326,15 @@ public class ShopFunctionHandler
 		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
-		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), System.currentTimeMillis(),
+		ClientLog sl = new ClientLog(0, player.getUniqueId(), System.currentTimeMillis(),
 				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.BUY, samo*d, (int) samo,
 				ssh.getId());
 		plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTLOG, sl);
-		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.CLIENTDAILYLOG,
+		ClientDailyLog sdl = (ClientDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.CLIENTDAILYLOG,
 				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId().toString(), date);
 		if(sdl == null)
 		{
-			sdl = new ShoppingDailyLog(0, player.getUniqueId(), date, samo*d, 0, (int) samo, 0);
+			sdl = new ClientDailyLog(0, player.getUniqueId(), date, samo*d, 0, (int) samo, 0);
 			plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTDAILYLOG, sdl);
 		} else
 		{
@@ -582,15 +582,15 @@ public class ShopFunctionHandler
 		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		long date = TimeHandler.getDate(TimeHandler.getDate(now));
-		ShoppingLog sl = new ShoppingLog(0, player.getUniqueId(), now,
+		ClientLog sl = new ClientLog(0, player.getUniqueId(), now,
 				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.SELL, samo*d, (int) samo,
 				ssh.getId());
 		plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTLOG, sl);
-		ShoppingDailyLog sdl = (ShoppingDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.CLIENTDAILYLOG,
+		ClientDailyLog sdl = (ClientDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.CLIENTDAILYLOG,
 				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId().toString(), date);
 		if(sdl == null)
 		{
-			sdl = new ShoppingDailyLog(0, player.getUniqueId(), date, 0, samo*d, 0, (int) samo);
+			sdl = new ClientDailyLog(0, player.getUniqueId(), date, 0, samo*d, 0, (int) samo);
 			plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTDAILYLOG, sdl);
 		} else
 		{

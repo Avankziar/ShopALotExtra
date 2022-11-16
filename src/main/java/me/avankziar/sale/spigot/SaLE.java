@@ -232,12 +232,12 @@ public class SaLE extends JavaPlugin
 		ArgumentConstructor spdailylog = new ArgumentConstructor(CommandExecuteType.SALE_CLIENT_DAILYLOG, "sale_client_dailylog",
 				1, 1, 3, false, null);
 		new ARGSPDailyLog(plugin, spdailylog);
-		ArgumentConstructor shopping = new ArgumentConstructor(CommandExecuteType.SALE_CLIENT, "sale_client", 0, 0, 0, false, null,
+		ArgumentConstructor client = new ArgumentConstructor(CommandExecuteType.SALE_CLIENT, "sale_client", 0, 0, 0, false, null,
 				splog, spdailylog);
-		new ARGShopping(plugin, shopping);		
+		new ARGShopping(plugin, client);		
 		
 		CommandConstructor sale = new CommandConstructor(CommandExecuteType.SALE, "sale", false,
-				shop, shopping);
+				shop, client);
 		registerCommand(sale.getPath(), sale.getName());
 		getCommand(sale.getName()).setExecutor(new SaLECommandExecutor(plugin, sale));
 		getCommand(sale.getName()).setTabCompleter(tab);

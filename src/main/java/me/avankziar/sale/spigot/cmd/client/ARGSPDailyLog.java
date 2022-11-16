@@ -17,7 +17,7 @@ import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
-import main.java.me.avankziar.sale.spigot.objects.ShoppingDailyLog;
+import main.java.me.avankziar.sale.spigot.objects.ClientDailyLog;
 import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
 import main.java.me.avankziar.sale.spigot.permission.Bypass.Permission;
 
@@ -55,7 +55,7 @@ public class ARGSPDailyLog extends ArgumentModule
 				}
 			}
 		}
-		ArrayList<ShoppingDailyLog> ssdll = ShoppingDailyLog.convert(plugin.getMysqlHandler().getList(
+		ArrayList<ClientDailyLog> ssdll = ClientDailyLog.convert(plugin.getMysqlHandler().getList(
 				MysqlHandler.Type.CLIENTDAILYLOG, "`dates` DESC", page*10, 10,
 				"`player_uuid` = ?", otherplayer.toString()));
 		if(ssdll.size() == 0)
@@ -67,7 +67,7 @@ public class ARGSPDailyLog extends ArgumentModule
 		msg.add(plugin.getYamlHandler().getLang().getString("Cmd.ClientDailyLog.Headline")
 				.replace("%page%", String.valueOf(page))
 				.replace("%player%", Utility.convertUUIDToName(otherplayer.toString())));
-		for(ShoppingDailyLog ssdl : ssdll)
+		for(ClientDailyLog ssdl : ssdll)
 		{
 			int bamo = ssdl.getBuyItemAmount();
 			int samo = ssdl.getSellItemAmount();

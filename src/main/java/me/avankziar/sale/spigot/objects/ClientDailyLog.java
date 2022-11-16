@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandable;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 
-public class ShoppingDailyLog implements MysqlHandable
+public class ClientDailyLog implements MysqlHandable
 {
 	private int id;
 	private UUID player;
@@ -21,9 +21,9 @@ public class ShoppingDailyLog implements MysqlHandable
 	private int buyItemAmount; //amount items of client buying
 	private int sellItemAmount; //amount item of client selling
 	
-	public ShoppingDailyLog(){}
+	public ClientDailyLog(){}
 	
-	public ShoppingDailyLog(int id, UUID player, long date,
+	public ClientDailyLog(int id, UUID player, long date,
 			double buyAmount, double sellAmount, 
 			int buyItemAmount, int sellItemAmount)
 	{
@@ -191,7 +191,7 @@ public class ShoppingDailyLog implements MysqlHandable
 			ArrayList<Object> al = new ArrayList<>();
 			while (rs.next()) 
 			{
-				al.add(new ShoppingDailyLog(
+				al.add(new ClientDailyLog(
 						rs.getInt("id"),
 						UUID.fromString(rs.getString("player_uuid")),
 						rs.getLong("dates"),
@@ -208,14 +208,14 @@ public class ShoppingDailyLog implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
-	public static ArrayList<ShoppingDailyLog> convert(ArrayList<Object> arrayList)
+	public static ArrayList<ClientDailyLog> convert(ArrayList<Object> arrayList)
 	{
-		ArrayList<ShoppingDailyLog> l = new ArrayList<>();
+		ArrayList<ClientDailyLog> l = new ArrayList<>();
 		for(Object o : arrayList)
 		{
-			if(o instanceof ShoppingDailyLog)
+			if(o instanceof ClientDailyLog)
 			{
-				l.add((ShoppingDailyLog) o);
+				l.add((ClientDailyLog) o);
 			}
 		}
 		return l;

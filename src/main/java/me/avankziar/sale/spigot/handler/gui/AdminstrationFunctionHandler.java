@@ -248,7 +248,7 @@ public class AdminstrationFunctionHandler
 	}
 	
 	private static void addStorage(Player player, SignShop ssh, long amount, Inventory inv, SettingsLevel settingsLevel)
-	{//FIXME Immer noch ein problem?
+	{//FIXME Immer noch ein problem!
 		if(isTooMuchShop(player, ssh))
 		{
 			return;
@@ -295,6 +295,37 @@ public class AdminstrationFunctionHandler
 			{
 				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, BoniMali.COST_ADDING_STORAGE.getBonusMalus());
 			}
+			if(plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.SHOP, ec) == null
+					&& plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, ec) == null)
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw")));
+				return;
+			}
+			double dd = d*ca;
+			Account from = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.SHOP, ec);
+			if(from == null)
+			{
+				from = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, ec);
+				if(from == null)
+				{
+					player.sendMessage(ChatApi.tl(
+							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw")));
+					return;
+				}
+			}
+			if(!plugin.getIFHEco().canManageAccount(from, player.getUniqueId(), AccountManagementType.CAN_WITHDRAW))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouCannotWithdraw")));
+				return;
+			}
+			if(from.getBalance() < dd)
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.NoEnoughMoney")));
+				return;
+			}
 			moneymap.put(ec, d);
 		}
 		String category = plugin.getYamlHandler().getLang().getString("Economy.AddStorage.Category");
@@ -307,12 +338,16 @@ public class AdminstrationFunctionHandler
 		{
 			EconomyCurrency ec = e.getKey();
 			double d = e.getValue()*ca;
-			Account from = plugin.getIFHEco().getAccount(ssh.getAccountId());
+			Account from = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.SHOP, ec);
 			if(from == null)
 			{
-				player.sendMessage(ChatApi.tl(
-						plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw")));
-				return;
+				from = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, ec);
+				if(from == null)
+				{
+					player.sendMessage(ChatApi.tl(
+							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw")));
+					return;
+				}
 			}
 			Account to = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.VOID, ec);
 			EconomyAction ea = plugin.getIFHEco().transaction(from, to, d, OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);

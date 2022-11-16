@@ -20,8 +20,8 @@ import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
-import main.java.me.avankziar.sale.spigot.objects.ShoppingLog;
-import main.java.me.avankziar.sale.spigot.objects.ShoppingLog.WayType;
+import main.java.me.avankziar.sale.spigot.objects.ClientLog;
+import main.java.me.avankziar.sale.spigot.objects.ClientLog.WayType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
 import main.java.me.avankziar.sale.spigot.permission.Bypass.Permission;
@@ -66,15 +66,15 @@ public class ARGSPLog extends ArgumentModule
 			boolean b = Boolean.parseBoolean(args[4]);
 			wt = b ? WayType.BUY : WayType.SELL;
 		}
-		ArrayList<ShoppingLog> spll;
+		ArrayList<ClientLog> spll;
 		if(wt != null)
 		{
-			spll = ShoppingLog.convert(plugin.getMysqlHandler().getList(
+			spll = ClientLog.convert(plugin.getMysqlHandler().getList(
 					MysqlHandler.Type.CLIENTLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ? AND `way_type` = ?", otherplayer.toString(), wt.toString()));
 		} else
 		{
-			spll = ShoppingLog.convert(plugin.getMysqlHandler().getList(
+			spll = ClientLog.convert(plugin.getMysqlHandler().getList(
 					MysqlHandler.Type.CLIENTLOG, "`date_time` DESC", page*10, 10,
 					"`player_uuid` = ?", otherplayer.toString()));
 		}
@@ -88,7 +88,7 @@ public class ARGSPLog extends ArgumentModule
 				.replace("%page%", String.valueOf(page))
 				.replace("%player%", Utility.convertUUIDToName(otherplayer.toString()))
 				.replace("%waytype%", wt == null ? "-" : wt.toString()));
-		for(ShoppingLog spl : spll)
+		for(ClientLog spl : spll)
 		{
 			String type;
 			SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", spl.getSignShopId());
@@ -107,7 +107,7 @@ public class ARGSPLog extends ArgumentModule
 				type = "Cmd.ClientLog.Buy";
 			} else
 			{
-				type = "Cmd.SClientLog.Sell";
+				type = "Cmd.ClientLog.Sell";
 			}
 			String s = plugin.getYamlHandler().getLang().getString(type)
 					.replace("%time%", TimeHandler.getDateTime(time, plugin.getYamlHandler().getConfig().getString("SignShop.ShopLog.TimePattern")))

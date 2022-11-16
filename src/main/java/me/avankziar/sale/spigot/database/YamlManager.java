@@ -742,6 +742,14 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast keinen Account um die Kosten abziehen zu können.",
 						"&cYou do not have an account to be able to deduct the costs."}));
+		languageKeys.put("AdminstrationFunctionHandler.AddStorage.YouCannotWithdraw"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast kein Abhebrecht des angestrebte Account!",
+						"&cYou do not have the right to withdraw from the targeted account!"}));
+		languageKeys.put("AdminstrationFunctionHandler.AddStorage.NoEnoughMoney"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer angestrebte Account hat nicht genug Geld!",
+						"&cThe targeted account does not have enough money!"}));
 		languageKeys.put("AdminstrationFunctionHandler.AddStorage.TooManyAlreadyAsStorage"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop hat schon zu viel Lagerraum, als es ihm bzw. dir möglich ist!",
@@ -989,31 +997,31 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% &e>> &f%shop% &e>> &7[&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
 						"&7%time% &e>> &f%shop% &e>> &7[&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
-		languageKeys.put("Cmd.clientLog.NoLogs", 
+		languageKeys.put("Cmd.ClientLog.NoLogs", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cKeine clientlogs vorhanden!",
+						"&cKeine Kundenlogs vorhanden!",
 						"&cNo clientlogs available!"}));
-		languageKeys.put("Cmd.clientLog.Headline", 
+		languageKeys.put("Cmd.ClientLog.Headline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&f===&eclientLog %player%, Seite %page%, Type %waytype%&f===",
-						"&f===&eclientLog %player%, page %page%, Type %waytype%&f==="}));
-		languageKeys.put("Cmd.clientLog.Buy", 
+						"&f===&eKundenLog %player%, Seite %page%, Type %waytype%&f===",
+						"&f===&eClientLog %player%, page %page%, Type %waytype%&f==="}));
+		languageKeys.put("Cmd.ClientLog.Buy", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% [&#FF8800K&7]&f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%",
 						"&7%time% [&#FF8800B&7]&f%shop% &#FF8800>> &r%item% &rx &e%amount% &#FF8800>> %format%"}));
-		languageKeys.put("Cmd.clientLog.Sell", 
+		languageKeys.put("Cmd.ClientLog.Sell", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% [&aV&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%",
 						"&7%time% [&aS&7]&f%shop% &a>> &r%item% &rx &e%amount% &a>> &r%format%"}));
-		languageKeys.put("Cmd.clientDailyLog.NoLogs", 
+		languageKeys.put("Cmd.ClientDailyLog.NoLogs", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cKeine täglichen Signshoplogs vorhanden!",
+						"&cKeine täglichen Kundenlogs vorhanden!",
 						"&cNo daily Signshoplogs available!"}));
-		languageKeys.put("Cmd.clientDailyLog.Headline", 
+		languageKeys.put("Cmd.ClientDailyLog.Headline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&f===&eShopLog %player%, Seite %page%&f===",
+						"&f===&eKundenTagesLog %player%, Seite %page%&f===",
 						"&f===&eShopLog %player%, page %page%&f==="}));
-		languageKeys.put("Cmd.clientDailyLog.Log", 
+		languageKeys.put("Cmd.ClientDailyLog.Log", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% &e>> &7[&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
 						"&7%time% &e>> &7[&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));

@@ -15,7 +15,7 @@ import main.java.me.avankziar.sale.spigot.database.MysqlHandable;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.Base64Handler;
 
-public class ShoppingLog implements MysqlHandable
+public class ClientLog implements MysqlHandable
 {
 	public enum WayType
 	{
@@ -33,9 +33,9 @@ public class ShoppingLog implements MysqlHandable
 	private double amount;
 	private int itemAmount;
 	
-	public ShoppingLog(){}
+	public ClientLog(){}
 	
-	public ShoppingLog(int id, UUID owner, long dateTime,
+	public ClientLog(int id, UUID owner, long dateTime,
 			ItemStack itemStack, String displayName, Material material,
 			WayType wayType, double amount, int itemAmount, int signShopId)
 	{
@@ -51,7 +51,7 @@ public class ShoppingLog implements MysqlHandable
 		setSignShopId(signShopId);
 	}
 	
-	public ShoppingLog(int id, UUID owner, long dateTime,
+	public ClientLog(int id, UUID owner, long dateTime,
 			String itemStack, String displayName, String material,
 			String wayType, double amount, int itemAmount, int signShopId)
 	{
@@ -258,7 +258,7 @@ public class ShoppingLog implements MysqlHandable
 			ArrayList<Object> al = new ArrayList<>();
 			while (rs.next()) 
 			{
-				al.add(new ShoppingLog(
+				al.add(new ClientLog(
 						rs.getInt("id"),
 						UUID.fromString(rs.getString("player_uuid")),
 						rs.getLong("date_time"),
@@ -278,14 +278,14 @@ public class ShoppingLog implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
-	public static ArrayList<ShoppingLog> convert(ArrayList<Object> arrayList)
+	public static ArrayList<ClientLog> convert(ArrayList<Object> arrayList)
 	{
-		ArrayList<ShoppingLog> l = new ArrayList<>();
+		ArrayList<ClientLog> l = new ArrayList<>();
 		for(Object o : arrayList)
 		{
-			if(o instanceof ShoppingLog)
+			if(o instanceof ClientLog)
 			{
-				l.add((ShoppingLog) o);
+				l.add((ClientLog) o);
 			}
 		}
 		return l;
