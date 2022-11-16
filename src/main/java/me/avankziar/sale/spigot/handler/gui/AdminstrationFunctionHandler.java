@@ -248,7 +248,7 @@ public class AdminstrationFunctionHandler
 	}
 	
 	private static void addStorage(Player player, SignShop ssh, long amount, Inventory inv, SettingsLevel settingsLevel)
-	{
+	{//FIXME Immer noch ein problem?
 		if(isTooMuchShop(player, ssh))
 		{
 			return;
