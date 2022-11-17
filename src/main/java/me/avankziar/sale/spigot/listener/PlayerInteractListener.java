@@ -123,9 +123,7 @@ public class PlayerInteractListener implements Listener
 				}
 			}
 		}
-		if(((ssh.getListedType() == ListedType.BLACKLIST || ssh.getListedType() == ListedType.ALL)  
-				&& SignHandler.isListed(ListedType.BLACKLIST, ssh, player.getUniqueId()))
-				
+		if((ssh.getListedType() == ListedType.BLACKLIST && SignHandler.isListed(ListedType.BLACKLIST, ssh, player.getUniqueId()))
 				|| (ssh.getListedType() == ListedType.WHITELIST && !SignHandler.isListed(ListedType.WHITELIST, ssh, player.getUniqueId()))
 				|| (ssh.getListedType() == ListedType.MEMBER && !SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
 				|| (ssh.getListedType() == ListedType.CUSTOM && !SignHandler.isListed(ListedType.CUSTOM, ssh, player.getUniqueId()))

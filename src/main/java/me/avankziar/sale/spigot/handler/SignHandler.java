@@ -56,6 +56,11 @@ public class SignHandler
 			}
 			return MaterialHandler.getMaterial(ssh.getMaterial(), b != null ? b.getType() : Material.ACACIA_BOAT);
 		case 1:
+			if(!ssh.canBuy())
+			{
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
+						.replace("%amount%", "&4--");
+			}
 			if(isDiscount(ssh, System.currentTimeMillis()))
 			{ 
 				if(ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0)
@@ -81,6 +86,11 @@ public class SignHandler
 						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getBuyAmount()));
 			}			
 		case 2:
+			if(!ssh.canSell())
+			{
+				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
+						.replace("%amount%", "&4--");
+			}
 			if(isDiscount(ssh, System.currentTimeMillis()))
 			{
 				if(ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)

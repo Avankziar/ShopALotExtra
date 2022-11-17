@@ -142,7 +142,7 @@ public class ShopFunctionHandler
 	}
 	
 	private static void buy(Player player, SignShop ssh, long amount, Inventory inv, SettingsLevel settingsLevel)
-	{
+	{//FIXME Verkaufspreis und kaufpreis stimmen nicht siehe kundenlog
 		if(!ssh.canBuy())
 		{
 			return;
@@ -327,18 +327,18 @@ public class ShopFunctionHandler
 				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
 		ClientLog sl = new ClientLog(0, player.getUniqueId(), System.currentTimeMillis(),
-				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.BUY, samo*d, (int) samo,
+				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.BUY, samo*d.doubleValue(), (int) samo,
 				ssh.getId());
 		plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTLOG, sl);
 		ClientDailyLog sdl = (ClientDailyLog) plugin.getMysqlHandler().getData(MysqlHandler.Type.CLIENTDAILYLOG,
 				"`player_uuid` = ? AND `dates` = ?", player.getUniqueId().toString(), date);
 		if(sdl == null)
 		{
-			sdl = new ClientDailyLog(0, player.getUniqueId(), date, samo*d, 0, (int) samo, 0);
+			sdl = new ClientDailyLog(0, player.getUniqueId(), date, samo*d.doubleValue(), 0, (int) samo, 0);
 			plugin.getMysqlHandler().create(MysqlHandler.Type.CLIENTDAILYLOG, sdl);
 		} else
 		{
-			sdl.setBuyAmount(sdl.getBuyAmount()+samo*d);
+			sdl.setBuyAmount(sdl.getBuyAmount()+samo*d.doubleValue());
 			sdl.setBuyItemAmount(sdl.getBuyItemAmount()+(int) samo);
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.CLIENTDAILYLOG, sdl, "`id` = ?", sdl.getId());
 		}

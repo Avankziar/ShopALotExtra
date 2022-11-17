@@ -388,7 +388,7 @@ public class BackgroundTask
 		}.runTaskTimer(plugin, 0L, runEveryXMin*20L);
 	}
 	
-	public void doShopLog() //TODO fehler bei der erstellung des shoplogs
+	public void doShopLog()
 	{
 		ArrayList<UUID> del = new ArrayList<>();
 		for(UUID shopOwner : ShopPostTransactionListener.maping2.keySet())
