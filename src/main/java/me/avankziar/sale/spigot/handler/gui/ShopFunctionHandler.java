@@ -198,11 +198,13 @@ public class ShopFunctionHandler
 		if(isDiscount(ssh, now))
 		{
 			d = ssh.getDiscountBuyAmount();
-			if((d == null && ssh.getBuyAmount() == null) || (d < 0.0 && ssh.getBuyAmount() < 0.0))
+			if((ssh.getDiscountBuyAmount() == null && ssh.getBuyAmount() == null) 
+					|| (ssh.getDiscountBuyAmount() < 0.0 && ssh.getBuyAmount() < 0.0))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NotInit")));
 				return;
-			} else
+			} else if(ssh.getDiscountBuyAmount() == null 
+					|| ssh.getDiscountBuyAmount() < 0.0)
 			{
 				d = ssh.getBuyAmount();
 			}
@@ -426,11 +428,12 @@ public class ShopFunctionHandler
 		if(isDiscount(ssh, now))
 		{
 			d = ssh.getDiscountSellAmount();
-			if((d == null && ssh.getSellAmount() == null) || (d < 0.0 && ssh.getSellAmount() < 0.0))
+			if((ssh.getDiscountSellAmount() == null && ssh.getSellAmount() == null) 
+					|| (ssh.getDiscountSellAmount() < 0.0 && ssh.getSellAmount() < 0.0))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.NotInit")));
 				return;
-			} else
+			} else if(ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0)
 			{
 				d = ssh.getSellAmount();
 			}
