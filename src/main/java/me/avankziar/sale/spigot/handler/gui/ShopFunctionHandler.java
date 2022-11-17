@@ -142,7 +142,7 @@ public class ShopFunctionHandler
 	}
 	
 	private static void buy(Player player, SignShop ssh, long amount, Inventory inv, SettingsLevel settingsLevel)
-	{//FIXME Verkaufspreis und kaufpreis stimmen nicht siehe kundenlog
+	{
 		if(!ssh.canBuy())
 		{
 			return;

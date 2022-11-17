@@ -1,3 +1,8 @@
+Build 1-0-26
+- Kundenlog bugfixes
+- ClientLog Object Bugfix
+- Eine Vielzahl von ItemGui Ausgabefixes
+
 Build 1-0-25
 - cmd clientlog fix
 - addStorage Account Handling fix & Sicherheiten eingefügt
