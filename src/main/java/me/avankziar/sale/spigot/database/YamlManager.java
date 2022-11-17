@@ -3112,7 +3112,7 @@ public class YamlManager
 		shop.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&fPreis: &r%sell1%",
-						"&Verkaufe x1 Items",
+						"&bVerkaufe x1 Items",
 						"&boder soviele noch im Inventar sind",
 						"&boder der Shop annimmt.",
 						"&fPrice: &r%sell1%",

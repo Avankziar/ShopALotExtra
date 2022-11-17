@@ -46,7 +46,7 @@ public class ClientLog implements MysqlHandable
 		setDisplayName(displayName);
 		setMaterial(material);
 		setWayType(wayType);
-		setAmount(itemAmount);
+		setAmount(amount);
 		setItemAmount(itemAmount);
 		setSignShopId(signShopId);
 	}
@@ -62,7 +62,7 @@ public class ClientLog implements MysqlHandable
 		setDisplayName(displayName);
 		setMaterial(Material.valueOf(material));
 		setWayType(WayType.valueOf(wayType));
-		setAmount(itemAmount);
+		setAmount(amount);
 		setItemAmount(itemAmount);
 		setSignShopId(signShopId);
 	}
