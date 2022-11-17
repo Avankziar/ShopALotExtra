@@ -230,7 +230,7 @@ public class AdminstrationFunctionHandler
 	
 	private static boolean isTooMuchShop(Player player, SignShop ssh)
 	{
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			return false;
 		}
@@ -399,7 +399,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -428,7 +428,7 @@ public class AdminstrationFunctionHandler
 	
 	private static void deleteAll(Player player, SignShop ssh)
 	{
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -471,7 +471,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -500,7 +500,7 @@ public class AdminstrationFunctionHandler
 	
 	private static void setClearASH(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
 	{
-		if(!ssh.getOwner().equals(player.getUniqueId()))
+		if(!ssh.getOwner().equals(player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -518,7 +518,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -590,7 +590,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -624,7 +624,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -776,7 +776,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -792,7 +792,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -908,7 +908,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -927,7 +927,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -960,7 +960,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
@@ -981,7 +981,7 @@ public class AdminstrationFunctionHandler
 		{
 			return;
 		}
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
