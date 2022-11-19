@@ -106,6 +106,11 @@ public class GuiPreListener implements Listener
 		{
 			return;
 		}
+		if(event.getClick() == org.bukkit.event.inventory.ClickType.SWAP_OFFHAND)
+		{
+			event.setCancelled(true);
+			event.setResult(Result.DENY);
+		}
 		boolean clickEventCancel = Boolean.parseBoolean(pdc.get(nclickEventCancel, PersistentDataType.STRING));
 		if(clickEventCancel)
 		{
