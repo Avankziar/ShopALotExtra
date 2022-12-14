@@ -1919,7 +1919,7 @@ public class YamlManager
 						"&bZz.: &f%possiblebuy%",
 						"&bVerbleibene Käufe, sind die Anzahl",
 						"&ban Käufe die noch getätig werden können.",
-						"&bIst die Zahl auf 0 können keine Items mehr Kauft werden.",
+						"&bIst die Zahl auf 0 können keine Items mehr gekauft werden.",
 						"&cQ &bfür das Zurücksetzen.",
 						"&cLinks/Rechtsklick &bzum öffnen des Numpad Gui.",
 						"&bAtm.: &f%possiblebuy%",

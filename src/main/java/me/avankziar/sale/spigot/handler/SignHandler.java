@@ -291,6 +291,10 @@ public class SignHandler
 	
 	public static boolean putInItemIntoShop(SignShop ssh, Player player, ItemStack toPutIn)
 	{
+		if(ssh.getItemStorageTotal() >= ssh.getItemStorageCurrent())
+		{
+			return false;
+		}
 		final boolean isShift = player.isSneaking();
 		ItemStack c = toPutIn.clone();
 		c.setAmount(1);

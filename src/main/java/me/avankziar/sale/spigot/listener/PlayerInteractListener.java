@@ -1,6 +1,7 @@
 package main.java.me.avankziar.sale.spigot.listener;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -27,6 +28,7 @@ import main.java.me.avankziar.sale.spigot.objects.SignShop;
 public class PlayerInteractListener implements Listener
 {
 	private SaLE plugin;
+	private static LinkedHashMap<String, Long> cooldown = new LinkedHashMap<>();
 	
 	public PlayerInteractListener(SaLE plugin)
 	{
@@ -80,6 +82,10 @@ public class PlayerInteractListener implements Listener
 			{
 				if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 				{
+					if(isOnCooldown(player))
+					{
+						return;
+					}
 					SignHandler.takeOutItemFromShop(ssh, player);
 					event.setCancelled(true);
 					return;
@@ -114,6 +120,10 @@ public class PlayerInteractListener implements Listener
 						return;
 					} else
 					{
+						if(isOnCooldown(player))
+						{
+							return;
+						}
 						if(SignHandler.putInItemIntoShop(ssh, player, player.getInventory().getItemInMainHand()))
 						{
 							event.setCancelled(true);
@@ -199,5 +209,23 @@ public class PlayerInteractListener implements Listener
 			return;
 		}
 		event.setCancelled(true);
+	}
+	
+	private boolean isOnCooldown(Player player)
+	{
+		if(cooldown.containsKey(player.getUniqueId().toString()))
+		{
+			if(cooldown.get(player.getUniqueId().toString()) > System.currentTimeMillis())
+			{
+				return true;
+			}
+		}
+		addCooldown(player);
+		return false;
+	}
+	
+	private void addCooldown(Player player)
+	{
+		cooldown.put(player.getUniqueId().toString(), System.currentTimeMillis()+1000L);
 	}
 }

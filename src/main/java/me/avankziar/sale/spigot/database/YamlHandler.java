@@ -90,7 +90,7 @@ public class YamlHandler
 	@SuppressWarnings("deprecation")
 	private boolean writeFile(File file, YamlConfiguration yml, LinkedHashMap<String, Language> keyMap)
 	{
-		yml.options().header("For more explanation see \n Your pluginsite");
+		yml.options().header("For more explanation see \n https://www.spigotmc.org/resources/shop-a-lot-extra.106371/");
 		for(String key : keyMap.keySet())
 		{
 			Language languageObject = keyMap.get(key);

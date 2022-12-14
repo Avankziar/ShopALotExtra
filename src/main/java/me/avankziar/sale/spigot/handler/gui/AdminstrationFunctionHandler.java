@@ -149,7 +149,7 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_KEYBOARD_A_CAPITAL: keyboard(player, ssh, "A", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD_A_SMALL: keyboard(player, ssh, "a", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD_B_CAPITAL: keyboard(player, ssh, "B", guiType, openInv, settingsLevel); break;
-		case ADMINISTRATION_KEYBOARD_B_SMALL: keyboard(player, ssh, "B", guiType, openInv, settingsLevel); break;
+		case ADMINISTRATION_KEYBOARD_B_SMALL: keyboard(player, ssh, "b", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD_C_CAPITAL: keyboard(player, ssh, "C", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD_C_SMALL: keyboard(player, ssh, "c", guiType, openInv, settingsLevel); break;
 		case ADMINISTRATION_KEYBOARD_D_CAPITAL: keyboard(player, ssh, "D", guiType, openInv, settingsLevel); break;

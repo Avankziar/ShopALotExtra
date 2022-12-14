@@ -58,11 +58,22 @@ public class BottomListener implements Listener
 			{
 				return;
 			}
+			if(ssh.getItemStorageCurrent() >= ssh.getItemStorageTotal())
+			{
+				return;
+			}
 			if(!ssh.getItemStack().toString().equals(is.toString()))
 			{
 				return;
 			}
-			final int amount = event.getEvent().getCurrentItem().getAmount();
+			final int amount;
+			if(ssh.getItemStorageCurrent() + event.getEvent().getCurrentItem().getAmount() >= ssh.getItemStorageTotal())
+			{
+				amount = (int)(ssh.getItemStorageTotal() - ssh.getItemStorageCurrent());
+			} else
+			{
+				amount = event.getEvent().getCurrentItem().getAmount();
+			}
 			event.getEvent().getCurrentItem().setAmount(0);
 			ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()+((long) amount));
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ItemsAddedToShop")

@@ -1,3 +1,10 @@
+Build 1-0-27
+- Rechtschreibefehler fix
+- Keine Items in volle Shops setzten fix
+- Cooldown für das reinsetzten von Items in den Shop von Außen.
+- kein Items in fast volle Shops reinsetzten um negative Zahlen zu haben, beim Klicken ins untere Inventar.
+- Small B (b) kann nun benutzt werden im Keyboardgui.
+
 Build 1-0-26
 - Kundenlog bugfixes
 - ClientLog Object Bugfix
