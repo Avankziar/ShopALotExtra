@@ -215,7 +215,8 @@ public class PlayerInteractListener implements Listener
 	{
 		if(cooldown.containsKey(player.getUniqueId().toString()))
 		{
-			if(cooldown.get(player.getUniqueId().toString()) > System.currentTimeMillis())
+			long c = cooldown.get(player.getUniqueId().toString());
+			if(c > System.currentTimeMillis())
 			{
 				return true;
 			}

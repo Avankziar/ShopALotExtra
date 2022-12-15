@@ -1,3 +1,7 @@
+Build 1-0-28
+- Buy 1728 gibt auch wieder 1728 items raus, keine 576
+- Herausnehmen und einfüllen in den Shop funktioniert wieder von außerhalb und unterliegt nun einem 1 s Cooldown.
+
 Build 1-0-27
 - Rechtschreibefehler fix
 - Keine Items in volle Shops setzten fix

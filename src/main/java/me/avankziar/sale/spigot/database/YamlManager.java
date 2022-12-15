@@ -3061,10 +3061,10 @@ public class YamlManager
 						"&bor the shop still in stock."}));
 		shop.put(path+".ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.SHOP_BUY_576.toString()}));
+						ClickFunctionType.SHOP_BUY_1728.toString()}));
 		shop.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.SHOP_BUY_576.toString()}));
+						ClickFunctionType.SHOP_BUY_1728.toString()}));
 		path = "48"; //Buy2304
 		shop.put(path+".CanBuy",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {

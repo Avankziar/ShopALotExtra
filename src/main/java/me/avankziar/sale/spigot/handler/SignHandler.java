@@ -291,7 +291,7 @@ public class SignHandler
 	
 	public static boolean putInItemIntoShop(SignShop ssh, Player player, ItemStack toPutIn)
 	{
-		if(ssh.getItemStorageTotal() >= ssh.getItemStorageCurrent())
+		if(ssh.getItemStorageCurrent() >= ssh.getItemStorageTotal())
 		{
 			return false;
 		}
