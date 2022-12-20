@@ -1,3 +1,14 @@
+Future Build
+- In ASH ein Event auslösen, wenn die Verteilerkiste gelöscht wird. Dann in SaLE diese für alle Kisten rauslöschen.
+
+Build 1-0-29
+- Cooldown wurde auf 1,5 s gesetzt, sowie nicht nur vor dem ein und ausfüllen. Bedeutet der Cooldown wirkt sich
+  auch nun auf den Kauf/Verkauf ansich aus.
+  **Bitte nachvollziehen!**
+- Lagersystem nummer kann nun wieder rausgelöscht werden.
+- Sollte die Lagersystemnummer nicht mehr vorhanden sein, wird per Nachricht herausgegeben, dass der Lagersystemnummer auf 0, aka Default
+  zurück gesetzt wird.
+
 Build 1-0-28
 - Buy 1728 gibt auch wieder 1728 items raus, keine 576
 - Herausnehmen und einfüllen in den Shop funktioniert wieder von außerhalb und unterliegt nun einem 1 s Cooldown.

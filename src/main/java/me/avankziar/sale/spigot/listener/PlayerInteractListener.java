@@ -65,6 +65,10 @@ public class PlayerInteractListener implements Listener
 		{
 			return;
 		}
+		if(isOnCooldown(player))
+		{
+			return;
+		}
 		PlayerData pd = (PlayerData) plugin.getMysqlHandler().getData(
 				MysqlHandler.Type.PLAYERDATA, "`player_uuid` = ?", player.getUniqueId().toString());
 		if((ssh.getMaterial() == Material.AIR)
@@ -82,10 +86,6 @@ public class PlayerInteractListener implements Listener
 			{
 				if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 				{
-					if(isOnCooldown(player))
-					{
-						return;
-					}
 					SignHandler.takeOutItemFromShop(ssh, player);
 					event.setCancelled(true);
 					return;
@@ -120,10 +120,6 @@ public class PlayerInteractListener implements Listener
 						return;
 					} else
 					{
-						if(isOnCooldown(player))
-						{
-							return;
-						}
 						if(SignHandler.putInItemIntoShop(ssh, player, player.getInventory().getItemInMainHand()))
 						{
 							event.setCancelled(true);
@@ -227,6 +223,6 @@ public class PlayerInteractListener implements Listener
 	
 	private void addCooldown(Player player)
 	{
-		cooldown.put(player.getUniqueId().toString(), System.currentTimeMillis()+1000L);
+		cooldown.put(player.getUniqueId().toString(), System.currentTimeMillis()+1500L);
 	}
 }

@@ -913,6 +913,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast keinen Account um den Gewinn einzuzahlen.",
 						"&cYou do not have an account to deposit the winnings."}));
+		languageKeys.put("ShopFunctionHandler.ASH.ChestNotFound"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas Lagersystem %id% wurde nicht gefunden! Shop %ssh% setzt LagerID zurück!",
+						"&cThe store system %id% was not found! Store %ssh% resets storageID!"}));
 		languageKeys.put("ShopFunctionHandler.Subscribe"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast den Shop &a%shop% &eabonniert!",

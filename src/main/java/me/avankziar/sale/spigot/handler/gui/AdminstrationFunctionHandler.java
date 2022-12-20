@@ -500,7 +500,7 @@ public class AdminstrationFunctionHandler
 	
 	private static void setClearASH(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
 	{
-		if(!ssh.getOwner().equals(player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
+		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;

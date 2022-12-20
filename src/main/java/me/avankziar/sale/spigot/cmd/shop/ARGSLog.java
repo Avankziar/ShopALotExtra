@@ -66,6 +66,9 @@ public class ARGSLog extends ArgumentModule
 				{
 					otherplayer = u;
 					pagination.add(args[4]);
+				} else
+				{
+					pagination.add("n");
 				}
 			}
 		}

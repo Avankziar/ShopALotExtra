@@ -147,11 +147,26 @@ public class ShopFunctionHandler
 		{
 			return;
 		}
-		if(ssh.getItemStorageCurrent() == 0 && !ssh.isUnlimitedBuy())
+		if(ssh.getItemStorageCurrent() <= 0 && !ssh.isUnlimitedBuy())
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NoGoodsInStock")));
 			if(plugin.getPCS() != null && ssh.getStorageID() != 0)
 			{
+				if(plugin.getPCS().getDistribtionChestLocation(ssh.getStorageID()) == null)
+				{
+					String msg = ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.ASH.ChestNotFound")
+							.replace("%ssh%", String.valueOf(ssh.getId()))
+							.replace("%id%", String.valueOf(ssh.getStorageID())));
+					TextComponent tc1 = ChatApi.tctl(msg);
+					ArrayList<BaseComponent> list = new ArrayList<>();
+					list.add(tc1);
+					ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+					listInList.add(list);
+					new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
+					ssh.setStorageID(0);
+					plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+					return;
+				}
 				plugin.getPCS().getOutOfStorageToShop(ssh.getId(), ssh.getStorageID(),
 						ssh.getItemStack(), (long) (ssh.getItemStorageTotal()*0.5));
 			} else
@@ -375,15 +390,31 @@ public class ShopFunctionHandler
 		{
 			return;
 		}
-		if(ssh.getItemStorageCurrent() == ssh.getItemStorageTotal() && !ssh.isUnlimitedBuy())
+		if(ssh.getItemStorageCurrent() >= ssh.getItemStorageTotal() && !ssh.isUnlimitedSell())
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopIsFull")));
 			if(plugin.getPCS() != null && ssh.getStorageID() != 0)
 			{
+				if(plugin.getPCS().getDistribtionChestLocation(ssh.getStorageID()) == null)
+				{
+					String msg = ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.ASH.ChestNotFound")
+							.replace("%ssh%", String.valueOf(ssh.getId()))
+							.replace("%id%", String.valueOf(ssh.getStorageID())));
+					TextComponent tc1 = ChatApi.tctl(msg);
+					ArrayList<BaseComponent> list = new ArrayList<>();
+					list.add(tc1);
+					ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+					listInList.add(list);
+					new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
+					ssh.setStorageID(0);
+					plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+					return;
+				}
 				long removed = (long) (ssh.getItemStorageTotal()*0.5);
 				ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-removed);
 				plugin.getPCS().putIntoStorageFromShop(ssh.getId(), ssh.getStorageID(), ssh.getItemStack(), removed);
 				plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+				//TODO Update, des Shop erst wenn die ASH Regelung zurückkommt.
 			} else
 			{
 				String msg = plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopIsFullII")
