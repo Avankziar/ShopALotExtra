@@ -1,6 +1,7 @@
 package main.java.me.avankziar.sale.spigot.gui.listener;
 
 import org.bukkit.Material;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -114,7 +115,7 @@ public class BottomListener implements Listener
 		{
 			return;
 		}
-		if(is.getType() == Material.SHULKER_BOX)
+		if(is instanceof ShulkerBox)
 		{
 			if(!new ConfigHandler().shopCanTradeShulker())
 			{
