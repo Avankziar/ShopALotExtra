@@ -273,6 +273,9 @@ public class YamlManager
 		configSpigotKeys.put("SignShop.ShopDailyLog.TimePattern"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"dd-MM-yyyy"}));
+		configSpigotKeys.put("SignShop.ShopCanTradeShulker"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				false}));
 	}
 	
 	//INFO:Commands

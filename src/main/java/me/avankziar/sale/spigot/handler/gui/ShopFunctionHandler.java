@@ -673,6 +673,7 @@ public class ShopFunctionHandler
 	@SuppressWarnings("deprecation")
 	public static boolean isSimilar(ItemStack item, ItemStack filter)
 	{
+		//TODO Eventuell die Mechanik so verfeineren, dass man kein String Vergleich mehr macht.
 		if (item == null || filter == null) 
         {
             return false;

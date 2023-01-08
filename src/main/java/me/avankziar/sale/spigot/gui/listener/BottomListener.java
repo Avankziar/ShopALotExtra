@@ -14,6 +14,7 @@ import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.GUIApi;
 import main.java.me.avankziar.sale.spigot.gui.events.BottomGuiClickEvent;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
+import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
@@ -112,6 +113,13 @@ public class BottomListener implements Listener
 		if(ssh.getItemStack() != null)
 		{
 			return;
+		}
+		if(is.getType() == Material.SHULKER_BOX)
+		{
+			if(!new ConfigHandler().shopCanTradeShulker())
+			{
+				return;
+			}
 		}
 		ssh.setItemStack(is);
 		ssh.setMaterial(is.getType());

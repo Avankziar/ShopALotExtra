@@ -1,6 +1,9 @@
 Future Build
 - In ASH ein Event auslösen, wenn die Verteilerkiste gelöscht wird. Dann in SaLE diese für alle Kisten rauslöschen.
 
+Build 1-0-30
+- ConfigWert "SignShop.ShopCanTradeShulker" erlaubt oder verbietet den Handel mit Shulker
+
 Build 1-0-29
 - Cooldown wurde auf 1,5 s gesetzt, sowie nicht nur vor dem ein und ausfüllen. Bedeutet der Cooldown wirkt sich
   auch nun auf den Kauf/Verkauf ansich aus.

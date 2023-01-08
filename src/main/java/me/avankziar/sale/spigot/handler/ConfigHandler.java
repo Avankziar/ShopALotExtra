@@ -54,4 +54,9 @@ public class ConfigHandler
 	{
 		return plugin.getYamlHandler().getConfig().getLong("SignShop.SignInitializationLine", 3456);
 	}
+	
+	public boolean shopCanTradeShulker()
+	{
+		return plugin.getYamlHandler().getConfig().getBoolean("SignShop.ShopCanTradeShulker", true);
+	}
 }
