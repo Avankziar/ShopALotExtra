@@ -29,7 +29,6 @@ import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalusType;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation;
-import main.java.me.avankziar.ifh.spigot.storage.PhysicalChestStorage;
 import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee;
 import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
 import main.java.me.avankziar.sale.spigot.assistance.BackgroundTask;
@@ -94,11 +93,12 @@ public class SaLE extends JavaPlugin
 	
 	private Administration administrationConsumer;
 	private EnumTranslation enumTranslationConsumer;
-	private PhysicalChestStorage pcsConsumer;
 	private Economy ecoConsumer;
 	private BonusMalus bonusMalusConsumer;
 	private MessageToBungee mtbConsumer;
 	private BaseComponentToBungee bctbConsumer;
+	
+	private net.milkbowl.vault.economy.Economy vEco;
 	
 	public void onEnable()
 	{
@@ -460,7 +460,6 @@ public class SaLE extends JavaPlugin
 			return;
 		}
 		setupIFHEnumTranslation();
-		setupIFHPhysicalChestStorage();
 		setupIFHEconomy();
 		setupIFHBonusMalus();
 		setupIFHMessageToBungee();
@@ -489,8 +488,6 @@ public class SaLE extends JavaPlugin
 	{
 		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
 	    {
-			log.severe("IFH is not set in the Plugin " + pluginName + "! Disable plugin!");
-			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(this);
 	    	return;
 	    }
         new BukkitRunnable()
@@ -504,7 +501,7 @@ public class SaLE extends JavaPlugin
 					if(i == 20)
 				    {
 						cancel();
-						log.severe("IFH is not set in the Plugin " + pluginName + "! Disable plugin!");
+						log.severe("IFH EnumTranslation is not found to consume for " + pluginName + "! Disable plugin!");
 						Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 				    	return;
 				    }
@@ -527,77 +524,61 @@ public class SaLE extends JavaPlugin
         }.runTaskTimer(plugin, 0L, 20*2);
 	}
 	
-	public EnumTranslation getEnumTl()
+	public EnumTranslation getEnumTl
+	()
 	{
 		return enumTranslationConsumer;
 	}
 	
-	private void setupIFHPhysicalChestStorage() 
-	{
-        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
-        {
-            return;
-        }
-        new BukkitRunnable()
-        {
-        	int i = 0;
-			@Override
-			public void run()
-			{
-				try
-				{
-					if(i == 20)
-				    {
-						cancel();
-						return;
-				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.storage.PhysicalChestStorage> rsp = 
-		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.spigot.storage.PhysicalChestStorage.class);
-				    if(rsp == null) 
-				    {
-				    	i++;
-				        return;
-				    }
-				    pcsConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> PhysicalChestStorage.class is consumed!");
-				    cancel();
-				} catch(NoClassDefFoundError e)
-				{
-					cancel();
-				}			    
-			}
-        }.runTaskTimer(plugin, 0L, 20*2);
-	}
-	
-	public PhysicalChestStorage getPCS()
-	{
-		return pcsConsumer;
-	}
-	
 	private void setupIFHEconomy()
     {
-		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")
+				&& !plugin.getServer().getPluginManager().isPluginEnabled("Vault")) 
 	    {
-	    	return;
-	    }
-		RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.economy.Economy> rsp = 
-                getServer().getServicesManager().getRegistration(Economy.class);
-		if (rsp == null) 
-		{
-			log.severe("A economy plugin which supported InterfaceHub is missing!");
+			log.severe("Plugin InterfaceHub or Vault are missing!");
 			log.severe("Disable "+pluginName+"!");
 			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
-			return;
+	    	return;
+	    }
+		if(plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub"))
+		{
+			RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.economy.Economy> rsp = 
+	                getServer().getServicesManager().getRegistration(Economy.class);
+			if (rsp == null) 
+			{
+				log.severe("A economy plugin which supported InterfaceHub is missing!");
+				log.severe("Disable "+pluginName+"!");
+				Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
+				return;
+			}
+			ecoConsumer = rsp.getProvider();
+			log.info(pluginName + " detected InterfaceHub >>> Economy.class is consumed!");
+		} else
+		{
+			RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> rsp = getServer()
+	        		.getServicesManager()
+	        		.getRegistration(net.milkbowl.vault.economy.Economy.class);
+	        if (rsp == null) 
+	        {
+	        	log.severe("A economy plugin which supported Vault is missing!");
+				log.severe("Disable "+pluginName+"!");
+				Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
+	            return;
+	        }
+	        vEco = rsp.getProvider();
+	        log.info(pluginName + " detected Vault >>> Economy.class is consumed!");
 		}
-		ecoConsumer = rsp.getProvider();
-		log.info(pluginName + " detected InterfaceHub >>> Economy.class is consumed!");
         return;
     }
 	
 	public Economy getIFHEco()
 	{
 		return this.ecoConsumer;
+	}
+	
+	public net.milkbowl.vault.economy.Economy getVaultEco()
+	{
+		return this.vEco;
 	}
 	
 	private void setupIFHBonusMalus() 

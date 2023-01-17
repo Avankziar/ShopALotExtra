@@ -306,25 +306,57 @@ public class BackgroundTask
 							double scostTotal = var.getValue().costTotalSell;
 							if(bsamo > 0)
 							{
-								hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Buy")
-										.replace("%amount%", String.valueOf(bsamo))
-										.replace("%item%", is.getItemMeta().hasDisplayName() 
-												? is.getItemMeta().getDisplayName() 
-												: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))
-										.replace("%shop%", shopname)
-										.replace("%format%", plugin.getIFHEco().format(bcostTotal,
-												SaLE.getPlugin().getIFHEco().getCurrency(currency))));
+								if(plugin.getIFHEco() != null)
+								{
+									hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Buy")
+											.replace("%amount%", String.valueOf(bsamo))
+											.replace("%item%", is.getItemMeta().hasDisplayName() 
+													? is.getItemMeta().getDisplayName() 
+													: (SaLE.getPlugin().getEnumTl() != null
+													  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+													  : is.getType().toString()))
+											.replace("%shop%", shopname)
+											.replace("%format%", plugin.getIFHEco().format(bcostTotal,
+													SaLE.getPlugin().getIFHEco().getCurrency(currency))));
+								} else
+								{
+									hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Buy")
+											.replace("%amount%", String.valueOf(bsamo))
+											.replace("%item%", is.getItemMeta().hasDisplayName() 
+													? is.getItemMeta().getDisplayName() 
+													: (SaLE.getPlugin().getEnumTl() != null
+												      ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+													  : is.getType().toString()))
+											.replace("%shop%", shopname)
+											.replace("%format%", String.valueOf(bcostTotal)+" "+plugin.getVaultEco().currencyNamePlural()));
+								}
 							}
 							if(ssamo > 0)
 							{
-								hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Sell")
-										.replace("%amount%", String.valueOf(ssamo))
-										.replace("%item%", is.getItemMeta().hasDisplayName() 
-												? is.getItemMeta().getDisplayName() 
-												: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))
-										.replace("%shop%", shopname)
-										.replace("%format%", plugin.getIFHEco().format(scostTotal,
-												SaLE.getPlugin().getIFHEco().getCurrency(currency))));
+								if(plugin.getIFHEco() != null)
+								{
+									hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Sell")
+											.replace("%amount%", String.valueOf(ssamo))
+											.replace("%item%", is.getItemMeta().hasDisplayName() 
+													? is.getItemMeta().getDisplayName() 
+													: (SaLE.getPlugin().getEnumTl() != null
+													  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+													  : is.getType().toString()))
+											.replace("%shop%", shopname)
+											.replace("%format%", plugin.getIFHEco().format(scostTotal,
+													SaLE.getPlugin().getIFHEco().getCurrency(currency))));
+								} else
+								{
+									hov.add(plugin.getYamlHandler().getLang().getString("ShopLog.MsgTimer.Sell")
+											.replace("%amount%", String.valueOf(ssamo))
+											.replace("%item%", is.getItemMeta().hasDisplayName() 
+													? is.getItemMeta().getDisplayName() 
+													: (SaLE.getPlugin().getEnumTl() != null
+													  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+													  : is.getType().toString()))
+											.replace("%shop%", shopname)
+											.replace("%format%", String.valueOf(scostTotal)+" "+plugin.getVaultEco().currencyNamePlural()));
+								}
 							}
 						}
 						if(lhm.containsKey(client))
@@ -411,7 +443,9 @@ public class BackgroundTask
 						SignShopLog ssl = new SignShopLog(0, shopID, System.currentTimeMillis(),
 								is, is.getItemMeta().hasDisplayName() 
 								? is.getItemMeta().getDisplayName() 
-								: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()),
+								: (SaLE.getPlugin().getEnumTl() != null
+								  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+								  : is.getType().toString()),
 							is.getType(), WayType.BUY, bcostTotal, (int) bsamo,
 							client, shopOwner);
 						plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPLOG, ssl);
@@ -421,7 +455,9 @@ public class BackgroundTask
 						SignShopLog ssl = new SignShopLog(0, shopID, System.currentTimeMillis(),
 								is, is.getItemMeta().hasDisplayName() 
 								? is.getItemMeta().getDisplayName() 
-								: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()),
+								: (SaLE.getPlugin().getEnumTl() != null
+								  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+								  : is.getType().toString()),
 							is.getType(), WayType.SELL, scostTotal, (int) ssamo,
 							client, shopOwner);
 						plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOPLOG, ssl);

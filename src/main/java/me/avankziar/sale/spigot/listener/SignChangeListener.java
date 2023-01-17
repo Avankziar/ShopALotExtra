@@ -73,15 +73,20 @@ public class SignChangeListener implements Listener
 			return;
 		}
 		int lastnumber = plugin.getMysqlHandler().lastID(MysqlHandler.Type.SIGNSHOP)+1;
-		Account ac = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.SHOP, plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL));
-		if(ac == null)
+		int acid = 0;
+		if(plugin.getIFHEco() != null)
 		{
-			ac = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL));
+			Account ac = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.SHOP, plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL));
+			if(ac == null)
+			{
+				ac = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL));
+			}
+			acid = ac.getID();
 		}
 		long defaultStartItemStorage = new ConfigHandler().getDefaulStartItemStorage();
 		SignShop ssh = new SignShop(
 				0, player.getUniqueId(),
-				"Shop_"+lastnumber, ac.getID(), System.currentTimeMillis(), null, null, Material.AIR,
+				"Shop_"+lastnumber, acid, System.currentTimeMillis(), null, null, Material.AIR,
 				defaultStartItemStorage, 0,
 				-1.0, -1.0, -1, -1,
 				0, 0, -1.0, -1.0, -1, -1, 

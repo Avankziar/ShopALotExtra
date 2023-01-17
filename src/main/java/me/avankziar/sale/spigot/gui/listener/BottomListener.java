@@ -131,7 +131,9 @@ public class BottomListener implements Listener
 			ssh.setDisplayName(im.getDisplayName());
 		} else
 		{
-			ssh.setDisplayName(SaLE.getPlugin().getEnumTl().getLocalization(is.getType()));
+			ssh.setDisplayName(SaLE.getPlugin().getEnumTl() != null
+					  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+					  : is.getType().toString());
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		SignHandler.updateSign(ssh);

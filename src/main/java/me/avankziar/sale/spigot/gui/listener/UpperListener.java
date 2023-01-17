@@ -85,7 +85,6 @@ public class UpperListener implements Listener
 			break;
 		case ADMINISTRATION:
 		case NUMPAD_ACCOUNT:
-		case NUMPAD_ASH:
 		case NUMPAD_BUY:
 		case NUMPAD_DISCOUNT_BUY:
 		case NUMPAD_DISCOUNT_END:

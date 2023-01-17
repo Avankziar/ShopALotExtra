@@ -492,10 +492,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDas Argument &f%value% &cmuss eine positive Zahl sein!",
 						"&cThe argument &f%value% &must be a positive number!"}));
-		languageKeys.put("AccountNotExist",
+		languageKeys.put("NotEnought",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDas Konto &f%value% &existiert nicht!",
-						"&cThe account &f%value% &cdont exist!"}));
+						"&cDu hast nicht genug Geld!",
+						"&cYou dont have enough money!"}));
 		languageKeys.put("NoWithdrawRights",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast für das angegeben Konto keine Abheberechte!",
@@ -1518,6 +1518,9 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_SETTINGSLEVEL_SETTO_MASTER.toString()}));
 		path = "9"; //SetAccount
+		admin.put(path+".IFHDepend",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						true}));
 		admin.put(path+".SettingLevel",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						SettingsLevel.EXPERT.toString()}));
@@ -1628,40 +1631,7 @@ public class YamlManager
 		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_SETSIGNSHOPNAME_OPENKEYBOARD.toString()}));
-		path = "10"; //SetASH
-		admin.put(path+".UseASH",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						true}));
-		admin.put(path+".SettingLevel",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						SettingsLevel.MASTER.toString()}));
-		admin.put(path+".Material",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						Material.BARREL.toString()}));
-		admin.put(path+".Displayname",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dEingabe des Verteilersystem von ASH per ID",
-						"&dEnter the distributionsystem from ASH per ID"}));
-		admin.put(path+".Lore",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bZz.: &f%storageid%",
-						"&cQ &bstellt das Lagersystemverlinkung auf 0.",
-						"&bUnd somit außer Betrieb.",
-						"&cLinks-/Rechtsklick &bzum öffnen des Numpad Gui.",
-						"&bAtm.: &f%storageid%",
-						"&cQ &bsets the storage system link to 0.",
-						"&bAnd thus out of operation.",
-						"&cLeft/right click &to open the Numpad Gui."}));
-		admin.put(path+".ClickFunction."+ClickType.DROP.toString(),
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_SETASH_CLEAR.toString()}));
-		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_SETASH_OPEN_NUMPAD.toString()}));
-		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						ClickFunctionType.ADMINISTRATION_SETASH_OPEN_NUMPAD.toString()}));
-		path = "19"; //Setglowing
+		path = "10"; //Setglowing
 		admin.put(path+".SettingLevel",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						SettingsLevel.ADVANCED.toString()}));
@@ -2582,8 +2552,6 @@ public class YamlManager
 						ClickFunctionType.ADMINISTRATION_NUMPAD_CANCEL.toString()}));
 		LinkedHashMap<String, Language> numpad_ACCOUNT = new LinkedHashMap<>();
 		numpad_ACCOUNT.putAll(numpad);
-		LinkedHashMap<String, Language> numpad_ASH = new LinkedHashMap<>();
-		numpad_ASH.putAll(numpad);
 		LinkedHashMap<String, Language> numpad_BUY = new LinkedHashMap<>();
 		numpad_BUY.putAll(numpad);
 		LinkedHashMap<String, Language> numpad_SELL = new LinkedHashMap<>();
@@ -2640,17 +2608,6 @@ public class YamlManager
 		numpad_ACCOUNT.put(sLC, lLC);
 		numpad_ACCOUNT.put(sRC, lRC);
 		guiKeys.put(GuiType.NUMPAD_ACCOUNT, numpad_ACCOUNT);
-		lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				ClickFunctionType.ADMINISTRATION_SETASH_TAKEOVER.toString()});
-		lRC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				ClickFunctionType.ADMINISTRATION_SETASH_TAKEOVER.toString()});
-		numpad_ASH.put(sSL, lSL);
-		numpad_ASH.put(sMat, lMat);
-		numpad_ASH.put(sDN, lDN);
-		numpad_ASH.put(sLo, lLo);
-		numpad_ASH.put(sLC, lLC);
-		numpad_ASH.put(sRC, lRC);
-		guiKeys.put(GuiType.NUMPAD_ASH, numpad_ASH);
 		//-------------
 		lLC = new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				ClickFunctionType.ADMINISTRATION_SETBUY_TAKEOVER.toString()});

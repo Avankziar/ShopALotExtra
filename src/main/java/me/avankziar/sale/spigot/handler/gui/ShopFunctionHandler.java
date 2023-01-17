@@ -37,16 +37,17 @@ import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.MessageHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
-import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.ClientDailyLog;
 import main.java.me.avankziar.sale.spigot.objects.ClientLog;
 import main.java.me.avankziar.sale.spigot.objects.ClientLog.WayType;
+import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SubscribedShop;
 import main.java.me.avankziar.sale.spigot.permission.BoniMali;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 public class ShopFunctionHandler
 {
@@ -150,62 +151,40 @@ public class ShopFunctionHandler
 		if(ssh.getItemStorageCurrent() <= 0 && !ssh.isUnlimitedBuy())
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NoGoodsInStock")));
-			if(plugin.getPCS() != null && ssh.getStorageID() != 0)
+			String msg = plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NoGoodsInStockII")
+					.replace("%shopname%", ssh.getSignShopName());
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+			for(String s : plugin.getYamlHandler().getLang().getStringList("ShopFunctionHandler.InfoHover"))
 			{
-				if(plugin.getPCS().getDistribtionChestLocation(ssh.getStorageID()) == null)
+				if(i > 0)
 				{
-					String msg = ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.ASH.ChestNotFound")
-							.replace("%ssh%", String.valueOf(ssh.getId()))
-							.replace("%id%", String.valueOf(ssh.getStorageID())));
-					TextComponent tc1 = ChatApi.tctl(msg);
-					ArrayList<BaseComponent> list = new ArrayList<>();
-					list.add(tc1);
-					ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
-					listInList.add(list);
-					new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
-					ssh.setStorageID(0);
-					plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-					return;
+					sb.append("~!~");
 				}
-				plugin.getPCS().getOutOfStorageToShop(ssh.getId(), ssh.getStorageID(),
-						ssh.getItemStack(), (long) (ssh.getItemStorageTotal()*0.5));
-			} else
-			{
-				String msg = plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NoGoodsInStockII")
-						.replace("%shopname%", ssh.getSignShopName());
-				StringBuilder sb = new StringBuilder();
-				int i = 0;
-				for(String s : plugin.getYamlHandler().getLang().getStringList("ShopFunctionHandler.InfoHover"))
-				{
-					if(i > 0)
-					{
-						sb.append("~!~");
-					}
-					sb.append(s
-							.replace("%client%", player.getName())
-							.replace("%item%", ssh.getDisplayName())
-							.replace("%amount%", String.valueOf(amount))
-							.replace("%price%", isDiscount(ssh, System.currentTimeMillis()) 
-									? String.valueOf(amount*ssh.getDiscountBuyAmount()) : String.valueOf(amount*ssh.getBuyAmount()))
-							.replace("%server%", ssh.getServer())
-							.replace("%world%", ssh.getWorld())
-							.replace("%x%", String.valueOf(ssh.getX()))
-							.replace("%y%", String.valueOf(ssh.getY()))
-							.replace("%z%", String.valueOf(ssh.getZ()))
-							);
-					i++;
-				}
-				TextComponent tc1 = ChatApi.tctl(msg);
-				TextComponent tc2 = ChatApi.hoverEvent(
-						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.InfoAddition"),
-						HoverEvent.Action.SHOW_TEXT, sb.toString());
-				ArrayList<BaseComponent> list = new ArrayList<>();
-				list.add(tc1);
-				list.add(tc2);
-				ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
-				listInList.add(list);
-				new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
+				sb.append(s
+						.replace("%client%", player.getName())
+						.replace("%item%", ssh.getDisplayName())
+						.replace("%amount%", String.valueOf(amount))
+						.replace("%price%", isDiscount(ssh, System.currentTimeMillis()) 
+								? String.valueOf(amount*ssh.getDiscountBuyAmount()) : String.valueOf(amount*ssh.getBuyAmount()))
+						.replace("%server%", ssh.getServer())
+						.replace("%world%", ssh.getWorld())
+						.replace("%x%", String.valueOf(ssh.getX()))
+						.replace("%y%", String.valueOf(ssh.getY()))
+						.replace("%z%", String.valueOf(ssh.getZ()))
+						);
+				i++;
 			}
+			TextComponent tc1 = ChatApi.tctl(msg);
+			TextComponent tc2 = ChatApi.hoverEvent(
+					plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.InfoAddition"),
+					HoverEvent.Action.SHOW_TEXT, sb.toString());
+			ArrayList<BaseComponent> list = new ArrayList<>();
+			list.add(tc1);
+			list.add(tc2);
+			ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+			listInList.add(list);
+			new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
 			return;
 		}
 		long now = System.currentTimeMillis();
@@ -241,20 +220,6 @@ public class ShopFunctionHandler
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.PossibleIsZero")));
 				return;
 			}
-		}
-		Account to = plugin.getIFHEco().getAccount(ssh.getAccountId());
-		if(to == null)
-		{
-			player.sendMessage(ChatApi.tl(
-					plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.ShopHaveNotAccountReady")));
-			return;
-		}
-		Account from = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, to.getCurrency());
-		if(from == null)
-		{
-			player.sendMessage(ChatApi.tl(
-					plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.YouDontHaveAccountToWithdraw")));
-			return;
 		}
 		ArrayList<ItemStack> islist = new ArrayList<>();
 		int emptySlot = emtpySlots(player);
@@ -321,12 +286,73 @@ public class ShopFunctionHandler
 				.replace("%amount%", String.valueOf(samo))
 				.replace("%item%", ssh.getItemStack().getItemMeta().hasDisplayName() 
 						? ssh.getItemStack().getItemMeta().getDisplayName() 
-						: SaLE.getPlugin().getEnumTl().getLocalization(ssh.getItemStack().getType()))
+						: (plugin.getEnumTl() != null 
+						  ? SaLE.getPlugin().getEnumTl().getLocalization(ssh.getItemStack().getType())
+						  : ssh.getItemStack().getType().toString()))
 				.replace("%shop%", ssh.getSignShopName());
-		if(!doTransaction(player, from, to, samo*d, to.getCurrency(), category, comment, taxation))
+		if(plugin.getIFHEco() != null)
 		{
-			return;
-		}
+			Account to = plugin.getIFHEco().getAccount(ssh.getAccountId());
+			if(to == null)
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.ShopHaveNotAccountReady")));
+				return;
+			}
+			Account from = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, to.getCurrency());
+			if(from == null)
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.YouDontHaveAccountToWithdraw")));
+				return;
+			}
+			if(!doTransaction(player, from, to, samo*d, to.getCurrency(), category, comment, taxation))
+			{
+				return;
+			}
+			comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
+					.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
+		} else
+		{
+			if(!plugin.getVaultEco().hasAccount(Bukkit.getOfflinePlayer(ssh.getOwner())))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.ShopHaveNotAccountReady")));
+				return;
+			}
+			if(!plugin.getVaultEco().hasAccount(player))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.YouDontHaveAccountToWithdraw")));
+				return;
+			}
+			double w = samo*d;
+			if(taxation > 0 && taxation < 100)
+			{
+				w = w + w*taxation;
+			}
+			if(!plugin.getVaultEco().has(player, w))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("NotEnought")));
+				return;
+			}
+			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(player, w);
+			if(!er.transactionSuccess())
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				return;
+			}
+			er = plugin.getVaultEco().depositPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), samo*d);
+			if(!er.transactionSuccess())
+			{
+				plugin.getVaultEco().depositPlayer(player, w);
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				return;
+			}
+			comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
+					.replace("%format%", String.valueOf(samo*d)+" "+ plugin.getVaultEco().currencyNamePlural());
+		}		
 		if(!ssh.isUnlimitedBuy())
 		{
 			if(ssh.getPossibleBuy() >= 0 || ssh.getDiscountPossibleBuy() >= 0)
@@ -340,8 +366,6 @@ public class ShopFunctionHandler
 				}
 			}
 		}
-		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
-				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		long date = TimeHandler.getDate(TimeHandler.getDate(System.currentTimeMillis()));
 		ClientLog sl = new ClientLog(0, player.getUniqueId(), System.currentTimeMillis(),
 				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.BUY, samo*d.doubleValue(), (int) samo,
@@ -364,22 +388,11 @@ public class ShopFunctionHandler
 		if(!ssh.isUnlimitedBuy())
 		{
 			ssh.setItemStorageCurrent(postc);
-			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		}
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		for(ItemStack is : islist)
 		{
 			player.getInventory().addItem(is);
-		}
-		if(!ssh.isUnlimitedBuy())
-		{
-			if(ssh.getItemStorageCurrent() < ssh.getItemStorageTotal()*0.1)
-			{
-				if(plugin.getPCS() != null && ssh.getStorageID() != 0)
-				{
-					plugin.getPCS().getOutOfStorageToShop(ssh.getId(), ssh.getStorageID(),
-							ssh.getItemStack(), (long)( ssh.getItemStorageTotal()*0.5));
-				}
-			}
 		}
 		GuiHandler.openShop(ssh, player, settingsLevel, inv, false);
 	}
@@ -393,65 +406,40 @@ public class ShopFunctionHandler
 		if(ssh.getItemStorageCurrent() >= ssh.getItemStorageTotal() && !ssh.isUnlimitedSell())
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopIsFull")));
-			if(plugin.getPCS() != null && ssh.getStorageID() != 0)
+			String msg = plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopIsFullII")
+					.replace("%shopname%", ssh.getSignShopName());
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+			for(String s : plugin.getYamlHandler().getLang().getStringList("ShopFunctionHandler.InfoHover"))
 			{
-				if(plugin.getPCS().getDistribtionChestLocation(ssh.getStorageID()) == null)
+				if(i > 0)
 				{
-					String msg = ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.ASH.ChestNotFound")
-							.replace("%ssh%", String.valueOf(ssh.getId()))
-							.replace("%id%", String.valueOf(ssh.getStorageID())));
-					TextComponent tc1 = ChatApi.tctl(msg);
-					ArrayList<BaseComponent> list = new ArrayList<>();
-					list.add(tc1);
-					ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
-					listInList.add(list);
-					new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
-					ssh.setStorageID(0);
-					plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-					return;
+					sb.append("~!~");
 				}
-				long removed = (long) (ssh.getItemStorageTotal()*0.5);
-				ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-removed);
-				plugin.getPCS().putIntoStorageFromShop(ssh.getId(), ssh.getStorageID(), ssh.getItemStack(), removed);
-				plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-				//TODO Update, des Shop erst wenn die ASH Regelung zurückkommt.
-			} else
-			{
-				String msg = plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopIsFullII")
-						.replace("%shopname%", ssh.getSignShopName());
-				StringBuilder sb = new StringBuilder();
-				int i = 0;
-				for(String s : plugin.getYamlHandler().getLang().getStringList("ShopFunctionHandler.InfoHover"))
-				{
-					if(i > 0)
-					{
-						sb.append("~!~");
-					}
-					sb.append(s
-							.replace("%client%", player.getName())
-							.replace("%item%", ssh.getDisplayName())
-							.replace("%amount%", String.valueOf(amount))
-							.replace("%price%", isDiscount(ssh, System.currentTimeMillis()) 
-									? String.valueOf(amount*ssh.getDiscountSellAmount()) : String.valueOf(amount*ssh.getSellAmount()))
-							.replace("%server%", ssh.getServer())
-							.replace("%world%", ssh.getWorld())
-							.replace("%x%", String.valueOf(ssh.getX()))
-							.replace("%y%", String.valueOf(ssh.getY()))
-							.replace("%z%", String.valueOf(ssh.getZ()))
-							);
-					i++;
-				}
-				TextComponent tc1 = ChatApi.tctl(msg);
-				TextComponent tc2 = ChatApi.hoverEvent(
-						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.InfoAddition"),
-						HoverEvent.Action.SHOW_TEXT, sb.toString());
-				ArrayList<BaseComponent> list = new ArrayList<>();
-				list.add(tc1);
-				list.add(tc2);
-				ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
-				listInList.add(list);
-				new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
+				sb.append(s
+						.replace("%client%", player.getName())
+						.replace("%item%", ssh.getDisplayName())
+						.replace("%amount%", String.valueOf(amount))
+						.replace("%price%", isDiscount(ssh, System.currentTimeMillis()) 
+								? String.valueOf(amount*ssh.getDiscountSellAmount()) : String.valueOf(amount*ssh.getSellAmount()))
+						.replace("%server%", ssh.getServer())
+						.replace("%world%", ssh.getWorld())
+						.replace("%x%", String.valueOf(ssh.getX()))
+						.replace("%y%", String.valueOf(ssh.getY()))
+						.replace("%z%", String.valueOf(ssh.getZ()))
+						);
+				i++;
 			}
+			TextComponent tc1 = ChatApi.tctl(msg);
+			TextComponent tc2 = ChatApi.hoverEvent(
+					plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.InfoAddition"),
+					HoverEvent.Action.SHOW_TEXT, sb.toString());
+			ArrayList<BaseComponent> list = new ArrayList<>();
+			list.add(tc1);
+			list.add(tc2);
+			ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+			listInList.add(list);
+			new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
 			return;
 		}
 		Double d = 0.0;
@@ -486,20 +474,6 @@ public class ShopFunctionHandler
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.PossibleIsZero")));
 				return;
 			}
-		}
-		Account from = plugin.getIFHEco().getAccount(ssh.getAccountId());
-		if(from == null)
-		{
-			player.sendMessage(ChatApi.tl(
-					plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopHaveNotAccountReady")));
-			return;
-		}
-		Account to = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, from.getCurrency());
-		if(to == null)
-		{
-			player.sendMessage(ChatApi.tl(
-					plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.YouDontHaveAccountToWithdraw")));
-			return;
 		}
 		ArrayList<ItemStack> islist = new ArrayList<>();
 		long postc = ssh.getItemStorageCurrent();
@@ -603,18 +577,77 @@ public class ShopFunctionHandler
 				.replace("%amount%", String.valueOf(samo))
 				.replace("%item%", ssh.getItemStack().getItemMeta().hasDisplayName() 
 						? ssh.getItemStack().getItemMeta().getDisplayName() 
-						: SaLE.getPlugin().getEnumTl().getLocalization(ssh.getItemStack().getType()))
+						: (plugin.getEnumTl() != null 
+						  ? SaLE.getPlugin().getEnumTl().getLocalization(ssh.getItemStack().getType())
+						  : ssh.getItemStack().getType().toString()))
 				.replace("%shop%", ssh.getSignShopName());
-		if(!doTransaction(player, from, to, d*samo, to.getCurrency(), category, comment, taxation))
+		if(plugin.getIFHEco() != null)
 		{
-			for(ItemStack is : islist)
+			Account from = plugin.getIFHEco().getAccount(ssh.getAccountId());
+			if(from == null)
 			{
-				player.getInventory().addItem(is);
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopHaveNotAccountReady")));
+				return;
 			}
-			return;
+			Account to = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, from.getCurrency());
+			if(to == null)
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.YouDontHaveAccountToWithdraw")));
+				return;
+			}
+			if(!doTransaction(player, from, to, d*samo, to.getCurrency(), category, comment, taxation))
+			{
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
+				return;
+			}
+			comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
+					.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
+		} else
+		{
+			if(!plugin.getVaultEco().hasAccount(Bukkit.getOfflinePlayer(ssh.getOwner())))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.ShopHaveNotAccountReady")));
+				return;
+			}
+			if(!plugin.getVaultEco().hasAccount(player))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.YouDontHaveAccountToWithdraw")));
+				return;
+			}
+			double w = samo*d;
+			if(taxation > 0 && taxation < 100)
+			{
+				w = w + w*taxation;
+			}
+			if(!plugin.getVaultEco().has(Bukkit.getOfflinePlayer(ssh.getOwner()), w))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("NotEnought")));
+				return;
+			}
+			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), w);
+			if(!er.transactionSuccess())
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				return;
+			}
+			er = plugin.getVaultEco().depositPlayer(player, samo*d);
+			if(!er.transactionSuccess())
+			{
+				plugin.getVaultEco().depositPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), w);
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				return;
+			}
+			comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
+					.replace("%format%", String.valueOf(samo*d)+" "+plugin.getVaultEco().currencyNamePlural());
 		}
-		comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
-				.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		long date = TimeHandler.getDate(TimeHandler.getDate(now));
 		ClientLog sl = new ClientLog(0, player.getUniqueId(), now,
 				ssh.getItemStack(), ssh.getDisplayName(), ssh.getMaterial(), WayType.SELL, samo*d, (int) samo,
@@ -637,15 +670,6 @@ public class ShopFunctionHandler
 		if(!ssh.isUnlimitedSell())
 		{
 			ssh.setItemStorageCurrent(postc);
-			if(ssh.getItemStorageCurrent() > ssh.getItemStorageTotal()/100*90)
-			{
-				if(plugin.getPCS() != null && ssh.getStorageID() != 0)
-				{
-					long removed = (long) (ssh.getItemStorageTotal()*0.5);
-					ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-removed);
-					plugin.getPCS().putIntoStorageFromShop(ssh.getId(), ssh.getStorageID(), ssh.getItemStack(), removed);
-				}
-			}
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		GuiHandler.openShop(ssh, player, settingsLevel, inv, false);
@@ -811,7 +835,7 @@ public class ShopFunctionHandler
         			return false;
         		}
 				BlockStateMeta ibsm = (BlockStateMeta) im;
-				BlockStateMeta fbsm = (BlockStateMeta) im;
+				BlockStateMeta fbsm = (BlockStateMeta) fm;
 				if(ibsm.getBlockState() instanceof ShulkerBox)
 				{
 					if(!(ibsm.getBlockState() instanceof ShulkerBox))

@@ -41,18 +41,38 @@ public class ShopPostTransactionListener implements Listener
 		ShopLogVar slv = null;
 		if(isBuy)
 		{
-			slv = (sub2.containsKey(b64) 
-					? sub2.get(b64).addBuy(iamount, costPerItem) 
-							: new ShopLogVar(ssh.getId(), ssh.getSignShopName(),
-									SaLE.getPlugin().getIFHEco().getAccount(ssh.getAccountId()).getCurrency().getUniqueName(), 
-									iamount, costPerItem, 0, 0));
+			if(SaLE.getPlugin().getIFHEco() != null)
+			{
+				slv = (sub2.containsKey(b64) 
+						? sub2.get(b64).addBuy(iamount, costPerItem) 
+								: new ShopLogVar(ssh.getId(), ssh.getSignShopName(),
+										SaLE.getPlugin().getIFHEco().getAccount(ssh.getAccountId()).getCurrency().getUniqueName(), 
+										iamount, costPerItem, 0, 0));
+			} else
+			{
+				slv = (sub2.containsKey(b64) 
+						? sub2.get(b64).addBuy(iamount, costPerItem) 
+								: new ShopLogVar(ssh.getId(), ssh.getSignShopName(),
+										SaLE.getPlugin().getVaultEco().currencyNamePlural(), 
+										iamount, costPerItem, 0, 0));
+			}
 		} else 
 		{
-			slv = (sub2.containsKey(b64) 
-					? sub2.get(b64).addSell(iamount, costPerItem) 
-							: new ShopLogVar(ssh.getId(), ssh.getSignShopName(),
-									SaLE.getPlugin().getIFHEco().getAccount(ssh.getAccountId()).getCurrency().getUniqueName(), 
-									0, 0, iamount, costPerItem));
+			if(SaLE.getPlugin() != null)
+			{
+				slv = (sub2.containsKey(b64) 
+						? sub2.get(b64).addSell(iamount, costPerItem) 
+								: new ShopLogVar(ssh.getId(), ssh.getSignShopName(),
+										SaLE.getPlugin().getIFHEco().getAccount(ssh.getAccountId()).getCurrency().getUniqueName(), 
+										0, 0, iamount, costPerItem));
+			} else
+			{
+				slv = (sub2.containsKey(b64) 
+						? sub2.get(b64).addSell(iamount, costPerItem) 
+								: new ShopLogVar(ssh.getId(), ssh.getSignShopName(),
+										SaLE.getPlugin().getVaultEco().currencyNamePlural(), 
+										0, 0, iamount, costPerItem));
+			}
 		}
 		sub2.put(b64, slv);
 		sub.put(client.getUniqueId(), sub2);

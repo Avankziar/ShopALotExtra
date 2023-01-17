@@ -58,8 +58,12 @@ public class ItemHologram
 		lines.add(ChatApi.tl(im.hasDisplayName() 
 				? im.getDisplayName() 
 				: (ptd != null && pmd != null && is.getType() != Material.TIPPED_ARROW
-					? SaLE.getPlugin().getEnumTl().getLocalization(ptd, pmd)
-					: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))));
+					? (SaLE.getPlugin().getEnumTl() != null 
+					  ? SaLE.getPlugin().getEnumTl().getLocalization(ptd, pmd)
+					  : ptd.toString()+"_"+pmd.toString())
+					: (SaLE.getPlugin().getEnumTl() != null 
+					  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+					  : is.getType().toString()))));
 		if(im.hasLore()) 
 		{
 			lines.addAll(im.getLore());
@@ -71,7 +75,10 @@ public class ItemHologram
 				{
 					for(Entry<Enchantment, Integer> en : is.getEnchantments().entrySet())
 					{
-						String name = SaLE.getPlugin().getEnumTl().getLocalization(en.getKey());
+						String name = 
+								(SaLE.getPlugin().getEnumTl() != null 
+								? SaLE.getPlugin().getEnumTl().getLocalization(en.getKey())
+								: en.getKey().toString());
 						int level = en.getValue();
 						lines.add(ChatApi.tl("&7"+name+" "+GuiHandler.IntegerToRomanNumeral(level)));
 					}
@@ -83,7 +90,10 @@ public class ItemHologram
 					EnchantmentStorageMeta esm = (EnchantmentStorageMeta) im;
 					for(Entry<Enchantment, Integer> en : esm.getStoredEnchants().entrySet())
 					{
-						String name = SaLE.getPlugin().getEnumTl().getLocalization(en.getKey());
+						String name = 
+								(SaLE.getPlugin().getEnumTl() != null 
+								? SaLE.getPlugin().getEnumTl().getLocalization(en.getKey())
+								: en.getKey().toString());
 						int level = en.getValue();
 						lines.add(ChatApi.tl("&7"+name+" "+GuiHandler.IntegerToRomanNumeral(level)));
 					}
@@ -94,7 +104,10 @@ public class ItemHologram
 				BannerMeta bm = (BannerMeta) im;
 				for(Pattern p : bm.getPatterns())
 				{
-					lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(p.getColor(), p.getPattern())));
+					lines.add(ChatApi.tl("&7"+
+							(SaLE.getPlugin().getEnumTl() != null 
+							? SaLE.getPlugin().getEnumTl().getLocalization(p.getColor(), p.getPattern())
+							: p.getColor().toString()+"_"+p.getPattern().toString())));
 				}
 			}
 			if(im instanceof SkullMeta)
@@ -117,11 +130,17 @@ public class ItemHologram
 						String color = GuiHandler.getPotionColor(pe);
 						if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
 						{
-							lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+							lines.add(ChatApi.tl(color+
+									(SaLE.getPlugin().getEnumTl() != null 
+									? SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+									: pe.getType())
 									+" "+GuiHandler.IntegerToRomanNumeral(level)));
 						} else
 						{
-							lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+							lines.add(ChatApi.tl(color+
+									(SaLE.getPlugin().getEnumTl() != null 
+									? SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+									: pe.getType().toString())
 									+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
 						}
 					}
@@ -139,11 +158,17 @@ public class ItemHologram
 						String color = GuiHandler.getPotionColor(pe);
 						if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
 						{
-							lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+							lines.add(ChatApi.tl(color+
+									(SaLE.getPlugin().getEnumTl() != null 
+									? SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+									: pe.getType().toString())
 									+" "+GuiHandler.IntegerToRomanNumeral(level)));
 						} else
 						{
-							lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+							lines.add(ChatApi.tl(color+
+									(SaLE.getPlugin().getEnumTl() != null 
+									? SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+									: pe.getType().toString())
 									+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
 						}
 					}
@@ -183,7 +208,10 @@ public class ItemHologram
 					for(Entry<String, Integer> e : lhm.entrySet())
 					{
 						ItemStack ist = new Base64Handler(e.getKey()).fromBase64();
-						lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(ist.getType())+ " x"+e.getValue()));
+						lines.add(ChatApi.tl("&7"+
+								(SaLE.getPlugin().getEnumTl() != null 
+								? SaLE.getPlugin().getEnumTl().getLocalization(ist.getType())
+								: ist.getType()) + " x"+e.getValue()));
 					}
 				}
 			}
@@ -202,7 +230,9 @@ public class ItemHologram
 				if(bm.getGeneration() != null)
 				{
 					lines.add(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("GuiHandler.ItemHolo.BookMeta.Generation") 
-							+ SaLE.getPlugin().getEnumTl().getLocalization(bm.getGeneration())));
+							+ (SaLE.getPlugin().getEnumTl() != null 
+							? SaLE.getPlugin().getEnumTl().getLocalization(bm.getGeneration())
+							: bm.getGeneration().toString())));
 				}
 			}
 			if(im instanceof LeatherArmorMeta)
@@ -219,7 +249,10 @@ public class ItemHologram
 				{
 					if(sem.getSpawnedType() != null)
 					{
-						lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())));
+						lines.add(ChatApi.tl("&7"+
+								(SaLE.getPlugin().getEnumTl() != null 
+								? SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())
+								: sem.getSpawnedType().toString())));
 					}
 					
 				} catch(Exception e)
@@ -235,14 +268,20 @@ public class ItemHologram
 					int level = pe.getAmplifier()+1;
 					long dur = pe.getDuration();
 					String color = GuiHandler.getPotionColor(pe);
-					lines.add(ChatApi.tl(color+SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+					lines.add(ChatApi.tl(color+
+							(SaLE.getPlugin().getEnumTl() != null 
+							? SaLE.getPlugin().getEnumTl().getLocalization(pe.getType())
+							: pe.getType().toString())
 					+" "+GuiHandler.IntegerToRomanNumeral(level)+" >> "+TimeHandler.getDateTime(dur, "mm:ss")));
 				}
 			}
 			if(im instanceof TropicalFishBucketMeta)
 			{
 				TropicalFishBucketMeta tfbm = (TropicalFishBucketMeta) im;
-				lines.add(ChatApi.tl("&7"+SaLE.getPlugin().getEnumTl().getLocalization(tfbm.getBodyColor(), tfbm.getPattern(), tfbm.getPatternColor())));
+				lines.add(ChatApi.tl("&7"+
+						(SaLE.getPlugin().getEnumTl() != null 
+						? SaLE.getPlugin().getEnumTl().getLocalization(tfbm.getBodyColor(), tfbm.getPattern(), tfbm.getPatternColor())
+						: tfbm.getBodyColor().toString()+"_"+tfbm.getPattern().toString()+"_"+tfbm.getPatternColor().toString())));
 			}
 		}
 		spawn(null, loc.add(0, 0.9, 0), is);

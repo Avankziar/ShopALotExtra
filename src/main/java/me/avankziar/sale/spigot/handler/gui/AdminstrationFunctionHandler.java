@@ -40,6 +40,7 @@ import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.permission.BoniMali;
 import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
 import main.java.me.avankziar.sale.spigot.permission.Bypass;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 public class AdminstrationFunctionHandler
 {
@@ -82,9 +83,6 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_SETACCOUNT_DEFAULT: setAccountDefault(player, ssh, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETACCOUNT_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_ACCOUNT, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETACCOUNT_TAKEOVER: takeOver(player, ssh, GuiType.NUMPAD_ACCOUNT, openInv, settingsLevel); break;
-		case ADMINISTRATION_SETASH_CLEAR: setClearASH(player, ssh, openInv, settingsLevel); break;
-		case ADMINISTRATION_SETASH_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_ASH, openInv, settingsLevel); break;
-		case ADMINISTRATION_SETASH_TAKEOVER: takeOver(player, ssh, GuiType.NUMPAD_ASH, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETBUY_CLEAR: setClear(player, ssh, GuiType.NUMPAD_BUY, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETBUY_OPEN_NUMPAD: openNumpad(player, ssh, GuiType.NUMPAD_BUY, openInv, settingsLevel); break;
 		case ADMINISTRATION_SETBUY_TAKEOVER: takeOver(player, ssh, GuiType.NUMPAD_BUY, openInv, settingsLevel); break;
@@ -267,6 +265,25 @@ public class AdminstrationFunctionHandler
 		{
 			ca = maxPossibleStorage - maxStorage;
 		}
+		boolean boo = false;
+		if(plugin.getIFHEco() != null)
+		{
+			boo = addStorageIFH(player, ssh, costPerOne, amount, ca);
+		} else
+		{
+			boo = addStorageVault(player, ssh, costPerOne, amount, ca);
+		}
+		if(!boo)
+		{
+			return;
+		}
+		ssh.setItemStorageTotal(ssh.getItemStorageTotal()+ca);
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
+	}
+	
+	private static boolean addStorageIFH(Player player, SignShop ssh, List<String> costPerOne, long amount, long ca)
+	{
 		LinkedHashMap<EconomyCurrency, Double> moneymap = new LinkedHashMap<>();
 		for(String t : costPerOne)
 		{
@@ -275,20 +292,20 @@ public class AdminstrationFunctionHandler
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("FileError")
 						.replace("%file%", "config.yml | split.length != 2")));
-				return;
+				continue;
 			}
 			EconomyCurrency ec = plugin.getIFHEco().getCurrency(split[0]);
 			if(ec == null)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("FileError")
 						.replace("%file%", "config.yml | EconomyCurrency == null")));
-				return;
+				continue;
 			}
 			if(!MatchApi.isDouble(split[1]))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("FileError")
 						.replace("%file%", "config.yml | "+split[1]+" != Double")));
-				return;
+				continue;
 			}
 			double d = Double.parseDouble(split[1]);
 			if(plugin.getBonusMalus() != null)
@@ -300,7 +317,7 @@ public class AdminstrationFunctionHandler
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw")));
-				return;
+				return false;
 			}
 			double dd = d*ca;
 			Account from = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.SHOP, ec);
@@ -311,20 +328,20 @@ public class AdminstrationFunctionHandler
 				{
 					player.sendMessage(ChatApi.tl(
 							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw")));
-					return;
+					return false;
 				}
 			}
 			if(!plugin.getIFHEco().canManageAccount(from, player.getUniqueId(), AccountManagementType.CAN_WITHDRAW))
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouCannotWithdraw")));
-				return;
+				return false;
 			}
 			if(from.getBalance() < dd)
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.NoEnoughMoney")));
-				return;
+				return false;
 			}
 			moneymap.put(ec, d);
 		}
@@ -346,7 +363,7 @@ public class AdminstrationFunctionHandler
 				{
 					player.sendMessage(ChatApi.tl(
 							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.YouDontHaveAccountToWithdraw")));
-					return;
+					return false;
 				}
 			}
 			Account to = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.VOID, ec);
@@ -381,16 +398,56 @@ public class AdminstrationFunctionHandler
 			if(!ea.isSuccess())
 			{
 				player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
-				return;
+				return false;
 			}
 			for(String s : list)
 			{
 				player.sendMessage(ChatApi.tl(s));
 			}
 		}
-		ssh.setItemStorageTotal(ssh.getItemStorageTotal()+ca);
-		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
+		return true;
+	}
+	
+	private static boolean addStorageVault(Player player, SignShop ssh, List<String> costPerOne, long amount, long ca)
+	{
+		double d = 0.0;
+		for(String t : costPerOne)
+		{
+			String[] split = t.split(";");
+			if(split.length != 2)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("FileError")
+						.replace("%file%", "config.yml | split.length != 2")));
+				continue;
+			}
+			
+			if(!MatchApi.isDouble(split[1]))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("FileError")
+						.replace("%file%", "config.yml | "+split[1]+" != Double")));
+				continue;
+			}
+			d = Double.parseDouble(split[1]);
+			if(plugin.getBonusMalus() != null)
+			{
+				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, BoniMali.COST_ADDING_STORAGE.getBonusMalus());
+			}
+		}
+		double dd = d*ca;
+		if(plugin.getVaultEco().getBalance(player) < dd)
+		{
+			player.sendMessage(ChatApi.tl(
+					plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.NoEnoughMoney")));
+			return false;
+		}
+		EconomyResponse er = plugin.getVaultEco().withdrawPlayer(player, dd);
+		if(!er.transactionSuccess())
+		{
+			player.sendMessage(ChatApi.tl(
+					plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.AddStorage.NoEnoughMoney")));
+			return false;
+		}
+		return true;
 	}
 	
 	private static void clearItem(Player player, SignShop ssh)
@@ -437,7 +494,10 @@ public class AdminstrationFunctionHandler
 		final String sshname = ssh.getSignShopName();
 		final ItemStack is = ssh.getItemStack();
 		final String displayname = is.getItemMeta().hasDisplayName() 
-				? is.getItemMeta().getDisplayName() : SaLE.getPlugin().getEnumTl().getLocalization(is.getType());
+				? is.getItemMeta().getDisplayName() : 
+					(plugin.getEnumTl() != null 
+					? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+					: is.getType().toString());
 		final long amount = ssh.getItemStorageCurrent();
 		player.closeInventory();
 		Block block = null;
@@ -467,6 +527,10 @@ public class AdminstrationFunctionHandler
 	
 	private static void setAccountDefault(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
 	{
+		if(plugin.getIFHEco() == null)
+		{
+			return;
+		}
 		if(isTooMuchShop(player, ssh))
 		{
 			return;
@@ -495,20 +559,6 @@ public class AdminstrationFunctionHandler
 		ssh.setAccountId(acid);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SetAccount.Set")));
-		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
-	}
-	
-	private static void setClearASH(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
-	{
-		if(!SignHandler.isOwner(ssh, player.getUniqueId()) && !SignHandler.isBypassToggle(player.getUniqueId()))
-		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
-			return;
-		}
-		int acid = 0;
-		ssh.setStorageID(acid);
-		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SetStorage.Set")));
 		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
 	}
 	
@@ -633,6 +683,10 @@ public class AdminstrationFunctionHandler
 		{
 		default: break;
 		case NUMPAD_ACCOUNT:
+			if(plugin.getIFHEco() == null)
+			{
+				break;
+			}
 			if(!MatchApi.isInteger(ssh.getNumText()))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
@@ -656,32 +710,9 @@ public class AdminstrationFunctionHandler
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoWithdrawRights")));
 				break;
-			}
+			}			
 			ssh.setAccountId(Integer.parseInt(ssh.getNumText()));
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SetAccount.Set")));
-			break;
-		case NUMPAD_ASH:
-			if(!MatchApi.isInteger(ssh.getNumText()))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
-						.replace("%value%", ssh.getNumText())));
-				break;
-			}
-			if(!MatchApi.isPositivNumber(Integer.parseInt(ssh.getNumText())))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
-						.replace("%value%", ssh.getNumText())));
-				break;
-			}
-			int ashid = Integer.parseInt(ssh.getNumText());
-			if(plugin.getPCS() == null || !plugin.getPCS().isOwner(ashid, player.getUniqueId()))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SetStorage.NotOwner")
-						.replace("%value%", ssh.getNumText())));
-				break;
-			}
-			ssh.setStorageID(ashid);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SetStorage.Set")));
 			break;
 		case NUMPAD_BUY:
 			if(!MatchApi.isDouble(ssh.getNumText()))

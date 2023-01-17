@@ -20,7 +20,9 @@ public class MaterialHandler
 	
 	public static String getMaterial(Material mat, Material sign)
 	{
-		String s = SaLE.getPlugin().getEnumTl().getLocalization(mat);
+		String s = (SaLE.getPlugin().getEnumTl() != null 
+				? SaLE.getPlugin().getEnumTl().getLocalization(mat)
+				: mat.toString());
 		switch(sign)
 		{
 		default: return s != null ? s : mat.toString();

@@ -331,11 +331,22 @@ public class SignHandler
 			
 		} else
 		{
-			if(!ShopFunctionHandler.isSimilar(ssh.getItemStack(), toPutIn))
+			if(toPutIn == null || toPutIn.getType() == Material.AIR)
 			{
 				return false;
 			}
-			if(ssh.getItemStorageTotal() <= ssh.getItemStorageCurrent() + toPutIn.getAmount())
+			if(!ssh.getItemStack().toString().equals(c.toString()))
+			{
+				return false;
+			}
+			if(!ShopFunctionHandler.isSimilar(toPutIn, ssh.getItemStack()))
+			{
+				return false;
+			}
+			if(ssh.getItemStorageTotal() > ssh.getItemStorageCurrent())
+			{
+				return false;
+			} else if(ssh.getItemStorageTotal() < ssh.getItemStorageCurrent() + toPutIn.getAmount())
 			{
 				long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent();
 				amount += v;

@@ -63,7 +63,10 @@ public class BlockBreakListener implements Listener
 			final String sshname = ssh.getSignShopName();
 			final ItemStack is = ssh.getItemStack();
 			final String displayname = is.getItemMeta().hasDisplayName() 
-					? is.getItemMeta().getDisplayName() : SaLE.getPlugin().getEnumTl().getLocalization(is.getType());
+					? is.getItemMeta().getDisplayName() : 
+						(plugin.getEnumTl() != null 
+						? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+						: is.getType().toString());
 			final long amount = ssh.getItemStorageCurrent();
 			plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP,
 					"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",

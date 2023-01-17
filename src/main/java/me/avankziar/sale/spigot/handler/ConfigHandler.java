@@ -52,7 +52,7 @@ public class ConfigHandler
 	
 	public long getDefaulStartItemStorage()
 	{
-		return plugin.getYamlHandler().getConfig().getLong("SignShop.SignInitializationLine", 3456);
+		return plugin.getYamlHandler().getConfig().getLong("SignShop.DefaultStartItemStorage", 3456);
 	}
 	
 	public boolean shopCanTradeShulker()

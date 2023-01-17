@@ -93,11 +93,7 @@ public class ARGSPLog extends ArgumentModule
 			String type;
 			SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", spl.getSignShopId());
 			String shopname = ssh != null ? ssh.getSignShopName() : String.valueOf(spl.getSignShopId());
-			EconomyCurrency ec = ssh != null 
-					? (plugin.getIFHEco().getAccount(ssh.getAccountId()) != null 
-					? plugin.getIFHEco().getAccount(ssh.getAccountId()).getCurrency()
-					: plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL))
-					: plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL);
+			
 			int amo = spl.getItemAmount();
 			long time = spl.getDateTime();
 			double cost = spl.getAmount();
@@ -109,15 +105,37 @@ public class ARGSPLog extends ArgumentModule
 			{
 				type = "Cmd.ClientLog.Sell";
 			}
-			String s = plugin.getYamlHandler().getLang().getString(type)
-					.replace("%time%", TimeHandler.getDateTime(time, plugin.getYamlHandler().getConfig().getString("SignShop.ShopLog.TimePattern")))
-					.replace("%amount%", String.valueOf(amo))
-					.replace("%item%", is.getItemMeta().hasDisplayName() 
-							? is.getItemMeta().getDisplayName() 
-							: SaLE.getPlugin().getEnumTl().getLocalization(is.getType()))
-					.replace("%shop%", shopname)
-					.replace("%format%", plugin.getIFHEco().format(cost,
-							ec));
+			String s;
+			if(plugin.getIFHEco() != null)
+			{
+				EconomyCurrency ec = ssh != null 
+						? (plugin.getIFHEco().getAccount(ssh.getAccountId()) != null 
+						? plugin.getIFHEco().getAccount(ssh.getAccountId()).getCurrency()
+						: plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL))
+						: plugin.getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL);
+				s = plugin.getYamlHandler().getLang().getString(type)
+						.replace("%time%", TimeHandler.getDateTime(time, plugin.getYamlHandler().getConfig().getString("SignShop.ShopLog.TimePattern")))
+						.replace("%amount%", String.valueOf(amo))
+						.replace("%item%", is.getItemMeta().hasDisplayName() 
+								? is.getItemMeta().getDisplayName() 
+								: (SaLE.getPlugin().getEnumTl() != null
+								  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+								  : is.getType().toString()))
+						.replace("%shop%", shopname)
+						.replace("%format%", plugin.getIFHEco().format(cost, ec));
+			} else
+			{
+				s = plugin.getYamlHandler().getLang().getString(type)
+						.replace("%time%", TimeHandler.getDateTime(time, plugin.getYamlHandler().getConfig().getString("SignShop.ShopLog.TimePattern")))
+						.replace("%amount%", String.valueOf(amo))
+						.replace("%item%", is.getItemMeta().hasDisplayName() 
+								? is.getItemMeta().getDisplayName() 
+								: (SaLE.getPlugin().getEnumTl() != null
+								  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+								  : is.getType().toString()))
+						.replace("%shop%", shopname)
+						.replace("%format%", String.valueOf(cost)+" "+plugin.getVaultEco().currencyNamePlural());
+			}
 			msg.add(s);
 		}
 		for(String s : msg)
