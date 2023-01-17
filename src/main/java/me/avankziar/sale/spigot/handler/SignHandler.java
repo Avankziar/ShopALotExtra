@@ -350,11 +350,11 @@ public class SignHandler
 			{
 				long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent();
 				amount += v;
-				player.getInventory().getItemInMainHand().setAmount(amount);
+				toPutIn.setAmount(toPutIn.getAmount()-(int) v);
 			} else
 			{
 				amount = toPutIn.getAmount();
-				player.getInventory().setItemInMainHand(null);
+				toPutIn.setAmount(0);
 			}
 		}
 		ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()+((long) amount));
