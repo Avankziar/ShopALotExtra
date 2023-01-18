@@ -455,10 +455,7 @@ public class SaLE extends JavaPlugin
 	
 	private void setupIFH()
 	{
-		if(setupIFHShop())
-		{
-			return;
-		}
+		setupIFHShop();
 		setupIFHEnumTranslation();
 		setupIFHEconomy();
 		setupIFHBonusMalus();
@@ -470,8 +467,6 @@ public class SaLE extends JavaPlugin
 	{
 		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
 	    {
-			log.severe("IFH is not set in the Plugin " + pluginName + "! Disable plugin!");
-			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(this);
 	    	return false;
 	    }
 		signShopProvider = new SignShopProvider(plugin);
@@ -546,9 +541,18 @@ public class SaLE extends JavaPlugin
 	                getServer().getServicesManager().getRegistration(Economy.class);
 			if (rsp == null) 
 			{
-				log.severe("A economy plugin which supported InterfaceHub is missing!");
-				log.severe("Disable "+pluginName+"!");
-				Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
+				RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> rsp2 = getServer()
+		        		.getServicesManager()
+		        		.getRegistration(net.milkbowl.vault.economy.Economy.class);
+		        if (rsp2 == null) 
+		        {
+		        	log.severe("A economy plugin which supported InterfaceHub or Vault is missing!");
+					log.severe("Disable "+pluginName+"!");
+					Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
+		            return;
+		        }
+		        vEco = rsp2.getProvider();
+		        log.info(pluginName + " detected Vault >>> Economy.class is consumed!");
 				return;
 			}
 			ecoConsumer = rsp.getProvider();

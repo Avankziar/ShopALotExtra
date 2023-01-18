@@ -700,7 +700,7 @@ public class ShopFunctionHandler
 		//TODO Eventuell die Mechanik so verfeineren, dass man kein String Vergleich mehr macht.
 		if (item == null || filter == null) 
         {
-            return false;
+            return true;
         }
         final ItemStack i = item.clone();
         final ItemStack f = filter.clone();
@@ -799,7 +799,6 @@ public class ShopFunctionHandler
         			}
         		}
         	}
-        	
         	if(im.hasEnchants() && i.getType() != Material.ENCHANTED_BOOK)
         	{
         		if(!fm.hasEnchants() && f.getType() != Material.ENCHANTED_BOOK)
@@ -838,7 +837,7 @@ public class ShopFunctionHandler
 				BlockStateMeta fbsm = (BlockStateMeta) fm;
 				if(ibsm.getBlockState() instanceof ShulkerBox)
 				{
-					if(!(ibsm.getBlockState() instanceof ShulkerBox))
+					if(!(fbsm.getBlockState() instanceof ShulkerBox))
 					{
 						return false;
 					}

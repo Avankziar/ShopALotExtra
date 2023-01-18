@@ -335,15 +335,11 @@ public class SignHandler
 			{
 				return false;
 			}
-			if(!ssh.getItemStack().toString().equals(c.toString()))
-			{
-				return false;
-			}
 			if(!ShopFunctionHandler.isSimilar(toPutIn, ssh.getItemStack()))
 			{
 				return false;
 			}
-			if(ssh.getItemStorageTotal() > ssh.getItemStorageCurrent())
+			if(ssh.getItemStorageTotal() < ssh.getItemStorageCurrent())
 			{
 				return false;
 			} else if(ssh.getItemStorageTotal() < ssh.getItemStorageCurrent() + toPutIn.getAmount())

@@ -47,11 +47,12 @@ public class SignChangeListener implements Listener
 		{
 			return;
 		}
+		Player player = event.getPlayer();
 		if(!plugin.getYamlHandler().getConfig().getBoolean("Enable.SignShop", false))
 		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Mechanic.SignShopIsntEnabled")));
 			return;
 		}
-		Player player = event.getPlayer();
 		if(plugin.getYamlHandler().getConfig().getStringList("SignShop.ForbiddenWorld").contains(event.getBlock().getWorld().getName()))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ForbiddenWorld")));

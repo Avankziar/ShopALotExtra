@@ -236,7 +236,8 @@ public class YamlManager
 		configSpigotKeys.put("SignShop.CostToAdd1Storage"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"dollar;1000.0",
-				"token;99.0"}));
+				"token;99.0",
+				"vault;100.0"}));
 		configSpigotKeys.put("SignShop.ForbiddenWorld"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"hubs", "spawns"}));
@@ -560,6 +561,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEs existiert ein Fehler in der Datei: &f%file%",
 						"&cThere is an error in the file: &f%file%"}));
+		languageKeys.put("Mechanic.SignShopIsntEnabled", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDie SchilderShops Mechanik ist nicht aktiviert!",
+						"&cThe Sign Shops mechanics is not activated!"}));
 		languageKeys.put("PlayerInteractListener.ShopItemIsNull", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst das Administrationsgui nicht aufrufen, da der Shop noch kein Item gesetzt hat!",

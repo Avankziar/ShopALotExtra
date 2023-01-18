@@ -371,10 +371,10 @@ public class GuiHandler
 				boolean useSy = ac == null ? false : plugin.getIFHEco().getDefaultUseSymbol(ac.getCurrency());
 				String ts = ac == null ? "." : plugin.getIFHEco().getDefaultThousandSeperator(ac.getCurrency());
 				String ds = ac == null ? "," : plugin.getIFHEco().getDefaultDecimalSeperator(ac.getCurrency());
-				a = getStringPlaceHolderIFH(ssh, player, s, ac, dg, useSI, useSy, ts, ds, playername);
+				a = getStringPlaceHolderIFH(ssh, player, a, ac, dg, useSI, useSy, ts, ds, playername);
 			} else
 			{
-				a = getStringPlaceHolderVault(ssh, player, s, playername);
+				a = getStringPlaceHolderVault(ssh, player, a, playername);
 			}
 			list.add(a);
 		}
@@ -1654,6 +1654,11 @@ public class GuiHandler
 	{
 		boolean inDiscount = System.currentTimeMillis() >= ssh.getDiscountStart() && System.currentTimeMillis() < ssh.getDiscountEnd();
 		String s = text;
+		if(text.contains("%accountname%"))
+		{
+			String n = Utility.convertUUIDToName(ssh.getOwner().toString());
+			s = s.replace("%accountname%", n != null ? n : "/");
+		}
 		if(text.contains("%buyraw1%"))
 		{
 			s = s.replace("%buyraw1%", (ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0) ? "/" : 

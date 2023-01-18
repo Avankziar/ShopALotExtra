@@ -5,14 +5,8 @@ Build 1-1-0
 - Vault Support hinzugefügt
 - EnumTranslation über IFH ist nur noch SoftDepend
 - DefaultStartItemStorage übernimmt nun die Zahl korrekt.
-- Shulker sollten wieder korrekt wieder funktionieren.
-- Bugs:
-  - 1 Stack aus dem Shop entfernen und wieder hinzufügen, lässt die Anzahl zwar sinken, aber nicht wieder hoch.
-  - Wenn Shop voll ist, kann man Items immer verkaufen. Geld erhält man, aber die Items kommen nicht im Shop an. War mit ASH verbunden.
-  - Shulker individuell befüllen. (So das auf jeden Slot ein Item liegt.)
-    Shop erstellen und die Shulker für den Shop registrieren
-    Eine Leere Shulker der gleichen Farbe im Shop hinzufügen
-    die Shulker wieder entnehmen, somit ist die leere Shulker die individuell befüllte Shulker von Anfang.
+- Beim herausnehmen von Items eines vollen Shop und sofort wieder hinzufügen des Shops ist der DupeBug gefixt.
+- Shulker werden korrekt verglichen und sollten wieder funktionieren.
 
 Somit kann man jedes Item beliebig oft in einer Shulker duplizieren.
 

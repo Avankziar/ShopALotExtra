@@ -3,5 +3,7 @@ main: main.java.me.avankziar.sale.spigot.SaLE
 version: 1
 author: Avankziar
 api-version: 1.17
-description: A Template
+description: A SignShop Plugin
 depend: [InterfaceHub]
+softdepend: [Vault]
+website: https://www.spigotmc.org/resources/shop-a-lot-extra.106371/
