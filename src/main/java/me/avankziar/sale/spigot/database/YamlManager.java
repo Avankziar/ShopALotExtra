@@ -843,6 +843,10 @@ public class YamlManager
 						"&eDu hast von %amount% Shops die Rabattaktion für %hour% gestartet.",
 						"&eYou have started the discount promotion for %hour% from %amount% stores."}));
 		
+		languageKeys.put("ShopFunctionHandler.CannotTradeInOwnShop"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst nicht in deinem eigenen Shop handeln!",
+						"&cYou cant trade in your own store!"}));
 		languageKeys.put("ShopFunctionHandler.Buy.NoGoodsInStock"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop hat keine Ware mehr zum Kaufen!",

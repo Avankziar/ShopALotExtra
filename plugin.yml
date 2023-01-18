@@ -4,5 +4,6 @@ version: 1
 author: Avankziar
 api-version: 1.17
 description: A SignShop Plugin
-softdepend: [InterfaceHub,Vault]
+depend: [InterfaceHub]
+softdepend: [Vault]
 website: https://www.spigotmc.org/resources/shop-a-lot-extra.106371/

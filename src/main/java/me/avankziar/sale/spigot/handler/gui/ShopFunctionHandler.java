@@ -314,6 +314,12 @@ public class ShopFunctionHandler
 					.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		} else
 		{
+			if(ssh.getOwner().toString().equals(player.getUniqueId().toString()))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.CannotTradeInOwnShop")));
+				return;
+			}
 			if(!plugin.getVaultEco().hasAccount(Bukkit.getOfflinePlayer(ssh.getOwner())))
 			{
 				player.sendMessage(ChatApi.tl(
@@ -329,7 +335,7 @@ public class ShopFunctionHandler
 			double w = samo*d;
 			if(taxation > 0 && taxation < 100)
 			{
-				w = w + w*taxation;
+				w = samo*d + samo*d*taxation;
 			}
 			if(!plugin.getVaultEco().has(player, w))
 			{
@@ -337,13 +343,13 @@ public class ShopFunctionHandler
 						plugin.getYamlHandler().getLang().getString("NotEnought")));
 				return;
 			}
-			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(player, w);
+			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(player, samo*d);
 			if(!er.transactionSuccess())
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
 				return;
 			}
-			er = plugin.getVaultEco().depositPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), samo*d);
+			er = plugin.getVaultEco().depositPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), w);
 			if(!er.transactionSuccess())
 			{
 				plugin.getVaultEco().depositPlayer(player, w);
@@ -609,6 +615,12 @@ public class ShopFunctionHandler
 					.replace("%format%", plugin.getIFHEco().format(samo*d, from.getCurrency()));
 		} else
 		{
+			if(ssh.getOwner().toString().equals(player.getUniqueId().toString()))
+			{
+				player.sendMessage(ChatApi.tl(
+						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.CannotTradeInOwnShop")));
+				return;
+			}
 			if(!plugin.getVaultEco().hasAccount(Bukkit.getOfflinePlayer(ssh.getOwner())))
 			{
 				player.sendMessage(ChatApi.tl(
@@ -624,7 +636,7 @@ public class ShopFunctionHandler
 			double w = samo*d;
 			if(taxation > 0 && taxation < 100)
 			{
-				w = w + w*taxation;
+				w = samo*d - samo*d*taxation;
 			}
 			if(!plugin.getVaultEco().has(Bukkit.getOfflinePlayer(ssh.getOwner()), w))
 			{
@@ -632,13 +644,13 @@ public class ShopFunctionHandler
 						plugin.getYamlHandler().getLang().getString("NotEnought")));
 				return;
 			}
-			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), w);
+			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), samo*d);
 			if(!er.transactionSuccess())
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
 				return;
 			}
-			er = plugin.getVaultEco().depositPlayer(player, samo*d);
+			er = plugin.getVaultEco().depositPlayer(player, w);
 			if(!er.transactionSuccess())
 			{
 				plugin.getVaultEco().depositPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), w);

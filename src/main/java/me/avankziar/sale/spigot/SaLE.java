@@ -496,8 +496,6 @@ public class SaLE extends JavaPlugin
 					if(i == 20)
 				    {
 						cancel();
-						log.severe("IFH EnumTranslation is not found to consume for " + pluginName + "! Disable plugin!");
-						Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 				    	return;
 				    }
 				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation> rsp = 
@@ -519,8 +517,7 @@ public class SaLE extends JavaPlugin
         }.runTaskTimer(plugin, 0L, 20*2);
 	}
 	
-	public EnumTranslation getEnumTl
-	()
+	public EnumTranslation getEnumTl()
 	{
 		return enumTranslationConsumer;
 	}
