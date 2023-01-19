@@ -594,6 +594,10 @@ public class ShopFunctionHandler
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopHaveNotAccountReady")));
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
 				return;
 			}
 			Account to = plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, from.getCurrency());
@@ -601,6 +605,10 @@ public class ShopFunctionHandler
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.YouDontHaveAccountToWithdraw")));
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
 				return;
 			}
 			if(!doTransaction(player, from, to, d*samo, to.getCurrency(), category, comment, taxation))
@@ -642,6 +650,10 @@ public class ShopFunctionHandler
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("ShopOwnerNotEnought")));
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
 				return;
 			}
 			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), samo*d);
