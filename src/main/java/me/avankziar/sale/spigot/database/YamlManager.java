@@ -497,6 +497,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast nicht genug Geld!",
 						"&cYou dont have enough money!"}));
+		languageKeys.put("ShopOwnerNotEnought",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer ShopEigentümer hat nicht genug Geld!",
+						"&cThe shopowner dont have enough money!"}));
 		languageKeys.put("NoWithdrawRights",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast für das angegeben Konto keine Abheberechte!",

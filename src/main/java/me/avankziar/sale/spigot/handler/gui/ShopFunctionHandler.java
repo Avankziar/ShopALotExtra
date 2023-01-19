@@ -638,16 +638,20 @@ public class ShopFunctionHandler
 			{
 				w = samo*d - samo*d*taxation;
 			}
-			if(!plugin.getVaultEco().has(Bukkit.getOfflinePlayer(ssh.getOwner()), w))
+			if(!plugin.getVaultEco().has(Bukkit.getOfflinePlayer(ssh.getOwner()), samo*d))
 			{
 				player.sendMessage(ChatApi.tl(
-						plugin.getYamlHandler().getLang().getString("NotEnought")));
+						plugin.getYamlHandler().getLang().getString("ShopOwnerNotEnought")));
 				return;
 			}
 			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), samo*d);
 			if(!er.transactionSuccess())
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
 				return;
 			}
 			er = plugin.getVaultEco().depositPlayer(player, w);
@@ -655,6 +659,10 @@ public class ShopFunctionHandler
 			{
 				plugin.getVaultEco().depositPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), w);
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
 				return;
 			}
 			comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
