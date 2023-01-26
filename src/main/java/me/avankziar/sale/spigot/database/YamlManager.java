@@ -1126,17 +1126,17 @@ public class YamlManager
 		bmlanguageKeys.put(BoniMali.SHOP_BUYING_TAX.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die prozentualen Kaufsteuer",
-						"&edes Shops definiert. Zählt für Shopeigentümer.",
+						"&edes Shops definiert. Zählt für den Shopeigentümer.",
 						"&eCounting mission, which defines the percentage",
 						"&ebuy tax of the shop. Counts for shop owner."}));
 		bmlanguageKeys.put(BoniMali.SHOP_SELLING_TAX.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eProzentuale Kaufsteuer",
+						"&eProzentuale Verkaufsteuer",
 						"&ePercentage sell tax"}));
 		bmlanguageKeys.put(BoniMali.SHOP_SELLING_TAX.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eZählpermission, welche die prozentualen Kaufsteuer",
-						"&edes Shops definiert. Zählt für Shopeigentümer.",
+						"&eZählpermission, welche die prozentualen Verkaufsteuer",
+						"&edes Shops definiert. Zählt für den Kunden.",
 						"&eCounting mission, which defines the percentage",
 						"&esell tax of the shop. Counts for shop owner."}));
 	}
