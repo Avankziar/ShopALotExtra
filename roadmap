@@ -1,5 +1,9 @@
 Future Build
 
+Build 1-1-2
+- Vault Teil, Shopeigentümer verliert bei eigenem Einkauf, die Items. Fix
+- BonusMalus, Falscher BonusmalusName eingetragen.
+
 Build 1-1-1
 - Dependencie fix
 - Vault Teil, Shopeigentümer können nicht mit ihren Shops handeln.

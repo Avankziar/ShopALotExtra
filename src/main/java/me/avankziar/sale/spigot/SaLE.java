@@ -637,9 +637,10 @@ public class SaLE extends JavaPlugin
 							cmd++;
 							continue;
 						}
+						String bmn = pluginName.toLowerCase()+":"+bc.getPath();
 						String[] ex = {plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Explanation")};
 						getBonusMalus().register(
-								pluginName.toLowerCase()+":"+bc.getPath(),
+								bmn,
 								plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Displayname", "Command "+bc.getName()),
 								true,
 								BonusMalusType.UP,
@@ -661,9 +662,10 @@ public class SaLE extends JavaPlugin
 								bmt = BonusMalusType.UP;
 								break;
 							}
+							String bmn = pluginName.toLowerCase()+":"+ept.toString().toLowerCase();
 							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
 							getBonusMalus().register(
-									pluginName.toLowerCase()+":"+ept.toString().toLowerCase(),
+									bmn,
 									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
 									true,
 									bmt,
@@ -684,9 +686,10 @@ public class SaLE extends JavaPlugin
 								bmt = BonusMalusType.UP;
 								break;
 							}
+							String bmn = pluginName.toLowerCase()+":"+ept.getBonusMalus();
 							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
 							getBonusMalus().register(
-									ept.getBonusMalus(),
+									bmn,
 									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
 									false,
 									bmt,
@@ -710,9 +713,10 @@ public class SaLE extends JavaPlugin
 								bmt = BonusMalusType.DOWN;
 								break;
 							}
+							String bmn = pluginName.toLowerCase()+":"+ept.getBonusMalus();
 							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
 							getBonusMalus().register(
-									ept.getBonusMalus(),
+									bmn,
 									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
 									false,
 									bmt,

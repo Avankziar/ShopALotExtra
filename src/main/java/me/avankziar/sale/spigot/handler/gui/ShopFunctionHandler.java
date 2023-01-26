@@ -627,18 +627,30 @@ public class ShopFunctionHandler
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.CannotTradeInOwnShop")));
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
 				return;
 			}
 			if(!plugin.getVaultEco().hasAccount(Bukkit.getOfflinePlayer(ssh.getOwner())))
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.ShopHaveNotAccountReady")));
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
 				return;
 			}
 			if(!plugin.getVaultEco().hasAccount(player))
 			{
 				player.sendMessage(ChatApi.tl(
 						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.YouDontHaveAccountToWithdraw")));
+				for(ItemStack is : islist)
+				{
+					player.getInventory().addItem(is);
+				}
 				return;
 			}
 			double w = samo*d;
