@@ -632,12 +632,12 @@ public class SaLE extends JavaPlugin
 						{
 							continue;
 						}
-						if(getBonusMalus().isRegistered(pluginName.toLowerCase()+":"+bc.getPath()))
+						String bmn = pluginName.toLowerCase()+":"+bc.getPath();
+						if(getBonusMalus().isRegistered(bmn))
 						{
 							cmd++;
 							continue;
 						}
-						String bmn = pluginName.toLowerCase()+":"+bc.getPath();
 						String[] ex = {plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Explanation")};
 						getBonusMalus().register(
 								bmn,
@@ -650,7 +650,8 @@ public class SaLE extends JavaPlugin
 					List<Bypass.Permission> list = new ArrayList<Bypass.Permission>(EnumSet.allOf(Bypass.Permission.class));
 					for(Bypass.Permission ept : list)
 					{
-						if(!getBonusMalus().isRegistered(pluginName.toLowerCase()+":"+ept.toString().toLowerCase()))
+						String bmn = pluginName.toLowerCase()+":"+ept.toString().toLowerCase();
+						if(!getBonusMalus().isRegistered(bmn))
 						{
 							BonusMalusType bmt = null;
 							switch(ept)
@@ -662,7 +663,6 @@ public class SaLE extends JavaPlugin
 								bmt = BonusMalusType.UP;
 								break;
 							}
-							String bmn = pluginName.toLowerCase()+":"+ept.toString().toLowerCase();
 							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
 							getBonusMalus().register(
 									bmn,
@@ -676,7 +676,8 @@ public class SaLE extends JavaPlugin
 					List<Bypass.CountPermission> list2 = new ArrayList<Bypass.CountPermission>(EnumSet.allOf(Bypass.CountPermission.class));
 					for(Bypass.CountPermission ept : list2)
 					{
-						if(!getBonusMalus().isRegistered(pluginName.toLowerCase()+":"+ept.toString().toLowerCase()))
+						String bmn = pluginName.toLowerCase()+":"+ept.toString().toLowerCase();
+						if(!getBonusMalus().isRegistered(bmn))
 						{
 							BonusMalusType bmt = null;
 							switch(ept)
@@ -686,7 +687,6 @@ public class SaLE extends JavaPlugin
 								bmt = BonusMalusType.UP;
 								break;
 							}
-							String bmn = pluginName.toLowerCase()+":"+ept.getBonusMalus();
 							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
 							getBonusMalus().register(
 									bmn,
@@ -700,7 +700,8 @@ public class SaLE extends JavaPlugin
 					List<BoniMali> list3 = new ArrayList<BoniMali>(EnumSet.allOf(BoniMali.class));
 					for(BoniMali ept : list3)
 					{
-						if(!getBonusMalus().isRegistered(pluginName.toLowerCase()+":"+ept.toString().toLowerCase()))
+						String bmn = pluginName.toLowerCase()+":"+ept.toString().toLowerCase();
+						if(!getBonusMalus().isRegistered(bmn))
 						{
 							BonusMalusType bmt = null;
 							switch(ept)
@@ -713,7 +714,6 @@ public class SaLE extends JavaPlugin
 								bmt = BonusMalusType.DOWN;
 								break;
 							}
-							String bmn = pluginName.toLowerCase()+":"+ept.getBonusMalus();
 							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
 							getBonusMalus().register(
 									bmn,
