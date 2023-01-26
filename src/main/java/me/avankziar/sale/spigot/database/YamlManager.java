@@ -1066,13 +1066,13 @@ public class YamlManager
 		bmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche spezifische",
-						"&eAdministrative Rechte gibt.",
+						"&eAdministrative Rechte für Shops gibt.",
 						"&ePermission, which gives specific",
-						"&eadministrative rights."}));
+						"&eadministrative rights for shops."}));
 		bmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eShopLog andere Spieler Einsichtrecht",
-						"&eShopLog other players right of inspection"}));
+						"&eShoplog andere Spieler Einsichtrecht",
+						"&eShop log other players right of inspection"}));
 		bmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche erlaubt von anderen",
@@ -1081,8 +1081,8 @@ public class YamlManager
 						"&eplayers to view the shoplog."}));
 		bmlanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eclientLog andere Spieler Einsichtrecht",
-						"&eclientLog other players right of inspection"}));
+						"&eKundenlog andere Spieler Einsichtrecht",
+						"&eClient log other players right of inspection"}));
 		bmlanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche erlaubt von anderen",
