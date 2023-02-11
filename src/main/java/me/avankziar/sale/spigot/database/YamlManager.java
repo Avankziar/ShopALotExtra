@@ -9,14 +9,13 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.Language.ISO639_2B;
 import main.java.me.avankziar.sale.spigot.gui.events.ClickType;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
-import main.java.me.avankziar.sale.spigot.permission.BoniMali;
-import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
 public class YamlManager
 {
@@ -28,7 +27,7 @@ public class YamlManager
 	private static LinkedHashMap<String, Language> configSpigotKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> commandsKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> languageKeys = new LinkedHashMap<>();
-	private static LinkedHashMap<String, Language> bmlanguageKeys = new LinkedHashMap<>();
+	private static LinkedHashMap<String, Language> cbmlanguageKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> matlanguageKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<GuiType, LinkedHashMap<String, Language>> guiKeys = new LinkedHashMap<>();
 	
@@ -37,7 +36,7 @@ public class YamlManager
 		initConfig();
 		initCommands();
 		initLanguage();
-		initBonusMalusLanguage();
+		initConditionBonusMalusLanguage();
 		initMaterialLanguage();
 		initGuiAdministration();
 		initGuiNumpad();
@@ -76,9 +75,9 @@ public class YamlManager
 		return languageKeys;
 	}
 	
-	public LinkedHashMap<String, Language> getBonusMalusLanguageKey()
+	public LinkedHashMap<String, Language> getConditionBonusMalusLanguageKey()
 	{
-		return bmlanguageKeys;
+		return cbmlanguageKeys;
 	}
 	
 	public LinkedHashMap<String, Language> getMaterialLanguageKey()
@@ -384,8 +383,8 @@ public class YamlManager
 					"sale."+ept.toString().toLowerCase().replace("_", ".")}));
 		}
 		
-		List<Bypass.CountPermission> list2 = new ArrayList<Bypass.CountPermission>(EnumSet.allOf(Bypass.CountPermission.class));
-		for(Bypass.CountPermission ept : list2)
+		List<Bypass.Counter> list2 = new ArrayList<Bypass.Counter>(EnumSet.allOf(Bypass.Counter.class));
+		for(Bypass.Counter ept : list2)
 		{
 			commandsKeys.put("Count."+ept.toString()
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -1047,93 +1046,93 @@ public class YamlManager
 						"&7%time% &e>> &7[&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
 	}
 	
-	public void initBonusMalusLanguage() //INFO:BonusMalusLanguages
+	public void initConditionBonusMalusLanguage() //INFO:BonusMalusLanguages
 	{
-		bmlanguageKeys.put(Bypass.Permission.SHOP_CREATION.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Permission.SHOP_CREATION.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eShop-Erstellungsrecht",
 						"&eShop creation right"}));
-		bmlanguageKeys.put(Bypass.Permission.SHOP_CREATION.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Permission.SHOP_CREATION.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche erlaubt SchilderShop",
 						"&eerstellen zu können.",
 						"&ePermission, which allows",
 						"&eto create SchilderShop."}));
-		bmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eShop-Adminstrationbypass",
 						"&eShop administration bypass"}));
-		bmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche spezifische",
 						"&eAdministrative Rechte für Shops gibt.",
 						"&ePermission, which gives specific",
 						"&eadministrative rights for shops."}));
-		bmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eShoplog andere Spieler Einsichtrecht",
 						"&eShop log other players right of inspection"}));
-		bmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche erlaubt von anderen",
 						"&eSpieler die Shoplog einzusehen.",
 						"&ePermission, which allows other",
 						"&eplayers to view the shoplog."}));
-		bmlanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKundenlog andere Spieler Einsichtrecht",
 						"&eClient log other players right of inspection"}));
-		bmlanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche erlaubt von anderen",
 						"&eSpieler die clientlog einzusehen.",
 						"&ePermission, which allows other",
 						"&eplayers to view the clientlog."}));
-		bmlanguageKeys.put(Bypass.CountPermission.SHOP_CREATION_AMOUNT_.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Counter.SHOP_CREATION_AMOUNT_.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eAnzahl zu erstellende Shops",
 						"&eNumber of stores to be created"}));
-		bmlanguageKeys.put(Bypass.CountPermission.SHOP_CREATION_AMOUNT_.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Counter.SHOP_CREATION_AMOUNT_.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die Anzahl",
 						"&ezu erstellender definiert.",
 						"&eCounting mission, which defines",
 						"&ethe number to be created."}));
-		bmlanguageKeys.put(Bypass.CountPermission.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eGröße des Shoplagerraums",
 						"&eShop storageroom size"}));
-		bmlanguageKeys.put(Bypass.CountPermission.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die Größe",
 						"&edes Shoplagerraums definiert.",
 						"&eCounting mission, which defines the",
 						"&esize of the shopstoreroom."}));
-		bmlanguageKeys.put(BoniMali.COST_ADDING_STORAGE.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Counter.COST_ADDING_STORAGE.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKosten für die Vergrößerung des Shoplagerraums",
 						"&eCosts for the enlargement of the store storage room"}));
-		bmlanguageKeys.put(BoniMali.COST_ADDING_STORAGE.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Counter.COST_ADDING_STORAGE.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die Kosten für die",
 						"&eVergrößerung des Shoplagerraums definiert.",
 						"&eCount mission that defines the cost",
 						"&eof increasing the store storage space."}));
-		bmlanguageKeys.put(BoniMali.SHOP_BUYING_TAX.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Counter.SHOP_BUYING_TAX.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eProzentuale Kaufsteuer",
 						"&ePercentage buy tax"}));
-		bmlanguageKeys.put(BoniMali.SHOP_BUYING_TAX.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Counter.SHOP_BUYING_TAX.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die prozentualen Kaufsteuer",
 						"&edes Shops definiert. Zählt für den Shopeigentümer.",
 						"&eCounting mission, which defines the percentage",
 						"&ebuy tax of the shop. Counts for shop owner."}));
-		bmlanguageKeys.put(BoniMali.SHOP_SELLING_TAX.toString()+".Displayname",
+		cbmlanguageKeys.put(Bypass.Counter.SHOP_SELLING_TAX.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eProzentuale Verkaufsteuer",
 						"&ePercentage sell tax"}));
-		bmlanguageKeys.put(BoniMali.SHOP_SELLING_TAX.toString()+".Explanation",
+		cbmlanguageKeys.put(Bypass.Counter.SHOP_SELLING_TAX.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die prozentualen Verkaufsteuer",
 						"&edes Shops definiert. Zählt für den Kunden.",

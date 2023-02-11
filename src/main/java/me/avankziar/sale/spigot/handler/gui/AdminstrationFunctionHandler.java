@@ -27,6 +27,8 @@ import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandSuggest;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.ConditionBonusMalus;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
@@ -37,9 +39,6 @@ import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.ShopAccessType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
-import main.java.me.avankziar.sale.spigot.permission.BoniMali;
-import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
-import main.java.me.avankziar.sale.spigot.permission.Bypass;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 public class AdminstrationFunctionHandler
@@ -233,7 +232,7 @@ public class AdminstrationFunctionHandler
 			return false;
 		}
 		int signShopAmount = plugin.getMysqlHandler().getCount(MysqlHandler.Type.SIGNSHOP, "`player_uuid` = ?", player.getUniqueId().toString());
-		int maxSignShopAmount = BonusMalusPermission.getPermissionCount(player, Bypass.CountPermission.SHOP_CREATION_AMOUNT_);
+		int maxSignShopAmount = ConditionBonusMalus.getResult(player, Bypass.Counter.SHOP_CREATION_AMOUNT_);
 		if(signShopAmount > maxSignShopAmount)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.AlreadyHaveMaximalSignShop")
@@ -253,7 +252,7 @@ public class AdminstrationFunctionHandler
 		}
 		List<String> costPerOne = plugin.getYamlHandler().getConfig().getStringList("SignShop.CostToAdd1Storage");
 		long maxStorage = ssh.getItemStorageTotal();
-		long maxPossibleStorage = (long) BonusMalusPermission.getPermissionCount(player, Bypass.CountPermission.SHOP_ITEMSTORAGE_AMOUNT_);
+		long maxPossibleStorage = (long) ConditionBonusMalus.getResult(player, Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_);
 		if(maxStorage >= maxPossibleStorage)
 		{
 			player.sendMessage(ChatApi.tl(
@@ -310,7 +309,7 @@ public class AdminstrationFunctionHandler
 			double d = Double.parseDouble(split[1]);
 			if(plugin.getBonusMalus() != null)
 			{
-				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, BoniMali.COST_ADDING_STORAGE.getBonusMalus());
+				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, Bypass.Counter.COST_ADDING_STORAGE.getBonusMalus());
 			}
 			if(plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.SHOP, ec) == null
 					&& plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, ec) == null)
@@ -430,7 +429,7 @@ public class AdminstrationFunctionHandler
 			d = Double.parseDouble(split[1]);
 			if(plugin.getBonusMalus() != null)
 			{
-				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, BoniMali.COST_ADDING_STORAGE.getBonusMalus());
+				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, Bypass.Counter.COST_ADDING_STORAGE.getBonusMalus());
 			}
 		}
 		double dd = d*ca;

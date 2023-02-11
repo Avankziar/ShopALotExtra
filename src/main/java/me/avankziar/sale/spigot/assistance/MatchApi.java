@@ -4,20 +4,30 @@ import java.util.UUID;
 
 public class MatchApi
 {
-	public static boolean isBoolean(String value)
+	public static boolean isBoolean(String boo)
 	{
-		if(value == null)
+		if(boo == null)
 		{
 			return false;
 		}
-		try
+		if(boo.equalsIgnoreCase("true") || boo.equalsIgnoreCase("1")
+				|| boo.equalsIgnoreCase("false") || boo.equalsIgnoreCase("0"))
 		{
-			Boolean.parseBoolean(value);
 			return true;
-		} catch (Exception e) 
+		}
+		return false;
+	}
+	
+	public static Boolean getBoolean(String boo)
+	{
+		if(boo.equalsIgnoreCase("true") || boo.equalsIgnoreCase("1"))
+		{
+			return true;
+		} else if(boo.equalsIgnoreCase("false") || boo.equalsIgnoreCase("0"))
 		{
 			return false;
 		}
+		return null;
 	}
 	
 	public static boolean isNumber(String numberstring)

@@ -1,5 +1,9 @@
 Future Build
 
+Build 1-2-0
+- Metrics hinzugefügt
+- BonusMalus & Condition IFH Interface hinzugefügt.
+
 Build 1-1-2
 - Vault Teil, Shopeigentümer verliert bei eigenem Einkauf, die Items. Fix
 - BonusMalus, Falscher BonusmalusName eingetragen.

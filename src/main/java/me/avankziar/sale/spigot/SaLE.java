@@ -26,6 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus;
 import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalusType;
+import main.java.me.avankziar.ifh.general.condition.Condition;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation;
@@ -49,6 +50,7 @@ import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlSetup;
 import main.java.me.avankziar.sale.spigot.database.YamlHandler;
@@ -66,9 +68,8 @@ import main.java.me.avankziar.sale.spigot.listener.PlayerInteractListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerJoinListener;
 import main.java.me.avankziar.sale.spigot.listener.ShopPostTransactionListener;
 import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
+import main.java.me.avankziar.sale.spigot.metrics.Metrics;
 import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
-import main.java.me.avankziar.sale.spigot.permission.BoniMali;
-import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
 public class SaLE extends JavaPlugin
 {
@@ -95,6 +96,7 @@ public class SaLE extends JavaPlugin
 	private EnumTranslation enumTranslationConsumer;
 	private Economy ecoConsumer;
 	private BonusMalus bonusMalusConsumer;
+	private Condition conditionConsumer;
 	private MessageToBungee mtbConsumer;
 	private BaseComponentToBungee bctbConsumer;
 	
@@ -138,8 +140,10 @@ public class SaLE extends JavaPlugin
 		setupBypassPerm();
 		setupCommandTree();
 		setupListeners();
-		setupIFH();
+		setupIFHProvider();
+		setupIFHConsumer();
 		MaterialHandler.init(plugin);
+		setupBstats();
 	}
 	
 	public void onDisable()
@@ -246,7 +250,7 @@ public class SaLE extends JavaPlugin
 	private void setupBypassPerm()
 	{
 		String path = "Count.";
-		for(Bypass.CountPermission bypass : new ArrayList<Bypass.CountPermission>(EnumSet.allOf(Bypass.CountPermission.class)))
+		for(Bypass.Counter bypass : new ArrayList<Bypass.Counter>(EnumSet.allOf(Bypass.Counter.class)))
 		{
 			Bypass.set(bypass, yamlHandler.getCommands().getString(path+bypass.toString()));
 		}
@@ -453,14 +457,99 @@ public class SaLE extends JavaPlugin
 		return administrationConsumer;
 	}
 	
-	private void setupIFH()
+	public void setupIFHProvider()
 	{
 		setupIFHShop();
+	}
+	
+	public void setupIFHConsumer()
+	{
+		setupIFHCondition();
+		setupIFHBonusMalus();
 		setupIFHEnumTranslation();
 		setupIFHEconomy();
 		setupIFHBonusMalus();
 		setupIFHMessageToBungee();
 		setupIFHBaseComponentToBungee();
+	}
+	
+	public void setupIFHCondition()
+	{
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+	    	return;
+	    }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+				    	return;
+				    }
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.condition.Condition> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 main.java.me.avankziar.ifh.general.condition.Condition.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    conditionConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> Condition.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}
+				if(getCondition() != null)
+				{
+					if(!new ConfigHandler().isMechanicBonusMalusEnabled())
+					{
+						return;
+					}
+					for(BaseConstructor bc : getCommandHelpList())
+					{
+						if(!bc.isPutUpCmdPermToConditionSystem())
+						{
+							continue;
+						}
+						if(getBonusMalus().isRegistered(bc.getConditionPath()))
+						{
+							continue;
+						}
+						String[] ex = {plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Explanation")};
+						getCondition().register(
+								bc.getConditionPath(),
+								plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Displayname", "Command "+bc.getName()),
+								ex);
+					}
+					List<Bypass.Permission> list = new ArrayList<Bypass.Permission>(EnumSet.allOf(Bypass.Permission.class));
+					for(Bypass.Permission ept : list)
+					{
+						if(getCondition().isRegistered(ept.getCondition()))
+						{
+							continue;
+						}
+						List<String> lar = plugin.getYamlHandler().getCBMLang().getStringList(ept.toString()+".Explanation");
+						getCondition().register(
+								ept.getCondition(),
+								plugin.getYamlHandler().getCBMLang().getString(ept.toString()+".Displayname", ept.toString()),
+								lar.toArray(new String[lar.size()]));
+					}
+				}
+			}
+        }.runTaskTimer(plugin, 0L, 20*2);
+	}
+	
+	public Condition getCondition()
+	{
+		return conditionConsumer;
 	}
 	
 	private boolean setupIFHShop()
@@ -618,117 +707,33 @@ public class SaLE extends JavaPlugin
 				}
 				if(getBonusMalus() != null)
 				{
-					if(!new ConfigHandler().isMechanicBonusMalusEnabled())
+					List<Bypass.Counter> list = new ArrayList<Bypass.Counter>(EnumSet.allOf(Bypass.Counter.class));
+					for(Bypass.Counter ept : list)
 					{
-						return;
-					}
-					int cmd = 0;
-					int bperm = 0;
-					int cperm = 0;
-					int bm = 0;
-					for(BaseConstructor bc : getCommandHelpList())
-					{
-						if(!bc.isPutUpCmdPermToBonusMalusSystem())
+						if(getBonusMalus().isRegistered(ept.getBonusMalus()))
 						{
 							continue;
 						}
-						String bmn = pluginName.toLowerCase()+":"+bc.getPath();
-						if(getBonusMalus().isRegistered(bmn))
+						BonusMalusType bmt = null;
+						switch(ept)
 						{
-							cmd++;
-							continue;
+						case SHOP_CREATION_AMOUNT_:
+						case SHOP_ITEMSTORAGE_AMOUNT_:
+						case COST_ADDING_STORAGE:
+							bmt = BonusMalusType.UP;
+							break;
+						case SHOP_BUYING_TAX:
+						case SHOP_SELLING_TAX:
+							bmt = BonusMalusType.DOWN;
+							break;
 						}
-						String[] ex = {plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Explanation")};
+						List<String> lar = plugin.getYamlHandler().getCBMLang().getStringList(ept.toString()+".Explanation");
 						getBonusMalus().register(
-								bmn,
-								plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Displayname", "Command "+bc.getName()),
-								true,
-								BonusMalusType.UP,
-								ex);
-						cmd++;
+								ept.getBonusMalus(),
+								plugin.getYamlHandler().getCBMLang().getString(ept.toString()+".Displayname", ept.toString()),
+								bmt,
+								lar.toArray(new String[lar.size()]));
 					}
-					List<Bypass.Permission> list = new ArrayList<Bypass.Permission>(EnumSet.allOf(Bypass.Permission.class));
-					for(Bypass.Permission ept : list)
-					{
-						String bmn = pluginName.toLowerCase()+":"+ept.toString().toLowerCase();
-						if(!getBonusMalus().isRegistered(bmn))
-						{
-							BonusMalusType bmt = null;
-							switch(ept)
-							{
-							case SHOP_CREATION:
-							case SHOP_GUI_BYPASS:
-							case SHOP_LOG_OTHERPLAYER:								
-							case CLIENT_LOG_OTHERPLAYER:
-								bmt = BonusMalusType.UP;
-								break;
-							}
-							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
-							getBonusMalus().register(
-									bmn,
-									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
-									true,
-									bmt,
-									lar.toArray(new String[lar.size()]));
-						}
-						bperm++;
-					}
-					List<Bypass.CountPermission> list2 = new ArrayList<Bypass.CountPermission>(EnumSet.allOf(Bypass.CountPermission.class));
-					for(Bypass.CountPermission ept : list2)
-					{
-						String bmn = pluginName.toLowerCase()+":"+ept.toString().toLowerCase();
-						if(!getBonusMalus().isRegistered(bmn))
-						{
-							BonusMalusType bmt = null;
-							switch(ept)
-							{
-							case SHOP_CREATION_AMOUNT_:
-							case SHOP_ITEMSTORAGE_AMOUNT_:
-								bmt = BonusMalusType.UP;
-								break;
-							}
-							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
-							getBonusMalus().register(
-									bmn,
-									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
-									false,
-									bmt,
-									lar.toArray(new String[lar.size()]));
-						}
-						cperm++;
-					}
-					List<BoniMali> list3 = new ArrayList<BoniMali>(EnumSet.allOf(BoniMali.class));
-					for(BoniMali ept : list3)
-					{
-						String bmn = pluginName.toLowerCase()+":"+ept.toString().toLowerCase();
-						if(!getBonusMalus().isRegistered(bmn))
-						{
-							BonusMalusType bmt = null;
-							switch(ept)
-							{
-							case COST_ADDING_STORAGE:
-								bmt = BonusMalusType.UP;
-								break;
-							case SHOP_BUYING_TAX:
-							case SHOP_SELLING_TAX:
-								bmt = BonusMalusType.DOWN;
-								break;
-							}
-							List<String> lar = plugin.getYamlHandler().getBMLang().getStringList(ept.toString()+".Explanation");
-							getBonusMalus().register(
-									bmn,
-									plugin.getYamlHandler().getBMLang().getString(ept.toString()+".Displayname", ept.toString()),
-									false,
-									bmt,
-									lar.toArray(new String[lar.size()]));
-						}
-						bm++;
-					}
-					log.info("===Registered BonusMalus===");
-					log.info(">> Commands: "+cmd);
-					log.info(">> BypassPerm: "+bperm);
-					log.info(">> CountPerm: "+cperm);
-					log.info(">> Other BoniMali: "+bm);
 				}
 			}
         }.runTaskTimer(plugin, 20L, 20*2);
@@ -823,5 +828,11 @@ public class SaLE extends JavaPlugin
 	public BaseComponentToBungee getBctB()
 	{
 		return bctbConsumer;
+	}
+	
+	public void setupBstats()
+	{
+		int pluginId = 17588;
+        new Metrics(this, pluginId);
 	}
 }

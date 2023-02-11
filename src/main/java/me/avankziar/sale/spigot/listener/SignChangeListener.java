@@ -11,13 +11,13 @@ import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
 import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
 import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.ConditionBonusMalus;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
-import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
-import main.java.me.avankziar.sale.spigot.permission.Bypass;
 
 public class SignChangeListener implements Listener
 {
@@ -58,13 +58,13 @@ public class SignChangeListener implements Listener
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ForbiddenWorld")));
 			return;
 		}
-		if(!BonusMalusPermission.hasPermission(player, Bypass.Permission.SHOP_CREATION))
+		if(!ConditionBonusMalus.hasPermission(player, Bypass.Permission.SHOP_CREATION))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 			return;
 		}
 		int signShopAmount = plugin.getMysqlHandler().getCount(MysqlHandler.Type.SIGNSHOP, "`player_uuid` = ?", player.getUniqueId().toString());
-		int maxSignShopAmount = BonusMalusPermission.getPermissionCount(player, Bypass.CountPermission.SHOP_CREATION_AMOUNT_);
+		int maxSignShopAmount = ConditionBonusMalus.getResult(player, Bypass.Counter.SHOP_CREATION_AMOUNT_);
 		if(signShopAmount > maxSignShopAmount)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.AlreadyHaveMaximalSignShop")

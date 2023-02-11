@@ -1,36 +1,9 @@
 package main.java.me.avankziar.sale.spigot.handler;
 
-import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 
 public class ConfigHandler
 {
-	private SaLE plugin;
-	
-	public ConfigHandler()
-	{
-		this.plugin = SaLE.getPlugin();
-	}
-	
-	public boolean isSignShopEnabled()
-	{
-		return plugin.getYamlHandler().getConfig().getBoolean("Enable.SignShop", false);
-	}
-	
-	public boolean isAuctionEnabled()
-	{
-		return plugin.getYamlHandler().getConfig().getBoolean("Enable.Auction", false);
-	}
-	
-	public boolean isMechanicBonusMalusEnabled()
-	{
-		return plugin.getYamlHandler().getConfig().getBoolean("EnableMechanic.BonusMalus", false);
-	}
-	
-	public String getSignShopInitLine()
-	{
-		return plugin.getYamlHandler().getConfig().getString("SignShop.SignInitializationLine", "[SaleShop]");
-	}
-	
 	public enum CountType
 	{
 		HIGHEST, ADDUP;
@@ -38,7 +11,7 @@ public class ConfigHandler
 	
 	public CountType getCountPermType()
 	{
-		String s = plugin.getYamlHandler().getConfig().getString("Mechanic.CountPerm", "HIGHEST");
+		String s = BaseConstructor.getPlugin().getYamlHandler().getConfig().getString("Mechanic.CountPerm", "HIGHEST");
 		CountType ct;
 		try
 		{
@@ -50,13 +23,33 @@ public class ConfigHandler
 		return ct;
 	}
 	
+	public boolean isSignShopEnabled()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Enable.SignShop", false);
+	}
+	
+	public boolean isAuctionEnabled()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Enable.Auction", false);
+	}
+	
+	public boolean isMechanicBonusMalusEnabled()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.BonusMalus", false);
+	}
+	
+	public String getSignShopInitLine()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getString("SignShop.SignInitializationLine", "[SaleShop]");
+	}
+	
 	public long getDefaulStartItemStorage()
 	{
-		return plugin.getYamlHandler().getConfig().getLong("SignShop.DefaultStartItemStorage", 3456);
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getLong("SignShop.DefaultStartItemStorage", 3456);
 	}
 	
 	public boolean shopCanTradeShulker()
 	{
-		return plugin.getYamlHandler().getConfig().getBoolean("SignShop.ShopCanTradeShulker", true);
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("SignShop.ShopCanTradeShulker", true);
 	}
 }

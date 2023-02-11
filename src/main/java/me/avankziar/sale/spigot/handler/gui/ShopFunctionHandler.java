@@ -29,6 +29,7 @@ import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.ifh.spigot.economy.currency.EconomyCurrency;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.event.ShopPostTransactionEvent;
 import main.java.me.avankziar.sale.spigot.event.ShopPreTransactionEvent;
@@ -43,7 +44,6 @@ import main.java.me.avankziar.sale.spigot.objects.ClientLog.WayType;
 import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SubscribedShop;
-import main.java.me.avankziar.sale.spigot.permission.BoniMali;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -273,7 +273,7 @@ public class ShopFunctionHandler
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.BuyInPercent") : null;
 		if(plugin.getBonusMalus() != null)
 		{
-			taxation = plugin.getBonusMalus().getResult(ssh.getOwner(), taxation, BoniMali.SHOP_BUYING_TAX.getBonusMalus());
+			taxation = plugin.getBonusMalus().getResult(ssh.getOwner(), taxation, Bypass.Counter.SHOP_BUYING_TAX.getBonusMalus());
 		}
 		ShopPreTransactionEvent sprte = new ShopPreTransactionEvent(ssh, samo, d.doubleValue(), taxation, true, player);
 		Bukkit.getPluginManager().callEvent(sprte);
@@ -570,7 +570,7 @@ public class ShopFunctionHandler
 		}
 		if(plugin.getBonusMalus() != null)
 		{
-			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, BoniMali.SHOP_SELLING_TAX.getBonusMalus());
+			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, Bypass.Counter.SHOP_SELLING_TAX.getBonusMalus());
 		}
 		ShopPreTransactionEvent sprte = new ShopPreTransactionEvent(ssh, samo, d.doubleValue(), taxation, false, player);
 		Bukkit.getPluginManager().callEvent(sprte);

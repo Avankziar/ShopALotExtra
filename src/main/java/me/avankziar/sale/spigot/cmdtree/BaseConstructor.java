@@ -4,6 +4,11 @@ import main.java.me.avankziar.sale.spigot.SaLE;
 
 public class BaseConstructor
 {
+	public static SaLE getPlugin()
+	{
+		return SaLE.getPlugin();
+	}
+	
 	private String name;
 	private String path;
 	private String permission;
@@ -11,10 +16,10 @@ public class BaseConstructor
 	private String commandString;
 	private String helpInfo;
 	private boolean canConsoleAccess;
-	private boolean putUpCmdPermToBonusMalusSystem;
+	private boolean putUpCmdPermToConditionSystem;
 	
 	public BaseConstructor(CommandExecuteType cet, String name, String path, String permission, String suggestion, String commandString,
-			String helpInfo, boolean canConsoleAccess, boolean putUpCmdPermToBonusMalusSystem)
+			String helpInfo, boolean canConsoleAccess, boolean putUpCmdPermToConditionSystem)
 	{
 		setName(name);
 		setPath(path);
@@ -25,12 +30,7 @@ public class BaseConstructor
 		setCanConsoleAccess(canConsoleAccess);
 		CommandSuggest.set(cet, commandString);
 		getPlugin().addingCommandHelps(this);
-		setPutUpCmdPermToBonusMalusSystem(putUpCmdPermToBonusMalusSystem);
-	}
-	
-	public static SaLE getPlugin()
-	{
-		return SaLE.getPlugin();
+		setPutUpCmdPermToConditionSystem(putUpCmdPermToConditionSystem);
 	}
 
 	public String getName()
@@ -102,14 +102,19 @@ public class BaseConstructor
 	{
 		this.helpInfo = helpInfo;
 	}
-	
-	public boolean isPutUpCmdPermToBonusMalusSystem()
+
+	public boolean isPutUpCmdPermToConditionSystem()
 	{
-		return putUpCmdPermToBonusMalusSystem;
+		return putUpCmdPermToConditionSystem;
 	}
 
-	public void setPutUpCmdPermToBonusMalusSystem(boolean putUpCmdPermToBonusMalusSystem)
+	public void setPutUpCmdPermToConditionSystem(boolean putUpCmdPermToConditionSystem)
 	{
-		this.putUpCmdPermToBonusMalusSystem = putUpCmdPermToBonusMalusSystem;
+		this.putUpCmdPermToConditionSystem = putUpCmdPermToConditionSystem;
+	}
+	
+	public String getConditionPath()
+	{
+		return getPlugin().pluginName.toLowerCase()+"-"+getPath();
 	}
 }

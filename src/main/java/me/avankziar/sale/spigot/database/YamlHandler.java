@@ -28,8 +28,8 @@ public class YamlHandler
 	private String languages;
 	private File language = null;
 	private YamlConfiguration lang = new YamlConfiguration();
-	private File bmlanguage = null;
-	private YamlConfiguration bmlang = new YamlConfiguration();
+	private File cbmlanguage = null;
+	private YamlConfiguration cbmlang = new YamlConfiguration();
 	
 	private File matlanguage = null;
 	private YamlConfiguration matlang = new YamlConfiguration();
@@ -57,9 +57,9 @@ public class YamlHandler
 		return lang;
 	}
 	
-	public YamlConfiguration getBMLang()
+	public YamlConfiguration getCBMLang()
 	{
-		return bmlang;
+		return cbmlang;
 	}
 	
 	public YamlConfiguration getMaterialLang()
@@ -278,25 +278,24 @@ public class YamlHandler
 			return false;
 		}
 		writeFile(language, lang, plugin.getYamlManager().getLanguageKey());
-		
-		bmlanguage = new File(directory.getPath(), languageString+"_bonusmalus.yml");
-		if(!bmlanguage.exists()) 
+		cbmlanguage = new File(directory.getPath(), "cbm_"+languageString+".yml");
+		if(!cbmlanguage.exists()) 
 		{
-			SaLE.log.info("Create %lang%_bonusmalus.yml...".replace("%lang%", languageString));
+			SaLE.log.info("Create cbm_%lang%.yml...".replace("%lang%", languageString));
 			try(InputStream in = plugin.getResource("default.yml"))
 			{
-				Files.copy(in, bmlanguage.toPath());
+				Files.copy(in, cbmlanguage.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
-		bmlang = loadYamlTask(bmlanguage, bmlang);
-		if(bmlang == null)
+		cbmlang = loadYamlTask(cbmlanguage, cbmlang);
+		if(cbmlang == null)
 		{
 			return false;
 		}
-		writeFile(bmlanguage, bmlang, plugin.getYamlManager().getBonusMalusLanguageKey());
+		writeFile(cbmlanguage, cbmlang, plugin.getYamlManager().getConditionBonusMalusLanguageKey());
 		
 		matlanguage = new File(directory.getPath(), languageString+"_material.yml");
 		if(!matlanguage.exists()) 

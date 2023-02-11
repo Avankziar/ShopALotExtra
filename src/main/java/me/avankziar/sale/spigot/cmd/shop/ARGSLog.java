@@ -19,14 +19,14 @@ import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.ConditionBonusMalus;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass.Permission;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SignShopLog;
 import main.java.me.avankziar.sale.spigot.objects.SignShopLog.WayType;
-import main.java.me.avankziar.sale.spigot.permission.BonusMalusPermission;
-import main.java.me.avankziar.sale.spigot.permission.Bypass.Permission;
 
 public class ARGSLog extends ArgumentModule
 {
@@ -85,7 +85,7 @@ public class ARGSLog extends ArgumentModule
 			{
 				SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", shopid);
 				if(!SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()) && !SignHandler.isOwner(ssh, player.getUniqueId())
-						&& !BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+						&& !ConditionBonusMalus.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 					return;
@@ -94,14 +94,14 @@ public class ARGSLog extends ArgumentModule
 			{
 				SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", shopid);
 				if(!SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()) && !SignHandler.isOwner(ssh, player.getUniqueId())
-						&& !BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+						&& !ConditionBonusMalus.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 					return;
 				}
 			} else if(!otherplayer.toString().equals(player.getUniqueId().toString()))
 			{
-				if(!BonusMalusPermission.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
+				if(!ConditionBonusMalus.hasPermission(player, Permission.SHOP_LOG_OTHERPLAYER))
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return;
