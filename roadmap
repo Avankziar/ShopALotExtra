@@ -1,39 +1,23 @@
 Future Build
-[12:44:09] [Server thread/ERROR]: Could not pass event PlayerInteractEvent to SaLE v1
-java.lang.NullPointerException: Cannot invoke "org.bukkit.inventory.ItemStack.clone()" because "itemstack" is null
-	at main.java.me.avankziar.sale.spigot.gui.GUIApi.add(GUIApi.java:222) ~[sale-1-1-0.jar:?]
-	at main.java.me.avankziar.sale.spigot.handler.GuiHandler.openGui(GuiHandler.java:127) ~[sale-1-1-0.jar:?]
-	at main.java.me.avankziar.sale.spigot.handler.GuiHandler.openShop(GuiHandler.java:91) ~[sale-1-1-0.jar:?]
-	at main.java.me.avankziar.sale.spigot.listener.PlayerInteractListener.onPlayerInteract(PlayerInteractListener.java:162) ~[sale-1-1-0.jar:?]
-	at com.destroystokyo.paper.event.executor.asm.generated.GeneratedEventExecutor215.execute(Unknown Source) ~[?:?]
-	at org.bukkit.plugin.EventExecutor$2.execute(EventExecutor.java:77) ~[paper-api-1.19.2-R0.1-SNAPSHOT.jar:?]
-	at co.aikar.timings.TimedEventExecutor.execute(TimedEventExecutor.java:80) ~[paper-api-1.19.2-R0.1-SNAPSHOT.jar:git-Paper-307]
-	at org.bukkit.plugin.RegisteredListener.callEvent(RegisteredListener.java:70) ~[paper-api-1.19.2-R0.1-SNAPSHOT.jar:?]
-	at org.bukkit.plugin.SimplePluginManager.callEvent(SimplePluginManager.java:670) ~[paper-api-1.19.2-R0.1-SNAPSHOT.jar:?]
-	at org.bukkit.craftbukkit.v1_19_R1.event.CraftEventFactory.callPlayerInteractEvent(CraftEventFactory.java:545) ~[paper-1.19.2.jar:git-Paper-307]
-	at net.minecraft.server.level.ServerPlayerGameMode.useItemOn(ServerPlayerGameMode.java:526) ~[?:?]
-	at net.minecraft.server.network.ServerGamePacketListenerImpl.handleUseItemOn(ServerGamePacketListenerImpl.java:1969) ~[?:?]
-	at net.minecraft.network.protocol.game.ServerboundUseItemOnPacket.handle(ServerboundUseItemOnPacket.java:37) ~[?:?]
-	at net.minecraft.network.protocol.game.ServerboundUseItemOnPacket.a(ServerboundUseItemOnPacket.java:9) ~[?:?]
-	at net.minecraft.network.protocol.PacketUtils.lambda$ensureRunningOnSameThread$1(PacketUtils.java:51) ~[?:?]
-	at net.minecraft.server.TickTask.run(TickTask.java:18) ~[paper-1.19.2.jar:git-Paper-307]
-	at net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:153) ~[?:?]
-	at net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:24) ~[?:?]
-	at net.minecraft.server.MinecraftServer.doRunTask(MinecraftServer.java:1341) ~[paper-1.19.2.jar:git-Paper-307]
-	at net.minecraft.server.MinecraftServer.d(MinecraftServer.java:185) ~[paper-1.19.2.jar:git-Paper-307]
-	at net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:126) ~[?:?]
-	at net.minecraft.server.MinecraftServer.pollTaskInternal(MinecraftServer.java:1318) ~[paper-1.19.2.jar:git-Paper-307]
-	at net.minecraft.server.MinecraftServer.pollTask(MinecraftServer.java:1311) ~[paper-1.19.2.jar:git-Paper-307]
-	at net.minecraft.util.thread.BlockableEventLoop.managedBlock(BlockableEventLoop.java:136) ~[?:?]
-	at net.minecraft.server.MinecraftServer.waitUntilNextTick(MinecraftServer.java:1289) ~[paper-1.19.2.jar:git-Paper-307]
-	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1177) ~[paper-1.19.2.jar:git-Paper-307]
-	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:305) ~[paper-1.19.2.jar:git-Paper-307]
-	at java.lang.Thread.run(Thread.java:833) ~[?:?]
 - Worldguardflag für das erstellen von Shops
 
 Build 1-2-0
 - Metrics hinzugefügt
-- BonusMalus & Condition IFH Interface hinzugefügt.
+- NullPointerException fix
+- Condition Interface hinzugefügt.
+  Hinzugefügt Condition:
+  - sale-shop_creation
+  - sale-shop_gui_bypass
+  - sale-shop_log_otherplayer
+  - sale-client_log_otherplayer
+- BonusMalus Interface hinzugefügt.
+  Hinzugefügte Bonus/Malus:
+  - sale-shop_creation_amount_
+  - sale-shop_itemstorage_amount_
+  - sale-cost_adding_storage
+  - sale-shop_buying_tax
+  - sale-shop_selling_tax
+
 
 Build 1-1-2
 - Vault Teil, Shopeigentümer verliert bei eigenem Einkauf, die Items. Fix

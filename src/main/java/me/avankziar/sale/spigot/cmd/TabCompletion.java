@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandConstructor;
+import main.java.me.avankziar.sale.spigot.conditionbonusmalus.ConditionBonusMalus;
 
 public class TabCompletion implements TabCompleter
 {	
@@ -163,7 +164,7 @@ public class TabCompletion implements TabCompleter
 		{
 			if(ac != null)
 			{
-				if(player.hasPermission(ac.getPermission()))
+				if(ConditionBonusMalus.hasPermission(player, ac))
 				{
 					returnlist.add(ac.getName());
 				}

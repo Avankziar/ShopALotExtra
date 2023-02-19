@@ -114,20 +114,11 @@ public class YamlHandler
 	
 	public boolean loadYamlHandler()
 	{
-		/*
-		 * Init all path from all yamls files
-		 */
 		plugin.setYamlManager(new YamlManager());
-		/*
-		 * Load all files, which are unique, for examples config.yml, commands.yml etc.
-		 */
 		if(!mkdirStaticFiles())
 		{
 			return false;
 		}
-		/*
-		 * Load all files, which exist mutiple versions. Languages etc.
-		 */
 		if(!mkdirDynamicFiles())
 		{
 			return false;
@@ -137,61 +128,40 @@ public class YamlHandler
 	
 	public boolean mkdirStaticFiles()
 	{
-		/*
-		 * Create the plugin general directory
-		 */
 		File directory = new File(plugin.getDataFolder()+"");
 		if(!directory.exists())
 		{
 			directory.mkdir();
 		}
-		/*
-		 * Init config.yml
-		 */
 		config = new File(plugin.getDataFolder(), "config.yml");
 		if(!config.exists()) 
 		{
 			SaLE.log.info("Create config.yml...");
 			try(InputStream in = plugin.getResource("default.yml"))
 			{
-				/*
-				 * If config.yml dont exist in the main directory, than create config.yml as empty file
-				 */
 				Files.copy(in, config.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
-		/*
-		 * Load the config.yml
-		 */
 		cfg = loadYamlTask(config, cfg);
 		if (cfg == null)
 		{
 			return false;
 		}
-		/*
-		 * Write all path for the configfile
-		 * Make sure, you use the right linkedHashmap from the YamlManager
-		 */
 		writeFile(config, cfg, plugin.getYamlManager().getConfigSpigotKey());
-		/*
-		 * Define the language
-		 */
+		
 		languages = plugin.getAdministration() == null 
 				? cfg.getString("Language", "ENG").toUpperCase() 
 				: plugin.getAdministration().getLanguage();
-		/*
-		 * Repeat for all other single flatfiles.
-		 */
 		commands = new File(plugin.getDataFolder(), "commands.yml");
+		
 		if(!commands.exists()) 
 		{
 			SaLE.log.info("Create commands.yml...");
 			try(InputStream in = plugin.getResource("default.yml"))
 			{
-				//Erstellung einer "leere" config.yml
 				Files.copy(in, commands.toPath());
 			} catch (IOException e)
 			{
@@ -209,7 +179,6 @@ public class YamlHandler
 	
 	private boolean mkdirDynamicFiles()
 	{
-		//Compare the using languages and set this as standard
 		List<Language.ISO639_2B> types = new ArrayList<Language.ISO639_2B>(EnumSet.allOf(Language.ISO639_2B.class));
 		ISO639_2B languageType = ISO639_2B.ENG;
 		for(ISO639_2B type : types)
@@ -220,22 +189,11 @@ public class YamlHandler
 				break;
 			}
 		}
-		/*
-		 * Set the standard languages
-		 */
 		plugin.getYamlManager().setLanguageType(languageType);
-		/*
-		 * Start to make the specific languagefile.
-		 * Attention! Only one file will be created.
-		 */
 		if(!mkdirLanguage())
 		{
 			return false;
 		}
-		/*
-		 * Here a example to create multiple flatfile for one purpose.
-		 * This example is been using for inventory-guis.
-		 */
 		if(!mkdirGUIs())
 		{
 			return false;
@@ -245,21 +203,12 @@ public class YamlHandler
 	
 	private boolean mkdirLanguage()
 	{
-		/*
-		 * Making the "prefix" thing for the filename.
-		 */
 		String languageString = plugin.getYamlManager().getLanguageType().toString().toLowerCase();
-		/*
-		 * Adding a new directory
-		 */
 		File directory = new File(plugin.getDataFolder()+"/Languages/");
 		if(!directory.exists())
 		{
 			directory.mkdir();
 		}
-		/*
-		 * The rest is equals part from the config.yml
-		 */
 		language = new File(directory.getPath(), languageString+".yml");
 		if(!language.exists()) 
 		{

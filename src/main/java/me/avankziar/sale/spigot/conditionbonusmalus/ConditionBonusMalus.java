@@ -16,15 +16,48 @@ public class ConditionBonusMalus
 	{
 		if(BaseConstructor.getPlugin().getCondition() != null)
 		{
-			String t = BaseConstructor.getPlugin().getCondition().getConditionEntry(
+			String[] ss = BaseConstructor.getPlugin().getCondition().getConditionEntry(
 					player.getUniqueId(),
 					bc.getConditionPath(),
 					BaseConstructor.getPlugin().getServername(),
 					player.getWorld().getName());
-			if(MatchApi.isBoolean(t)
-					&& MatchApi.getBoolean(t).booleanValue() && player.hasPermission(bc.getPermission()))
+			if(ss == null)
 			{
-				return true;
+				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+				{
+					return false;
+				} else
+				{
+					return player.hasPermission(bc.getPermission());
+				}
+			}
+			int t = 0;
+			int f = 0;
+			for(String s : ss)
+			{
+				if(MatchApi.isBoolean(s))
+				{
+					if(MatchApi.getBoolean(s).booleanValue())
+					{
+						t++;
+					} else
+					{
+						f++;
+					}
+				}
+			}
+			if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+			{
+				if((t > 0 && t > f))
+				{
+					return true;
+				}
+			} else
+			{
+				if((t > 0 && t > f) || player.hasPermission(bc.getPermission()))
+				{
+					return true;
+				}
 			}
 			return false;
 		}
@@ -35,15 +68,48 @@ public class ConditionBonusMalus
 	{
 		if(BaseConstructor.getPlugin().getCondition() != null)
 		{
-			String t = BaseConstructor.getPlugin().getCondition().getConditionEntry(
+			String[] ss = BaseConstructor.getPlugin().getCondition().getConditionEntry(
 					player.getUniqueId(),
 					bypassPermission.getCondition(),
 					BaseConstructor.getPlugin().getServername(),
 					player.getWorld().getName());
-			if(MatchApi.isBoolean(t)
-					&& MatchApi.getBoolean(t).booleanValue() && player.hasPermission(Bypass.get(bypassPermission)))
+			if(ss == null)
 			{
-				return true;
+				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+				{
+					return false;
+				} else
+				{
+					return player.hasPermission(Bypass.get(bypassPermission));
+				}
+			}
+			int t = 0;
+			int f = 0;
+			for(String s : ss)
+			{
+				if(MatchApi.isBoolean(s))
+				{
+					if(MatchApi.getBoolean(s).booleanValue())
+					{
+						t++;
+					} else
+					{
+						f++;
+					}
+				}
+			}
+			if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+			{
+				if((t > 0 && t > f))
+				{
+					return true;
+				}
+			} else
+			{
+				if((t > 0 && t > f) || player.hasPermission(Bypass.get(bypassPermission)))
+				{
+					return true;
+				}
 			}
 			return false;
 		}
@@ -54,19 +120,52 @@ public class ConditionBonusMalus
 	{
 		if(BaseConstructor.getPlugin().getCondition() != null)
 		{
-			String t = BaseConstructor.getPlugin().getCondition().getConditionEntry(
+			String[] ss = BaseConstructor.getPlugin().getCondition().getConditionEntry(
 					player.getUniqueId(),
 					bypassPermission.getCondition(),
 					BaseConstructor.getPlugin().getServername(),
 					player.getWorld().getName());
-			if(MatchApi.isBoolean(t)
-					&& MatchApi.getBoolean(t).booleanValue() && player.hasPermission(Bypass.get(bypassPermission)+addition))
+			if(ss == null)
 			{
-				return true;
+				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+				{
+					return false;
+				} else
+				{
+					return player.hasPermission(Bypass.get(bypassPermission)+addition);
+				}
+			}
+			int t = 0;
+			int f = 0;
+			for(String s : ss)
+			{
+				if(MatchApi.isBoolean(s))
+				{
+					if(MatchApi.getBoolean(s).booleanValue())
+					{
+						t++;
+					} else
+					{
+						f++;
+					}
+				}
+			}
+			if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+			{
+				if((t > 0 && t > f))
+				{
+					return true;
+				}
+			} else
+			{
+				if((t > 0 && t > f) || player.hasPermission(Bypass.get(bypassPermission)+addition))
+				{
+					return true;
+				}
 			}
 			return false;
 		}
-		return player.hasPermission(Bypass.get(bypassPermission)+addition);
+		return player.hasPermission(Bypass.get(bypassPermission));
 	}
 	
 	public static int getResult(@NonNull Player player, Bypass.Counter countPermission)

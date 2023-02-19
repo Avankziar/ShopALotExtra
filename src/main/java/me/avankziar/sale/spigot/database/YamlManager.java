@@ -191,6 +191,12 @@ public class YamlManager
 		configSpigotKeys.put("EnableMechanic.BonusMalus"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
+		configSpigotKeys.put("EnableMechanic.Condition"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
+		configSpigotKeys.put("Condition.ConditionOverrulePermission"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				false}));
 		
 		configSpigotKeys.put("CleanUpTask.Player.Active"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {

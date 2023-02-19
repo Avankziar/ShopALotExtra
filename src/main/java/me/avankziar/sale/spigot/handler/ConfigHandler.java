@@ -38,6 +38,11 @@ public class ConfigHandler
 		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.BonusMalus", false);
 	}
 	
+	public boolean isMechanicConditionEnabled()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.Condition", false);
+	}
+	
 	public String getSignShopInitLine()
 	{
 		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getString("SignShop.SignInitializationLine", "[SaleShop]");

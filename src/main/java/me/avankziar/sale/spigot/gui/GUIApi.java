@@ -219,6 +219,10 @@ public class GUIApi
 			@Nullable LinkedHashMap<String, Entry<Type, Object>> values,
 			ClickFunction...clickFunction)
 	{
+		if(itemstack == null)
+		{
+			return;
+		}
 		ItemStack i = itemstack.clone();
 		ItemMeta im = i.getItemMeta();
 		PersistentDataContainer pdc = im.getPersistentDataContainer();

@@ -475,6 +475,10 @@ public class SaLE extends JavaPlugin
 	
 	public void setupIFHCondition()
 	{
+		if(!new ConfigHandler().isMechanicConditionEnabled())
+		{
+			return;
+		}
 		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
 	    {
 	    	return;
@@ -509,10 +513,6 @@ public class SaLE extends JavaPlugin
 				}
 				if(getCondition() != null)
 				{
-					if(!new ConfigHandler().isMechanicBonusMalusEnabled())
-					{
-						return;
-					}
 					for(BaseConstructor bc : getCommandHelpList())
 					{
 						if(!bc.isPutUpCmdPermToConditionSystem())
@@ -673,6 +673,10 @@ public class SaLE extends JavaPlugin
 	
 	private void setupIFHBonusMalus() 
 	{
+		if(!new ConfigHandler().isMechanicBonusMalusEnabled())
+		{
+			return;
+		}
         if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
         {
             return;
