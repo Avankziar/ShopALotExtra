@@ -1,4 +1,4 @@
-package main.java.me.avankziar.sale.spigot.objects;
+package main.java.me.avankziar.sale.spigot.gui.objects;
 
 public enum GuiType
 {

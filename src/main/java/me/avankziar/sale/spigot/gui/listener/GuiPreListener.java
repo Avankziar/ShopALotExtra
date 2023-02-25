@@ -19,9 +19,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.gui.GUIApi;
 import main.java.me.avankziar.sale.spigot.gui.events.BottomGuiClickEvent;
-import main.java.me.avankziar.sale.spigot.gui.events.ClickType;
-import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.gui.events.UpperGuiClickEvent;
+import main.java.me.avankziar.sale.spigot.gui.objects.ClickType;
+import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 
 public class GuiPreListener implements Listener
 {

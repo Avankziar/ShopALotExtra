@@ -9,13 +9,13 @@ import org.bukkit.event.Listener;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
-import main.java.me.avankziar.sale.spigot.gui.events.ClickType;
 import main.java.me.avankziar.sale.spigot.gui.events.UpperGuiClickEvent;
+import main.java.me.avankziar.sale.spigot.gui.objects.ClickFunctionType;
+import main.java.me.avankziar.sale.spigot.gui.objects.ClickType;
+import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.AdminstrationFunctionHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.ShopFunctionHandler;
-import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
-import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class UpperListener implements Listener

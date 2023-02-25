@@ -15,11 +15,11 @@ import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.GUIApi;
 import main.java.me.avankziar.sale.spigot.gui.events.BottomGuiClickEvent;
-import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
+import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
-import main.java.me.avankziar.sale.spigot.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class BottomListener implements Listener
@@ -132,6 +132,12 @@ public class BottomListener implements Listener
 		} else
 		{
 			ssh.setDisplayName(SaLE.getPlugin().getEnumTl() != null
+					  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+					  : is.getType().toString());
+		}
+		if(plugin.getYamlHandler().getConfig().getBoolean("SignShop.ShopUseMaterialAsShopName"))
+		{
+			ssh.setSignShopName(SaLE.getPlugin().getEnumTl() != null
 					  ? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
 					  : is.getType().toString());
 		}

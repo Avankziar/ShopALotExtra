@@ -20,8 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.events.ClickFunction;
-import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
-import main.java.me.avankziar.sale.spigot.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class GUIApi

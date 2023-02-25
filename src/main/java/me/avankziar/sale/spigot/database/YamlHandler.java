@@ -14,7 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.Language.ISO639_2B;
-import main.java.me.avankziar.sale.spigot.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 
 public class YamlHandler
 {

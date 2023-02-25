@@ -10,7 +10,7 @@ import java.util.logging.Level;
 
 import main.java.me.avankziar.sale.spigot.database.MysqlHandable;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
-import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
+import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 
 public class PlayerData implements MysqlHandable
 {

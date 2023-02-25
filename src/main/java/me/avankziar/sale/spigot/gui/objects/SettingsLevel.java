@@ -1,4 +1,4 @@
-package main.java.me.avankziar.sale.spigot.gui.events;
+package main.java.me.avankziar.sale.spigot.gui.objects;
 
 /*
  * Als Einstellung zu verstehen, dass man bei bestimmten LEvel, nur bestimmte einstellmöglichkeiten sieht.

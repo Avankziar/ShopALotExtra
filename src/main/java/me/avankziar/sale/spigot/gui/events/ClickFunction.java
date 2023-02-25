@@ -1,6 +1,7 @@
 package main.java.me.avankziar.sale.spigot.gui.events;
 
-import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
+import main.java.me.avankziar.sale.spigot.gui.objects.ClickFunctionType;
+import main.java.me.avankziar.sale.spigot.gui.objects.ClickType;
 
 public class ClickFunction
 {

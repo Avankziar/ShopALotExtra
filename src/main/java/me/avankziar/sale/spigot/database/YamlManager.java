@@ -11,10 +11,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.Language.ISO639_2B;
-import main.java.me.avankziar.sale.spigot.gui.events.ClickType;
-import main.java.me.avankziar.sale.spigot.gui.events.SettingsLevel;
-import main.java.me.avankziar.sale.spigot.objects.ClickFunctionType;
-import main.java.me.avankziar.sale.spigot.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.gui.objects.ClickFunctionType;
+import main.java.me.avankziar.sale.spigot.gui.objects.ClickType;
+import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
+import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 
 public class YamlManager
@@ -282,6 +282,9 @@ public class YamlManager
 		configSpigotKeys.put("SignShop.ShopCanTradeShulker"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				false}));
+		configSpigotKeys.put("SignShop.ShopUseMaterialAsShopName"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
 	}
 	
 	//INFO:Commands

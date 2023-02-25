@@ -1,16 +1,23 @@
 Future Build
 - Worldguardflag für das erstellen von Shops
+- Shop ist leer, kommt nicht, wenn der Shop gerade mit der Aktion leer gekauft ist.
+- Adminshops sollen eine neue ShopGui methode bekommen/weiterleiten an diese, damit auch der Eigentümer diesen benutzen kann.
+- https://github.com/Avankziar/ShopALotExtra/issues/3
+
+Build 1-3-0
+- ConfigWert SignShop.ShopUseMaterialAsShopName hinzugefügt.
+  Erlaubt, beim Setzten eines Item in den Shop, wird der Shop nach diesem Item umbenannt.
 
 Build 1-2-0
 - Metrics hinzugefügt
 - NullPointerException fix
-- Condition Interface hinzugefügt.
+- Condition Interface hinzugefügt als Consumer
   Hinzugefügt Condition:
   - sale-shop_creation
   - sale-shop_gui_bypass
   - sale-shop_log_otherplayer
   - sale-client_log_otherplayer
-- BonusMalus Interface hinzugefügt.
+- BonusMalus Interface hinzugefügt als Consumer
   Hinzugefügte Bonus/Malus:
   - sale-shop_creation_amount_
   - sale-shop_itemstorage_amount_
