@@ -464,16 +464,15 @@ public class SaLE extends JavaPlugin
 	
 	public void setupIFHConsumer()
 	{
-		setupIFHCondition();
-		setupIFHBonusMalus();
+		setupIFHValueEntry();
+		setupIFHModifier();
 		setupIFHEnumTranslation();
 		setupIFHEconomy();
-		setupIFHBonusMalus();
 		setupIFHMessageToBungee();
 		setupIFHBaseComponentToBungee();
 	}
 	
-	public void setupIFHCondition()
+	public void setupIFHValueEntry()
 	{
 		if(!new ConfigHandler().isMechanicValueEntryEnabled())
 		{
@@ -671,7 +670,7 @@ public class SaLE extends JavaPlugin
 		return this.vEco;
 	}
 	
-	private void setupIFHBonusMalus() 
+	private void setupIFHModifier() 
 	{
 		if(!new ConfigHandler().isMechanicModifierEnabled())
 		{
