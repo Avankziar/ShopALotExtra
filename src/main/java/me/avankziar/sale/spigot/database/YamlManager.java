@@ -9,12 +9,12 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.Language.ISO639_2B;
 import main.java.me.avankziar.sale.spigot.gui.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.gui.objects.ClickType;
 import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 
 public class YamlManager
@@ -188,13 +188,13 @@ public class YamlManager
 		/*configSpigotKeys.put("Enable.Auction"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));*/
-		configSpigotKeys.put("EnableMechanic.BonusMalus"
+		configSpigotKeys.put("EnableMechanic.Modifier"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
-		configSpigotKeys.put("EnableMechanic.Condition"
+		configSpigotKeys.put("EnableMechanic.ValueEntry"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
-		configSpigotKeys.put("Condition.ConditionOverrulePermission"
+		configSpigotKeys.put("ValueEntry.OverrulePermission"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				false}));
 		
@@ -855,6 +855,10 @@ public class YamlManager
 						"&eDu hast von %amount% Shops die Rabattaktion für %hour% gestartet.",
 						"&eYou have started the discount promotion for %hour% from %amount% stores."}));
 		
+		languageKeys.put("ShopFunctionHandler.NoEmptySlot"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast keinen freien Slot in deinem Inventar!",
+						"&cYou have no free slot in your inventory!"}));
 		languageKeys.put("ShopFunctionHandler.CannotTradeInOwnShop"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst nicht in deinem eigenen Shop handeln!",

@@ -33,14 +33,14 @@ public class ConfigHandler
 		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Enable.Auction", false);
 	}
 	
-	public boolean isMechanicBonusMalusEnabled()
+	public boolean isMechanicModifierEnabled()
 	{
-		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.BonusMalus", false);
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.Modifier", false);
 	}
 	
-	public boolean isMechanicConditionEnabled()
+	public boolean isMechanicValueEntryEnabled()
 	{
-		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.Condition", false);
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.ValueEntry", false);
 	}
 	
 	public String getSignShopInitLine()

@@ -1,29 +1,28 @@
-package main.java.me.avankziar.sale.spigot.conditionbonusmalus;
+package main.java.me.avankziar.sale.spigot.modifiervalueentry;
 
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler.CountType;
 
-public class ConditionBonusMalus
+public class ModifierValueEntry
 {
 	public static boolean hasPermission(Player player, BaseConstructor bc)
 	{
-		if(BaseConstructor.getPlugin().getCondition() != null)
+		if(BaseConstructor.getPlugin().getValueEntry() != null)
 		{
-			String[] ss = BaseConstructor.getPlugin().getCondition().getConditionEntry(
+			Boolean ss = BaseConstructor.getPlugin().getValueEntry().getBooleanValueEntry(
 					player.getUniqueId(),
 					bc.getConditionPath(),
 					BaseConstructor.getPlugin().getServername(),
 					player.getWorld().getName());
 			if(ss == null)
 			{
-				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("ValueEntry.OverrulePermission", false))
 				{
 					return false;
 				} else
@@ -31,30 +30,12 @@ public class ConditionBonusMalus
 					return player.hasPermission(bc.getPermission());
 				}
 			}
-			int t = 0;
-			int f = 0;
-			for(String s : ss)
+			if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("ValueEntry.OverrulePermission", false))
 			{
-				if(MatchApi.isBoolean(s))
-				{
-					if(MatchApi.getBoolean(s).booleanValue())
-					{
-						t++;
-					} else
-					{
-						f++;
-					}
-				}
-			}
-			if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
-			{
-				if((t > 0 && t > f))
-				{
-					return true;
-				}
+				return ss;
 			} else
 			{
-				if((t > 0 && t > f) || player.hasPermission(bc.getPermission()))
+				if(ss || player.hasPermission(bc.getPermission()))
 				{
 					return true;
 				}
@@ -66,16 +47,16 @@ public class ConditionBonusMalus
 	
 	public static boolean hasPermission(Player player, Bypass.Permission bypassPermission)
 	{
-		if(BaseConstructor.getPlugin().getCondition() != null)
+		if(BaseConstructor.getPlugin().getValueEntry() != null)
 		{
-			String[] ss = BaseConstructor.getPlugin().getCondition().getConditionEntry(
+			Boolean ss = BaseConstructor.getPlugin().getValueEntry().getBooleanValueEntry(
 					player.getUniqueId(),
-					bypassPermission.getCondition(),
+					bypassPermission.getValueLable(),
 					BaseConstructor.getPlugin().getServername(),
 					player.getWorld().getName());
 			if(ss == null)
 			{
-				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("ValueEntry.OverrulePermission", false))
 				{
 					return false;
 				} else
@@ -83,30 +64,12 @@ public class ConditionBonusMalus
 					return player.hasPermission(Bypass.get(bypassPermission));
 				}
 			}
-			int t = 0;
-			int f = 0;
-			for(String s : ss)
+			if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("ValueEntry.OverrulePermission", false))
 			{
-				if(MatchApi.isBoolean(s))
-				{
-					if(MatchApi.getBoolean(s).booleanValue())
-					{
-						t++;
-					} else
-					{
-						f++;
-					}
-				}
-			}
-			if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
-			{
-				if((t > 0 && t > f))
-				{
-					return true;
-				}
+				return ss;
 			} else
 			{
-				if((t > 0 && t > f) || player.hasPermission(Bypass.get(bypassPermission)))
+				if(ss || player.hasPermission(Bypass.get(bypassPermission)))
 				{
 					return true;
 				}
@@ -118,16 +81,16 @@ public class ConditionBonusMalus
 	
 	public static boolean hasPermission(Player player, Bypass.Permission bypassPermission, String addition)
 	{
-		if(BaseConstructor.getPlugin().getCondition() != null)
+		if(BaseConstructor.getPlugin().getValueEntry() != null)
 		{
-			String[] ss = BaseConstructor.getPlugin().getCondition().getConditionEntry(
+			Boolean ss = BaseConstructor.getPlugin().getValueEntry().getBooleanValueEntry(
 					player.getUniqueId(),
-					bypassPermission.getCondition(),
+					bypassPermission.getValueLable(),
 					BaseConstructor.getPlugin().getServername(),
 					player.getWorld().getName());
 			if(ss == null)
 			{
-				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
+				if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("ValueEntry.OverrulePermission", false))
 				{
 					return false;
 				} else
@@ -135,30 +98,12 @@ public class ConditionBonusMalus
 					return player.hasPermission(Bypass.get(bypassPermission)+addition);
 				}
 			}
-			int t = 0;
-			int f = 0;
-			for(String s : ss)
-			{
-				if(MatchApi.isBoolean(s))
-				{
-					if(MatchApi.getBoolean(s).booleanValue())
-					{
-						t++;
-					} else
-					{
-						f++;
-					}
-				}
-			}
 			if(BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("Condition.ConditionOverrulePermission", false))
 			{
-				if((t > 0 && t > f))
-				{
-					return true;
-				}
+				return ss;
 			} else
 			{
-				if((t > 0 && t > f) || player.hasPermission(Bypass.get(bypassPermission)+addition))
+				if(ss || player.hasPermission(Bypass.get(bypassPermission)+addition))
 				{
 					return true;
 				}
@@ -204,12 +149,12 @@ public class ConditionBonusMalus
 			break;
 		}
 		possibleAmount += (int) value;
-		if(BaseConstructor.getPlugin().getBonusMalus() != null)
+		if(BaseConstructor.getPlugin().getModifier() != null)
 		{
-			return (int) BaseConstructor.getPlugin().getBonusMalus().getResult(
+			return (int) BaseConstructor.getPlugin().getModifier().getResult(
 					player.getUniqueId(),
 					possibleAmount,
-					countPermission.getBonusMalus(),
+					countPermission.getModification(),
 					BaseConstructor.getPlugin().getServername(),
 					player.getWorld().getName());
 		}
@@ -219,12 +164,12 @@ public class ConditionBonusMalus
 	public static double getResult(UUID uuid, double value, Bypass.Counter countPermission)
 	{
 		double possibleAmount = value;
-		if(BaseConstructor.getPlugin().getBonusMalus() != null)
+		if(BaseConstructor.getPlugin().getModifier() != null)
 		{
-			return BaseConstructor.getPlugin().getBonusMalus().getResult(
+			return BaseConstructor.getPlugin().getModifier().getResult(
 					uuid,
 					possibleAmount,
-					countPermission.getBonusMalus());
+					countPermission.getModification());
 		}
 		return possibleAmount;
 	}

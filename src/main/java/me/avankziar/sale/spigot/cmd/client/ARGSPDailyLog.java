@@ -16,9 +16,9 @@ import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.ConditionBonusMalus;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass.Permission;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass.Permission;
 import main.java.me.avankziar.sale.spigot.objects.ClientDailyLog;
 
 public class ARGSPDailyLog extends ArgumentModule
@@ -45,7 +45,7 @@ public class ARGSPDailyLog extends ArgumentModule
 		ArrayList<String> pagination = new ArrayList<>();
 		if(args.length >= 4)
 		{
-			if(args[3].equals(player.getName()) || ConditionBonusMalus.hasPermission(player, Permission.CLIENT_LOG_OTHERPLAYER))
+			if(args[3].equals(player.getName()) || ModifierValueEntry.hasPermission(player, Permission.CLIENT_LOG_OTHERPLAYER))
 			{
 				UUID u = Utility.convertNameToUUID(args[3]);
 				if(u != null)

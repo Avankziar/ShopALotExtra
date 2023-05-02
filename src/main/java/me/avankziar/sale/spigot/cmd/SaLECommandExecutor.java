@@ -18,7 +18,7 @@ import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandSuggest;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.ConditionBonusMalus;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -52,7 +52,7 @@ public class SaLECommandExecutor implements CommandExecutor
 			Player player = (Player) sender;
 			if(MatchApi.isInteger(args[0]))
 			{
-				if(!ConditionBonusMalus.hasPermission(player, cc))
+				if(!ModifierValueEntry.hasPermission(player, cc))
 				{
 					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return false;
@@ -68,7 +68,7 @@ public class SaLECommandExecutor implements CommandExecutor
 				return false;
 			}
 			Player player = (Player) sender;
-			if(!ConditionBonusMalus.hasPermission(player, cc))
+			if(!ModifierValueEntry.hasPermission(player, cc))
 			{
 				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
@@ -89,7 +89,7 @@ public class SaLECommandExecutor implements CommandExecutor
 						if (sender instanceof Player)
 						{
 							Player player = (Player) sender;
-							if(ConditionBonusMalus.hasPermission(player, ac))
+							if(ModifierValueEntry.hasPermission(player, ac))
 							{
 								ArgumentModule am = plugin.getArgumentMap().get(ac.getPath());
 								if(am != null)
@@ -163,7 +163,7 @@ public class SaLECommandExecutor implements CommandExecutor
 		{
 			if(count >= start && count <= end)
 			{
-				if(ConditionBonusMalus.hasPermission(player, bc))
+				if(ModifierValueEntry.hasPermission(player, bc))
 				{
 					sendInfo(player, bc);
 				}

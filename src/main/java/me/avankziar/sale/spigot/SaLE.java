@@ -24,9 +24,9 @@ import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus;
-import main.java.me.avankziar.ifh.general.bonusmalus.BonusMalusType;
-import main.java.me.avankziar.ifh.general.condition.Condition;
+import main.java.me.avankziar.ifh.general.modifier.ModificationType;
+import main.java.me.avankziar.ifh.general.modifier.Modifier;
+import main.java.me.avankziar.ifh.general.valueentry.ValueEntry;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation;
@@ -50,7 +50,6 @@ import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlSetup;
 import main.java.me.avankziar.sale.spigot.database.YamlHandler;
@@ -69,6 +68,7 @@ import main.java.me.avankziar.sale.spigot.listener.PlayerJoinListener;
 import main.java.me.avankziar.sale.spigot.listener.ShopPostTransactionListener;
 import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
 import main.java.me.avankziar.sale.spigot.metrics.Metrics;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
 import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
 
 public class SaLE extends JavaPlugin
@@ -95,8 +95,8 @@ public class SaLE extends JavaPlugin
 	private Administration administrationConsumer;
 	private EnumTranslation enumTranslationConsumer;
 	private Economy ecoConsumer;
-	private BonusMalus bonusMalusConsumer;
-	private Condition conditionConsumer;
+	private ValueEntry valueEntryConsumer;
+	private Modifier modifierConsumer;
 	private MessageToBungee mtbConsumer;
 	private BaseComponentToBungee bctbConsumer;
 	
@@ -475,7 +475,7 @@ public class SaLE extends JavaPlugin
 	
 	public void setupIFHCondition()
 	{
-		if(!new ConfigHandler().isMechanicConditionEnabled())
+		if(!new ConfigHandler().isMechanicValueEntryEnabled())
 		{
 			return;
 		}
@@ -496,22 +496,22 @@ public class SaLE extends JavaPlugin
 						cancel();
 				    	return;
 				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.condition.Condition> rsp = 
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.valueentry.ValueEntry> rsp = 
 		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.general.condition.Condition.class);
+		                            		 main.java.me.avankziar.ifh.general.valueentry.ValueEntry.class);
 				    if(rsp == null) 
 				    {
 				    	i++;
 				        return;
 				    }
-				    conditionConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> Condition.class is consumed!");
+				    valueEntryConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> ValueEntry.class is consumed!");
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
 					cancel();
 				}
-				if(getCondition() != null)
+				if(getValueEntry() != null)
 				{
 					for(BaseConstructor bc : getCommandHelpList())
 					{
@@ -519,12 +519,12 @@ public class SaLE extends JavaPlugin
 						{
 							continue;
 						}
-						if(getBonusMalus().isRegistered(bc.getConditionPath()))
+						if(getValueEntry().isRegistered(bc.getConditionPath()))
 						{
 							continue;
 						}
 						String[] ex = {plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Explanation")};
-						getCondition().register(
+						getValueEntry().register(
 								bc.getConditionPath(),
 								plugin.getYamlHandler().getCommands().getString(bc.getPath()+".Displayname", "Command "+bc.getName()),
 								ex);
@@ -532,13 +532,13 @@ public class SaLE extends JavaPlugin
 					List<Bypass.Permission> list = new ArrayList<Bypass.Permission>(EnumSet.allOf(Bypass.Permission.class));
 					for(Bypass.Permission ept : list)
 					{
-						if(getCondition().isRegistered(ept.getCondition()))
+						if(getValueEntry().isRegistered(ept.getValueLable()))
 						{
 							continue;
 						}
 						List<String> lar = plugin.getYamlHandler().getCBMLang().getStringList(ept.toString()+".Explanation");
-						getCondition().register(
-								ept.getCondition(),
+						getValueEntry().register(
+								ept.getValueLable(),
 								plugin.getYamlHandler().getCBMLang().getString(ept.toString()+".Displayname", ept.toString()),
 								lar.toArray(new String[lar.size()]));
 					}
@@ -547,9 +547,9 @@ public class SaLE extends JavaPlugin
         }.runTaskTimer(plugin, 0L, 20*2);
 	}
 	
-	public Condition getCondition()
+	public ValueEntry getValueEntry()
 	{
-		return conditionConsumer;
+		return valueEntryConsumer;
 	}
 	
 	private boolean setupIFHShop()
@@ -673,7 +673,7 @@ public class SaLE extends JavaPlugin
 	
 	private void setupIFHBonusMalus() 
 	{
-		if(!new ConfigHandler().isMechanicBonusMalusEnabled())
+		if(!new ConfigHandler().isMechanicModifierEnabled())
 		{
 			return;
 		}
@@ -694,46 +694,46 @@ public class SaLE extends JavaPlugin
 						cancel();
 						return;
 				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus> rsp = 
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.modifier.Modifier> rsp = 
 		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.general.bonusmalus.BonusMalus.class);
+		                            		 main.java.me.avankziar.ifh.general.modifier.Modifier.class);
 				    if(rsp == null) 
 				    {
 				    	i++;
 				        return;
 				    }
-				    log.info(pluginName + " detected InterfaceHub >>> BonusMalus.class is consumed!");
-				    bonusMalusConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> Modifier.class is consumed!");
+				    modifierConsumer = rsp.getProvider();
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
 					cancel();
 				}
-				if(getBonusMalus() != null)
+				if(getModifier() != null)
 				{
 					List<Bypass.Counter> list = new ArrayList<Bypass.Counter>(EnumSet.allOf(Bypass.Counter.class));
 					for(Bypass.Counter ept : list)
 					{
-						if(getBonusMalus().isRegistered(ept.getBonusMalus()))
+						if(getModifier().isRegistered(ept.getModification()))
 						{
 							continue;
 						}
-						BonusMalusType bmt = null;
+						ModificationType bmt = null;
 						switch(ept)
 						{
 						case SHOP_CREATION_AMOUNT_:
 						case SHOP_ITEMSTORAGE_AMOUNT_:
 						case COST_ADDING_STORAGE:
-							bmt = BonusMalusType.UP;
+							bmt = ModificationType.UP;
 							break;
 						case SHOP_BUYING_TAX:
 						case SHOP_SELLING_TAX:
-							bmt = BonusMalusType.DOWN;
+							bmt = ModificationType.DOWN;
 							break;
 						}
 						List<String> lar = plugin.getYamlHandler().getCBMLang().getStringList(ept.toString()+".Explanation");
-						getBonusMalus().register(
-								ept.getBonusMalus(),
+						getModifier().register(
+								ept.getModification(),
 								plugin.getYamlHandler().getCBMLang().getString(ept.toString()+".Displayname", ept.toString()),
 								bmt,
 								lar.toArray(new String[lar.size()]));
@@ -743,9 +743,9 @@ public class SaLE extends JavaPlugin
         }.runTaskTimer(plugin, 20L, 20*2);
 	}
 	
-	public BonusMalus getBonusMalus()
+	public Modifier getModifier()
 	{
-		return bonusMalusConsumer;
+		return modifierConsumer;
 	}
 	
 	private void setupIFHMessageToBungee() 

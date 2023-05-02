@@ -29,7 +29,6 @@ import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.ifh.spigot.economy.currency.EconomyCurrency;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.event.ShopPostTransactionEvent;
 import main.java.me.avankziar.sale.spigot.event.ShopPreTransactionEvent;
@@ -39,6 +38,7 @@ import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.MessageHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
 import main.java.me.avankziar.sale.spigot.objects.ClientDailyLog;
 import main.java.me.avankziar.sale.spigot.objects.ClientLog;
 import main.java.me.avankziar.sale.spigot.objects.ClientLog.WayType;
@@ -223,6 +223,11 @@ public class ShopFunctionHandler
 		}
 		ArrayList<ItemStack> islist = new ArrayList<>();
 		int emptySlot = emtpySlots(player);
+		if(emptySlot == 0)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.NoEmptySlot")));
+			return;
+		}
 		long postc = ssh.getItemStorageCurrent();
 		long quantity = amount;
 		if(quantity > ssh.getItemStorageCurrent())
@@ -271,9 +276,9 @@ public class ShopFunctionHandler
 		}
 		Double taxation = plugin.getYamlHandler().getConfig().get("SignShop.Tax.BuyInPercent") != null 
 				? plugin.getYamlHandler().getConfig().getDouble("SignShop.Tax.BuyInPercent") : null;
-		if(plugin.getBonusMalus() != null)
+		if(plugin.getModifier() != null)
 		{
-			taxation = plugin.getBonusMalus().getResult(ssh.getOwner(), taxation, Bypass.Counter.SHOP_BUYING_TAX.getBonusMalus());
+			taxation = plugin.getModifier().getResult(ssh.getOwner(), taxation, Bypass.Counter.SHOP_BUYING_TAX.getModification());
 		}
 		ShopPreTransactionEvent sprte = new ShopPreTransactionEvent(ssh, samo, d.doubleValue(), taxation, true, player);
 		Bukkit.getPluginManager().callEvent(sprte);
@@ -568,9 +573,9 @@ public class ShopFunctionHandler
 				}
 			}
 		}
-		if(plugin.getBonusMalus() != null)
+		if(plugin.getModifier() != null)
 		{
-			taxation = plugin.getBonusMalus().getResult(player.getUniqueId(), taxation, Bypass.Counter.SHOP_SELLING_TAX.getBonusMalus());
+			taxation = plugin.getModifier().getResult(player.getUniqueId(), taxation, Bypass.Counter.SHOP_SELLING_TAX.getModification());
 		}
 		ShopPreTransactionEvent sprte = new ShopPreTransactionEvent(ssh, samo, d.doubleValue(), taxation, false, player);
 		Bukkit.getPluginManager().callEvent(sprte);

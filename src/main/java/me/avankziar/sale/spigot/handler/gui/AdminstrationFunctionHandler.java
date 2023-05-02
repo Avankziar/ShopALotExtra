@@ -27,14 +27,14 @@ import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandSuggest;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.ConditionBonusMalus;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.ShopAccessType;
@@ -232,7 +232,7 @@ public class AdminstrationFunctionHandler
 			return false;
 		}
 		int signShopAmount = plugin.getMysqlHandler().getCount(MysqlHandler.Type.SIGNSHOP, "`player_uuid` = ?", player.getUniqueId().toString());
-		int maxSignShopAmount = ConditionBonusMalus.getResult(player, Bypass.Counter.SHOP_CREATION_AMOUNT_);
+		int maxSignShopAmount = ModifierValueEntry.getResult(player, Bypass.Counter.SHOP_CREATION_AMOUNT_);
 		if(signShopAmount > maxSignShopAmount)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.AlreadyHaveMaximalSignShop")
@@ -252,7 +252,7 @@ public class AdminstrationFunctionHandler
 		}
 		List<String> costPerOne = plugin.getYamlHandler().getConfig().getStringList("SignShop.CostToAdd1Storage");
 		long maxStorage = ssh.getItemStorageTotal();
-		long maxPossibleStorage = (long) ConditionBonusMalus.getResult(player, Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_);
+		long maxPossibleStorage = (long) ModifierValueEntry.getResult(player, Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_);
 		if(maxStorage >= maxPossibleStorage)
 		{
 			player.sendMessage(ChatApi.tl(
@@ -307,9 +307,9 @@ public class AdminstrationFunctionHandler
 				continue;
 			}
 			double d = Double.parseDouble(split[1]);
-			if(plugin.getBonusMalus() != null)
+			if(plugin.getModifier() != null)
 			{
-				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, Bypass.Counter.COST_ADDING_STORAGE.getBonusMalus());
+				d = plugin.getModifier().getResult(player.getUniqueId(), d, Bypass.Counter.COST_ADDING_STORAGE.getModification());
 			}
 			if(plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.SHOP, ec) == null
 					&& plugin.getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, ec) == null)
@@ -427,9 +427,9 @@ public class AdminstrationFunctionHandler
 				continue;
 			}
 			d = Double.parseDouble(split[1]);
-			if(plugin.getBonusMalus() != null)
+			if(plugin.getModifier() != null)
 			{
-				d = plugin.getBonusMalus().getResult(player.getUniqueId(), d, Bypass.Counter.COST_ADDING_STORAGE.getBonusMalus());
+				d = plugin.getModifier().getResult(player.getUniqueId(), d, Bypass.Counter.COST_ADDING_STORAGE.getModification());
 			}
 		}
 		double dd = d*ca;

@@ -46,8 +46,6 @@ import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
 import main.java.me.avankziar.sale.spigot.assistance.Utility;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.ConditionBonusMalus;
-import main.java.me.avankziar.sale.spigot.conditionbonusmalus.Bypass;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.gui.GUIApi;
 import main.java.me.avankziar.sale.spigot.gui.events.ClickFunction;
@@ -55,6 +53,8 @@ import main.java.me.avankziar.sale.spigot.gui.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.gui.objects.ClickType;
 import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -142,7 +142,7 @@ public class GuiHandler
 			}
 			if(y.get(i+".Permission") != null)
 			{
-				if(!ConditionBonusMalus.hasPermission(player, Bypass.Permission.SHOP_GUI_BYPASS, y.getString(i+".Permission")))
+				if(!ModifierValueEntry.hasPermission(player, Bypass.Permission.SHOP_GUI_BYPASS, y.getString(i+".Permission")))
 				{
 					continue;
 				}

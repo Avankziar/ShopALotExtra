@@ -1,4 +1,4 @@
-package main.java.me.avankziar.sale.spigot.conditionbonusmalus;
+package main.java.me.avankziar.sale.spigot.modifiervalueentry;
 
 import java.util.LinkedHashMap;
 
@@ -14,7 +14,7 @@ public class Bypass
 		SHOP_LOG_OTHERPLAYER,
 		CLIENT_LOG_OTHERPLAYER;
 		
-		public String getCondition()
+		public String getValueLable()
 		{
 			return SaLE.getPlugin().pluginName.toLowerCase()+"-"+this.toString().toLowerCase();
 		}
@@ -56,7 +56,7 @@ public class Bypass
 			return this.forPermission;
 		}
 		
-		public String getBonusMalus()
+		public String getModification()
 		{
 			return BaseConstructor.getPlugin().pluginName.toLowerCase()+"-"+this.toString().toLowerCase();
 		}

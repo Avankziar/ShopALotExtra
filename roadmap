@@ -2,11 +2,15 @@ Future Build
 - Worldguardflag für das erstellen von Shops
 - Shop ist leer, kommt nicht, wenn der Shop gerade mit der Aktion leer gekauft ist.
 - Adminshops sollen eine neue ShopGui methode bekommen/weiterleiten an diese, damit auch der Eigentümer diesen benutzen kann.
-- https://github.com/Avankziar/ShopALotExtra/issues/3
 
 Build 1-3-0
 - ConfigWert SignShop.ShopUseMaterialAsShopName hinzugefügt.
   Erlaubt, beim Setzten eines Item in den Shop, wird der Shop nach diesem Item umbenannt.
+- Spigot 1.19.4 Support
+- IFH 1-6-0 Support.
+- IFH Condition & BonusMalus zu ValueEntry & Modifier geändert.
+- Gui Auffülung vom Shop löscht nicht mehr den ganzen Stack.
+- Keinen Spam von Aktionlog des Economysystem, wenn man keinen Platz mehr hat was zu kaufen.
 
 Build 1-2-0
 - Metrics hinzugefügt
