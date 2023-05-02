@@ -16,10 +16,10 @@ public class BaseConstructor
 	private String commandString;
 	private String helpInfo;
 	private boolean canConsoleAccess;
-	private boolean putUpCmdPermToConditionSystem;
+	private boolean putUpCmdPermToValueEntrySystem;
 	
 	public BaseConstructor(CommandExecuteType cet, String name, String path, String permission, String suggestion, String commandString,
-			String helpInfo, boolean canConsoleAccess, boolean putUpCmdPermToConditionSystem)
+			String helpInfo, boolean canConsoleAccess, boolean putUpCmdPermToValueEntrySystem)
 	{
 		setName(name);
 		setPath(path);
@@ -30,7 +30,7 @@ public class BaseConstructor
 		setCanConsoleAccess(canConsoleAccess);
 		CommandSuggest.set(cet, commandString);
 		getPlugin().addingCommandHelps(this);
-		setPutUpCmdPermToConditionSystem(putUpCmdPermToConditionSystem);
+		setPutUpCmdPermToValueEntrySystem(putUpCmdPermToValueEntrySystem);
 	}
 
 	public String getName()
@@ -103,14 +103,14 @@ public class BaseConstructor
 		this.helpInfo = helpInfo;
 	}
 
-	public boolean isPutUpCmdPermToConditionSystem()
+	public boolean isPutUpCmdPermToValueEntrySystem()
 	{
-		return putUpCmdPermToConditionSystem;
+		return putUpCmdPermToValueEntrySystem;
 	}
 
-	public void setPutUpCmdPermToConditionSystem(boolean putUpCmdPermToConditionSystem)
+	public void setPutUpCmdPermToValueEntrySystem(boolean putUpCmdPermToValueEntrySystem)
 	{
-		this.putUpCmdPermToConditionSystem = putUpCmdPermToConditionSystem;
+		this.putUpCmdPermToValueEntrySystem = putUpCmdPermToValueEntrySystem;
 	}
 	
 	public String getConditionPath()
