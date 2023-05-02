@@ -536,10 +536,10 @@ public class SaLE extends JavaPlugin
 						{
 							continue;
 						}
-						List<String> lar = plugin.getYamlHandler().getCBMLang().getStringList(ept.toString()+".Explanation");
+						List<String> lar = plugin.getYamlHandler().getMVELang().getStringList(ept.toString()+".Explanation");
 						getValueEntry().register(
 								ept.getValueLable(),
-								plugin.getYamlHandler().getCBMLang().getString(ept.toString()+".Displayname", ept.toString()),
+								plugin.getYamlHandler().getMVELang().getString(ept.toString()+".Displayname", ept.toString()),
 								lar.toArray(new String[lar.size()]));
 					}
 				}
@@ -731,10 +731,10 @@ public class SaLE extends JavaPlugin
 							bmt = ModificationType.DOWN;
 							break;
 						}
-						List<String> lar = plugin.getYamlHandler().getCBMLang().getStringList(ept.toString()+".Explanation");
+						List<String> lar = plugin.getYamlHandler().getMVELang().getStringList(ept.toString()+".Explanation");
 						getModifier().register(
 								ept.getModification(),
-								plugin.getYamlHandler().getCBMLang().getString(ept.toString()+".Displayname", ept.toString()),
+								plugin.getYamlHandler().getMVELang().getString(ept.toString()+".Displayname", ept.toString()),
 								bmt,
 								lar.toArray(new String[lar.size()]));
 					}

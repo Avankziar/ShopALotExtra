@@ -27,7 +27,7 @@ public class YamlManager
 	private static LinkedHashMap<String, Language> configSpigotKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> commandsKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> languageKeys = new LinkedHashMap<>();
-	private static LinkedHashMap<String, Language> cbmlanguageKeys = new LinkedHashMap<>();
+	private static LinkedHashMap<String, Language> mvelanguageKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> matlanguageKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<GuiType, LinkedHashMap<String, Language>> guiKeys = new LinkedHashMap<>();
 	
@@ -36,7 +36,7 @@ public class YamlManager
 		initConfig();
 		initCommands();
 		initLanguage();
-		initConditionBonusMalusLanguage();
+		initModifierValueEntryLanguage();
 		initMaterialLanguage();
 		initGuiAdministration();
 		initGuiNumpad();
@@ -75,9 +75,9 @@ public class YamlManager
 		return languageKeys;
 	}
 	
-	public LinkedHashMap<String, Language> getConditionBonusMalusLanguageKey()
+	public LinkedHashMap<String, Language> getModifierValueEntryLanguageKey()
 	{
-		return cbmlanguageKeys;
+		return mvelanguageKeys;
 	}
 	
 	public LinkedHashMap<String, Language> getMaterialLanguageKey()
@@ -1059,93 +1059,93 @@ public class YamlManager
 						"&7%time% &e>> &7[&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
 	}
 	
-	public void initConditionBonusMalusLanguage() //INFO:BonusMalusLanguages
+	public void initModifierValueEntryLanguage() //INFO:ModifierValueEntryLanguages
 	{
-		cbmlanguageKeys.put(Bypass.Permission.SHOP_CREATION.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Permission.SHOP_CREATION.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eShop-Erstellungsrecht",
 						"&eShop creation right"}));
-		cbmlanguageKeys.put(Bypass.Permission.SHOP_CREATION.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Permission.SHOP_CREATION.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche erlaubt SchilderShop",
 						"&eerstellen zu können.",
 						"&ePermission, which allows",
 						"&eto create SchilderShop."}));
-		cbmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eShop-Adminstrationbypass",
 						"&eShop administration bypass"}));
-		cbmlanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Permission.SHOP_GUI_BYPASS.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche spezifische",
 						"&eAdministrative Rechte für Shops gibt.",
 						"&ePermission, which gives specific",
 						"&eadministrative rights for shops."}));
-		cbmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eShoplog andere Spieler Einsichtrecht",
 						"&eShop log other players right of inspection"}));
-		cbmlanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Permission.SHOP_LOG_OTHERPLAYER.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche erlaubt von anderen",
 						"&eSpieler die Shoplog einzusehen.",
 						"&ePermission, which allows other",
 						"&eplayers to view the shoplog."}));
-		cbmlanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKundenlog andere Spieler Einsichtrecht",
 						"&eClient log other players right of inspection"}));
-		cbmlanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Permission.CLIENT_LOG_OTHERPLAYER.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePermission, welche erlaubt von anderen",
 						"&eSpieler die clientlog einzusehen.",
 						"&ePermission, which allows other",
 						"&eplayers to view the clientlog."}));
-		cbmlanguageKeys.put(Bypass.Counter.SHOP_CREATION_AMOUNT_.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Counter.SHOP_CREATION_AMOUNT_.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eAnzahl zu erstellende Shops",
 						"&eNumber of stores to be created"}));
-		cbmlanguageKeys.put(Bypass.Counter.SHOP_CREATION_AMOUNT_.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Counter.SHOP_CREATION_AMOUNT_.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die Anzahl",
 						"&ezu erstellender definiert.",
 						"&eCounting mission, which defines",
 						"&ethe number to be created."}));
-		cbmlanguageKeys.put(Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eGröße des Shoplagerraums",
 						"&eShop storageroom size"}));
-		cbmlanguageKeys.put(Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Counter.SHOP_ITEMSTORAGE_AMOUNT_.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die Größe",
 						"&edes Shoplagerraums definiert.",
 						"&eCounting mission, which defines the",
 						"&esize of the shopstoreroom."}));
-		cbmlanguageKeys.put(Bypass.Counter.COST_ADDING_STORAGE.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Counter.COST_ADDING_STORAGE.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKosten für die Vergrößerung des Shoplagerraums",
 						"&eCosts for the enlargement of the store storage room"}));
-		cbmlanguageKeys.put(Bypass.Counter.COST_ADDING_STORAGE.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Counter.COST_ADDING_STORAGE.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die Kosten für die",
 						"&eVergrößerung des Shoplagerraums definiert.",
 						"&eCount mission that defines the cost",
 						"&eof increasing the store storage space."}));
-		cbmlanguageKeys.put(Bypass.Counter.SHOP_BUYING_TAX.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Counter.SHOP_BUYING_TAX.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eProzentuale Kaufsteuer",
 						"&ePercentage buy tax"}));
-		cbmlanguageKeys.put(Bypass.Counter.SHOP_BUYING_TAX.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Counter.SHOP_BUYING_TAX.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die prozentualen Kaufsteuer",
 						"&edes Shops definiert. Zählt für den Shopeigentümer.",
 						"&eCounting mission, which defines the percentage",
 						"&ebuy tax of the shop. Counts for shop owner."}));
-		cbmlanguageKeys.put(Bypass.Counter.SHOP_SELLING_TAX.toString()+".Displayname",
+		mvelanguageKeys.put(Bypass.Counter.SHOP_SELLING_TAX.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eProzentuale Verkaufsteuer",
 						"&ePercentage sell tax"}));
-		cbmlanguageKeys.put(Bypass.Counter.SHOP_SELLING_TAX.toString()+".Explanation",
+		mvelanguageKeys.put(Bypass.Counter.SHOP_SELLING_TAX.toString()+".Explanation",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZählpermission, welche die prozentualen Verkaufsteuer",
 						"&edes Shops definiert. Zählt für den Kunden.",
