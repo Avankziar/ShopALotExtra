@@ -3,6 +3,52 @@ Future Build
 - Shop ist leer, kommt nicht, wenn der Shop gerade mit der Aktion leer gekauft ist.
 - Adminshops sollen eine neue ShopGui methode bekommen/weiterleiten an diese, damit auch der Eigentümer diesen benutzen kann.
 
+- Konzept Auktion
+  - Hauptgui per Befehl/NPC erreichbar machen.
+    - Folgende Optionen im HauptGui:
+      - Auktion Durchschauen
+      - Gebotene Auktionen einschauen
+      - Auktion erstellen
+      - Optionen (Benachrichtigung ein/ausschalten)
+      - Eigene Auktionen
+    - Auktion erstellen:
+      - Oben das Item welches auktioniert wird. (Mit Anzahl und dem durchschnittlichen Preis pro Item (Statistik an getätigen Auktionen von DB)
+      - Auktion Starten
+      - Startpreis
+      - Mindestschritte per Gebot (Vom Versteigerer festzulegen oder Defaultwert) (Per Numpadgui, Schildgui/Buchgui mal testen)
+      - Dauer der Auktion (Defaultzeit mit Kostenangabe. Sowie extra Gebühr für jede weitere Stunde.) (R.Klick für hoch und L.Klick für runter
+      - Zwischen Zeitauktionen und Sofortauktionen wechseln?)
+    - Auktionsbrowser:
+      - An der Seite die Kategorien: Waffen/Werkzeuge, Rüstungen, Verbrauchsgegenstände, Blöcke, ?, ?
+      - Ein Feld mit den Item zum Bieten. Unter der ItemLore ein Strich mit den zusätzlichen Infos:
+        - Auktionär
+        - Momentanes Gebot
+        - Mindestschritt
+        - AuktionsEnde
+        Das Auktionsitem lässt folgende Interaktionen zu:
+        - Shift r.klick, erhöhung des Gebotes um dem Mindestschritt
+        - Shift l.klick, Festsetzung eines Maximalgebotes.
+      - Optionsbuttons:
+        - Reset
+        - Zurückgehen
+        - Suchfunktion(Type, Name etc. [Vielleich?]
+        - sortieren nach: Höchstes Gebot, Niedrigest Gebot, Ended Bald
+        - Sortieren nach: Alle Auktionen, Nur Sofort-, nur Zeitauktionen
+        - Pagination
+    - Eigene Auktionen:
+      - Ansicht wie beim Auktionsbrowser.
+      - Man kann mit Shift Rechtsklick die Auktionen zurückziehen, sofern keine Gebote drauf sind.
+      - Gebühren werden nicht erstattet.
+   - Auktionshandhabung:
+     - Auktionen die in spätestens 5 min enden, werden aus dem Browser genommen. (Boolean auf false für die Anzeigung im Browser).
+       Spieler die schon geboten haben, können noch weiter bieten und wenn der Boolean auf false steht, wird die Auktion um x min verlängert.
+       (Anti sniping)
+   - Discord Channel Verlinkung:
+     - Erstellung von Nachrichten im Discord Channel per Webhoock
+   - Server Eigene Auktionsbereich?
+   - Chatweite Zusatzaufruf für extra Gebühren?
+
+
 Build 1-3-0
 - ConfigWert SignShop.ShopUseMaterialAsShopName hinzugefügt.
   Erlaubt, beim Setzten eines Item in den Shop, wird der Shop nach diesem Item umbenannt.

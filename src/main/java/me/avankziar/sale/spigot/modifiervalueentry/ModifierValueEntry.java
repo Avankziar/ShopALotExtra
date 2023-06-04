@@ -17,7 +17,7 @@ public class ModifierValueEntry
 		{
 			Boolean ss = BaseConstructor.getPlugin().getValueEntry().getBooleanValueEntry(
 					player.getUniqueId(),
-					bc.getConditionPath(),
+					bc.getValueEntryPath(),
 					BaseConstructor.getPlugin().getServername(),
 					player.getWorld().getName());
 			if(ss == null)

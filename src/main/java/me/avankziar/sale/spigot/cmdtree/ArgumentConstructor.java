@@ -23,13 +23,8 @@ public class ArgumentConstructor extends BaseConstructor
     	super(
     			cet,
     			getPlugin().getYamlHandler().getCommands().getString(path+".Argument"),
-    			path,
-    			getPlugin().getYamlHandler().getCommands().getString(path+".Permission"),
-    			getPlugin().getYamlHandler().getCommands().getString(path+".Suggestion"),
-    			getPlugin().getYamlHandler().getCommands().getString(path+".CommandString"),
-    			getPlugin().getYamlHandler().getCommands().getString(path+".HelpInfo"),
-    			canConsoleAccess,
-				getPlugin().getYamlHandler().getCommands().getBoolean(path+".BonusMalusSystem.PutUpCommandPerm", false));
+    			path, getPlugin().getYamlHandler().getCommands(),
+    			canConsoleAccess);
         this.minArgsConstructor = minArgs;
         this.maxArgsConstructor = maxArgs;
         this.minArgsTablist = minArgs;
@@ -65,16 +60,7 @@ public class ArgumentConstructor extends BaseConstructor
     		LinkedHashMap<Integer, ArrayList<String>> tablistAddingOtherValue,
     		ArgumentConstructor...argumentConstructors)
     {
-    	super(
-    			cet,
-    			y.getString(path+".Argument"),
-    			path,
-    			y.getString(path+".Permission"),
-    			y.getString(path+".Suggestion"),
-    			y.getString(path+".CommandString"),
-    			y.getString(path+".HelpInfo"),
-    			canConsoleAccess,
-				getPlugin().getYamlHandler().getCommands().getBoolean(path+".BonusMalusSystem.PutUpCommandPerm", false));
+    	super(cet, y.getString(path+".Argument"), path, y, canConsoleAccess);
         this.minArgsConstructor = minArgs;
         this.maxArgsConstructor = maxArgs;
         this.minArgsTablist = minArgs;

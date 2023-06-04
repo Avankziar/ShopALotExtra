@@ -16,12 +16,8 @@ public class CommandConstructor extends BaseConstructor
 				cet,
 				getPlugin().getYamlHandler().getCommands().getString(path+".Name"),
 				path,
-				getPlugin().getYamlHandler().getCommands().getString(path+".Permission"),
-				getPlugin().getYamlHandler().getCommands().getString(path+".Suggestion"),
-				getPlugin().getYamlHandler().getCommands().getString(path+".CommandString"),
-				getPlugin().getYamlHandler().getCommands().getString(path+".HelpInfo"),
-				canConsoleAccess,
-				getPlugin().getYamlHandler().getCommands().getBoolean(path+".BonusMalusSystem.PutUpCommandPerm", false));
+				getPlugin().getYamlHandler().getCommands(),
+				canConsoleAccess);
         this.subcommands = new ArrayList<>();
         this.tablist = new ArrayList<>();
         for(ArgumentConstructor ac : argumentConstructors)
@@ -38,12 +34,8 @@ public class CommandConstructor extends BaseConstructor
 		super(cet, 
 				y.getString(path+".Name"),
 				path,
-				y.getString(path+".Permission"),
-				y.getString(path+".Suggestion"),
-				y.getString(path+".CommandString"),
-				y.getString(path+".HelpInfo"),
-				canConsoleAccess,
-				getPlugin().getYamlHandler().getCommands().getBoolean(path+".BonusMalusSystem.v", false));
+				y,
+				canConsoleAccess);
         this.subcommands = new ArrayList<>();
         this.tablist = new ArrayList<>();
         for(ArgumentConstructor ac : argumentConstructors)

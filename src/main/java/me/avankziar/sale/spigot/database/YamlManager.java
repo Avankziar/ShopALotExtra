@@ -402,7 +402,7 @@ public class YamlManager
 	}
 	
 	private void commandsInput(String path, String name, String basePermission, 
-			String suggestion, String commandString, boolean putUpCmdPermToBonusMalusSystem,
+			String suggestion, String commandString, boolean putUpCmdPermToValueEntrySystem,
 			String helpInfoGerman, String helpInfoEnglish,
 			String dnGerman, String dnEnglish,
 			String exGerman, String exEnglish)
@@ -423,21 +423,21 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				helpInfoGerman,
 				helpInfoEnglish}));
-		commandsKeys.put(path+".BonusMalusSystem.PutUpCommandPerm"
+		commandsKeys.put(path+".ValueEntry.PutUpCommandPerm"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				putUpCmdPermToBonusMalusSystem}));
-		commandsKeys.put(path+".BonusMalusSystem.Displayname"
+				putUpCmdPermToValueEntrySystem}));
+		commandsKeys.put(path+".ValueEntry.Displayname"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				dnGerman,
 				dnEnglish}));
-		commandsKeys.put(path+".BonusMalusSystem.Explanation"
+		commandsKeys.put(path+".ValueEntry.Explanation"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				exGerman,
 				exEnglish}));
 	}
 	
 	private void argumentInput(String path, String argument, String basePermission, 
-			String suggestion, String commandString, boolean putUpCmdPermToBonusMalusSystem,
+			String suggestion, String commandString, boolean putUpCmdPermToValueEntrySystem,
 			String helpInfoGerman, String helpInfoEnglish,
 			String dnGerman, String dnEnglish,
 			String exGerman, String exEnglish)
@@ -458,14 +458,14 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				helpInfoGerman,
 				helpInfoEnglish}));
-		commandsKeys.put(path+".BonusMalusSystem.PutUpCommandPerm"
+		commandsKeys.put(path+".ValueEntry.PutUpCommandPerm"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				putUpCmdPermToBonusMalusSystem}));
-		commandsKeys.put(path+".BonusMalusSystem.Displayname"
+				putUpCmdPermToValueEntrySystem}));
+		commandsKeys.put(path+".ValueEntry.Displayname"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				dnGerman,
 				dnEnglish}));
-		commandsKeys.put(path+".BonusMalusSystem.Explanation"
+		commandsKeys.put(path+".ValueEntry.Explanation"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				exGerman,
 				exEnglish}));
