@@ -9,6 +9,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
+import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -444,11 +446,18 @@ public class SignHandler
 			return;
 		}
 		Sign sign = (Sign) bs;
-		sign.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh, b)));
-		sign.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, b)));
-		sign.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh, b)));
-		sign.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, b)));
-		sign.setGlowingText(ssh.isSignGlowing());
+		SignSide front = sign.getSide(Side.FRONT);
+		front.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh, b)));
+		front.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, b)));
+		front.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh, b)));
+		front.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, b)));
+		front.setGlowingText(ssh.isSignGlowing());
+		SignSide back = sign.getSide(Side.BACK);
+		back.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh, b)));
+		back.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, b)));
+		back.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh, b)));
+		back.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, b)));
+		back.setGlowingText(ssh.isSignGlowing());
 		sign.update();
 	}
 	
@@ -459,11 +468,18 @@ public class SignHandler
 			return;
 		}
 		Sign sign = (Sign) block;
-		sign.setLine(0, "");
-		sign.setLine(1, "");
-		sign.setLine(2, "");
-		sign.setLine(3, "");
-		sign.setGlowingText(false);
+		SignSide front = sign.getSide(Side.FRONT);
+		front.setLine(0, "");
+		front.setLine(1, "");
+		front.setLine(2, "");
+		front.setLine(3, "");
+		front.setGlowingText(false);
+		SignSide back = sign.getSide(Side.BACK);
+		back.setLine(0, "");
+		back.setLine(1, "");
+		back.setLine(2, "");
+		back.setLine(3, "");
+		back.setGlowingText(false);
 		sign.update();
 	}
 }
