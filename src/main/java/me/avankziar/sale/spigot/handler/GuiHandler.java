@@ -116,6 +116,30 @@ public class GuiHandler
 	
 	private static void openGui(SignShop ssh, Player player, GuiType gt, GUIApi gui, SettingsLevel settingsLevel, boolean closeInv)
 	{
+		if(plugin.getIFHEco() != null)
+		{
+			Account ac = plugin.getIFHEco().getAccount(ssh.getAccountId());
+			if(ac == null)
+			{
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("GuiHandler.AccountNotExist")
+						.replace("%player%", Utility.convertUUIDToName(ssh.getOwner().toString()))));
+				if(gt == GuiType.SHOP)
+				{
+					return;
+				}
+			}
+		} else if(plugin.getVaultEco() != null)
+		{
+			if(!plugin.getVaultEco().hasAccount(Bukkit.getOfflinePlayer(ssh.getOwner())))
+			{
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("GuiHandler.AccountNotExist")
+						.replace("%player%", Utility.convertUUIDToName(ssh.getOwner().toString()))));
+				if(gt == GuiType.SHOP)
+				{
+					return;
+				}
+			}
+		}
 		YamlConfiguration y = plugin.getYamlHandler().getGui(gt);
 		for(int i = 0; i < 54; i++)
 		{
@@ -366,12 +390,15 @@ public class GuiHandler
 			if(plugin.getIFHEco() != null)
 			{
 				Account ac = plugin.getIFHEco().getAccount(ssh.getAccountId());
-				int dg = ac == null ? 0 : plugin.getIFHEco().getDefaultGradationQuantity(ac.getCurrency());
-				boolean useSI = ac == null ? false : plugin.getIFHEco().getDefaultUseSIPrefix(ac.getCurrency());
-				boolean useSy = ac == null ? false : plugin.getIFHEco().getDefaultUseSymbol(ac.getCurrency());
-				String ts = ac == null ? "." : plugin.getIFHEco().getDefaultThousandSeperator(ac.getCurrency());
-				String ds = ac == null ? "," : plugin.getIFHEco().getDefaultDecimalSeperator(ac.getCurrency());
-				a = getStringPlaceHolderIFH(ssh, player, a, ac, dg, useSI, useSy, ts, ds, playername);
+				if(ac != null)
+				{
+					int dg = ac == null ? 0 : plugin.getIFHEco().getDefaultGradationQuantity(ac.getCurrency());
+					boolean useSI = ac == null ? false : plugin.getIFHEco().getDefaultUseSIPrefix(ac.getCurrency());
+					boolean useSy = ac == null ? false : plugin.getIFHEco().getDefaultUseSymbol(ac.getCurrency());
+					String ts = ac == null ? "." : plugin.getIFHEco().getDefaultThousandSeperator(ac.getCurrency());
+					String ds = ac == null ? "," : plugin.getIFHEco().getDefaultDecimalSeperator(ac.getCurrency());
+					a = getStringPlaceHolderIFH(ssh, player, a, ac, dg, useSI, useSy, ts, ds, playername);
+				}
 			} else
 			{
 				a = getStringPlaceHolderVault(ssh, player, a, playername);

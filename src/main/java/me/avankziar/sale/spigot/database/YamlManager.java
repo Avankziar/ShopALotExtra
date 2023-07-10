@@ -666,6 +666,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cIn dieser Welt darfst du keine Signshop erstellt.",
 						"&cIn this world you may not create a signshop."}));
+		languageKeys.put("GuiHandler.AccountNotExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer zugehörige Account des Shops des Spielers %player% existiert nicht mehr! Bitte wende dich an den Shopeigentümer oder falls nicht anders möglich an einen Admin.",
+						"&cThe associated account of the store of the player %player% no longer exists! Please contact the store owner or if not otherwise possible an admin."}));
 		languageKeys.put("GuiHandler.InfoLore.Owner", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEigentümer: &f",

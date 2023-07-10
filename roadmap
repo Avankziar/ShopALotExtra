@@ -48,6 +48,11 @@ Future Build
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
 
+Build 1-4-1
+- Account existiert nicht mehr fix. 
+  Wenn ein Geldaccount eines Shopeigentümer nicht mehr existiert so wird es nun abgefangen. Eine Nachricht wird dann ausgegeben.
+  Man kann dann nicht mehr auf das ShopGui zugreifen. Auf das Administrationsgui aber noch.
+
 Build 1-4-0
 - Spigot 1.20.1 support
 - Da Schilder laut Spigot nun 2 Seiten haben, wird auch auf beiden Seiten des Schildes der Shop angezeigt.
