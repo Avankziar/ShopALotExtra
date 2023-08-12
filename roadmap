@@ -48,6 +48,9 @@ Future Build
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
 
+Build 1-4-2
+- Sell & Buy Sende Nachricht an Mitglieder des Shops gab es ein Konvertierungsfehler von Binary zu Utf8 für die Mysql. Ist gefixt.
+
 Build 1-4-1
 - Account existiert nicht mehr fix. 
   Wenn ein Geldaccount eines Shopeigentümer nicht mehr existiert so wird es nun abgefangen. Eine Nachricht wird dann ausgegeben.
