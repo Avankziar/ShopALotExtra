@@ -1,6 +1,9 @@
 package main.java.me.avankziar.sale.spigot.listener;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -99,6 +102,18 @@ public class SignChangeListener implements Listener
 		event.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, event.getBlock())));
 		event.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh, event.getBlock())));
 		event.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, event.getBlock())));
+		Block b = event.getBlock();
+		if(b == null)
+		{
+			return;
+		}
+		BlockState bs = b.getState();
+		if(!(bs instanceof Sign))
+		{
+			return;
+		}
+		Sign sign = (Sign) bs;
+		sign.setWaxed(true);
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.ShopCreated")
 				.replace("%name%", ssh.getSignShopName())
 				));

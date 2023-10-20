@@ -144,6 +144,10 @@ public class ShopFunctionHandler
 	
 	private static void buy(Player player, SignShop ssh, long amount, Inventory inv, SettingsLevel settingsLevel)
 	{
+		if(ssh.getItemStack() == null || ssh.getItemStack().getType() == Material.AIR)
+		{
+			return;
+		}
 		if(!ssh.canBuy())
 		{
 			return;
@@ -410,6 +414,10 @@ public class ShopFunctionHandler
 	
 	private static void sell(Player player, SignShop ssh, long amount, Inventory inv, SettingsLevel settingsLevel)
 	{
+		if(ssh.getItemStack() == null || ssh.getItemStack().getType() == Material.AIR)
+		{
+			return;
+		}
 		if(!ssh.canSell())
 		{
 			return;

@@ -446,6 +446,7 @@ public class SignHandler
 			return;
 		}
 		Sign sign = (Sign) bs;
+		sign.setWaxed(true);
 		SignSide front = sign.getSide(Side.FRONT);
 		front.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh, b)));
 		front.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, b)));
