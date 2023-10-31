@@ -98,28 +98,28 @@ public class BackgroundTask
 					ssIdList.add(ss.getId());
 				}
 				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.PLAYERDATA,
-						"`id` ASC",	"`last_login` < ?", offlineSinceAtLeast);
+						"`last_login` < ?", offlineSinceAtLeast);
 				for(UUID uuid : uuidlist)
 				{
 					plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP,
-							"`id` ASC", "`player_uuid` = ?", uuid.toString());
+							"`player_uuid` = ?", uuid.toString());
 					subscribedShop += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SUBSCRIBEDSHOP,
-							"`id` ASC", "`player_uuid` = ?", uuid.toString());
+							"`player_uuid` = ?", uuid.toString());
 					ClientLogCount += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.CLIENTLOG,
-							"`id` ASC", "`player_uuid` = ?", uuid.toString());
+							"`player_uuid` = ?", uuid.toString());
 					ClientDailyLogCount += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.CLIENTDAILYLOG,
-							"`id` ASC", "`player_uuid` = ?", uuid.toString());
+							"`player_uuid` = ?", uuid.toString());
 				}
 				for(int ssid : ssIdList)
 				{
 					subscribedShop += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SUBSCRIBEDSHOP,
-							"`id` ASC", "`sign_shop_id` = ?", ssid);
+							"`sign_shop_id` = ?", ssid);
 					signShopLogCount += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOPLOG,
-							"`id` ASC", "`sign_shop_id` = ?", ssid);
+							"`sign_shop_id` = ?", ssid);
 					signShopDailyLogCount += plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOPDAILYLOG,
-							"`id` ASC", "`sign_shop_id` = ?", ssid);
+							"`sign_shop_id` = ?", ssid);
 					plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP,
-							"`id` ASC", "`id` = ?", ssid);
+							"`id` = ?", ssid);
 				}
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
 				plugin.getLogger().info("Deleted PlayerData: "+playerCount);
@@ -155,7 +155,7 @@ public class BackgroundTask
 					return;
 				}
 				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOPLOG,
-						"`id` ASC", "`date_time` < ?", olderThanAtLeast);
+						"`date_time` < ?", olderThanAtLeast);
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
 				plugin.getLogger().info("Deleted SignShopLog: "+signShopLogCount);
 				plugin.getLogger().info("===========================================");
@@ -183,7 +183,7 @@ public class BackgroundTask
 					return;
 				}
 				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOPDAILYLOG,
-						"`id` ASC", "`dates` < ?", olderThanAtLeast);
+						"`dates` < ?", olderThanAtLeast);
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
 				plugin.getLogger().info("Deleted SignShopDailyLog: "+signShopDailyLogCount);
 				plugin.getLogger().info("===========================================");
@@ -211,7 +211,7 @@ public class BackgroundTask
 					return;
 				}
 				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.CLIENTLOG,
-						"`id` ASC", "`date_time` < ?", olderThanAtLeast);
+						"`date_time` < ?", olderThanAtLeast);
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
 				plugin.getLogger().info("Deleted ClientLog: "+ClientLogCount);
 				plugin.getLogger().info("===========================================");
@@ -239,7 +239,7 @@ public class BackgroundTask
 					return;
 				}
 				plugin.getMysqlHandler().deleteData(MysqlHandler.Type.CLIENTDAILYLOG,
-						"`id` ASC", "`dates` < ?", olderThanAtLeast);
+						"`dates` < ?", olderThanAtLeast);
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
 				plugin.getLogger().info("Deleted ClientDailyLog: "+ClientDailyLogCount);
 				plugin.getLogger().info("===========================================");

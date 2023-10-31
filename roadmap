@@ -48,6 +48,9 @@ Future Build
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
 
+Build 1-4-3
+- Backgroundtask Delete Fehler fix. Das Plugin hat versucht veraltete Daten zu löschen, konnte es auch einem kleinen Logikfehler heraus aber nicht.
+
 Build 1-4-2
 - Schild ist nun beim Updaten und beim erstellen gewaxed.
 - Sell & Buy Sende Nachricht an Mitglieder des Shops gab es ein Konvertierungsfehler von Binary zu Utf8 für die Mysql. Ist gefixt.
