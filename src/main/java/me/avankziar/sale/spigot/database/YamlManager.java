@@ -285,6 +285,12 @@ public class YamlManager
 		configSpigotKeys.put("SignShop.ShopUseMaterialAsShopName"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
+		configSpigotKeys.put("SignShop.Gui.ForceSettingsLevel"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				false}));
+		configSpigotKeys.put("SignShop.Gui.ToBeForcedSettingsLevel"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				SettingsLevel.BASE.toString()}));
 	}
 	
 	//INFO:Commands
@@ -308,6 +314,14 @@ public class YamlManager
 				"&bCommandright for &f/sale shop",
 				"&eBefehl für den Zwischenbefehl.",
 				"&eCommand for the intermediate command.");
+		argumentInput("sale_debug", "debug", basePermission,
+				"/sale debug <xxx>", "/sale debug ", false,
+				"&c/sale debug <xxx> &f| Zu Testzwecken des Plugin. Benutzung auf eigene Gefahr.",
+				"&c/sale debug <xxx> &f| For testing the plugin. Use at your own risk.",
+				"&bBefehlsrecht für &f/sale debug",
+				"&bCommandright for &f/sale debug",
+				"&eZu Testzwecken des Plugin. Benutzung auf eigene Gefahr.",
+				"&eFor testing the plugin. Use at your own risk.");
 		argumentInput("sale_shop_delete", "delete", basePermission,
 				"/sale shop delete <xxx:yyy...>", "/sale shop delete ", false,
 				"&c/sale shop delete <xxx:yyy...> &f| Löscht alle Shops nach den Parameter(xxx). Param. sind id, player, server, world, item, radius.",

@@ -500,7 +500,7 @@ public class AdminstrationFunctionHandler
 		final long amount = ssh.getItemStorageCurrent();
 		player.closeInventory();
 		Block block = null;
-		if(Bukkit.getWorld(ssh.getWorld()) == null)
+		if(Bukkit.getWorld(ssh.getWorld()) != null)
 		{
 			block = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX(), ssh.getY(), ssh.getZ()).getBlock();
 		}

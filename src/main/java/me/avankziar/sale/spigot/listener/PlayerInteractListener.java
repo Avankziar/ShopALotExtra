@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
@@ -114,7 +115,10 @@ public class PlayerInteractListener implements Listener
 							event.setCancelled(true);
 							return;
 						}
-						GuiHandler.openAdministration(ssh, player, pd.getLastSettingLevel(), true);
+						GuiHandler.openAdministration(ssh, player,
+								plugin.getYamlHandler().getConfig().getBoolean("SignShop.Gui.ForceSettingsLevel", false)
+								? SettingsLevel.valueOf(plugin.getYamlHandler().getConfig().getString("SignShop.Gui.ToBeForcedSettingsLevel", "BASE"))
+								: pd.getLastSettingLevel(), true);
 						SignHandler.updateSign(ssh);
 						event.setCancelled(true);
 						return;

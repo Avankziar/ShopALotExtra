@@ -48,6 +48,14 @@ Future Build
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
 
+Build 1-5-0
+- /sale debug, TestOnly Command
+- Wenn nun SignShop erstellt oder geupdatet wird, wird dem Block, welcher das Schild als Stütze gilt, mit Metadaten markiert.
+  Blöcke, welche nun markiert sind, kann man nicht mehr abbauen. Sollte ein SignShop gelöscht werden, wird die Markierung wieder aufgehoben.
+- Neuer ConfigPfad: SignShop.Gui.ForceSettingsLevel
+  Wenn true, dann öffnet sich die Gui beim klicken auf das Schild mit dem im Pfad SignShop.Gui.ToBeForcedSettingsLevel angegebenen SettingLevel.
+  Das kann dafür sorgen, dass es die Performance des Servers sich verbessert, da nun nicht mehr soviele GuiItems geladen werden muss.
+
 Build 1-4-3
 - Backgroundtask Delete Fehler fix. Das Plugin hat versucht veraltete Daten zu löschen, konnte es auch einem kleinen Logikfehler heraus aber nicht.
 

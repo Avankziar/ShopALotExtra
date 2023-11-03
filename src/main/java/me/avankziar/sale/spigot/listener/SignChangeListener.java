@@ -2,18 +2,21 @@ package main.java.me.avankziar.sale.spigot.listener;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
 import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
 import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
@@ -117,6 +120,22 @@ public class SignChangeListener implements Listener
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.ShopCreated")
 				.replace("%name%", ssh.getSignShopName())
 				));
+		if(b.getBlockData() instanceof org.bukkit.block.data.type.WallSign)
+		{
+			org.bukkit.block.data.type.WallSign ws = (org.bukkit.block.data.type.WallSign) b.getBlockData();
+			Block behind = b.getRelative(ws.getFacing().getOppositeFace());
+			if(!behind.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
+			{
+				behind.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, new FixedMetadataValue(BaseConstructor.getPlugin(), true));
+			}
+		} else
+		{
+			Block under = b.getRelative(BlockFace.DOWN);
+			if(!under.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
+			{
+				under.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, new FixedMetadataValue(BaseConstructor.getPlugin(), true));
+			}
+		}
 		return;
 	}
 }

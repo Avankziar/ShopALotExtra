@@ -7,17 +7,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.ShopFunctionHandler;
+import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
@@ -27,7 +31,7 @@ public class SignHandler
 	public static ArrayList<String> bypassToggle = new ArrayList<>();
 	public static ArrayList<String> breakToggle = new ArrayList<>();
 	
-	public static Sign getSign(SignShop ssh)
+	public static Sign getSign(SignShop ssh) //REMOVEME deprecated
 	{
 		if(!plugin.getServername().equals(ssh.getServer()))
 		{
@@ -460,15 +464,41 @@ public class SignHandler
 		back.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, b)));
 		back.setGlowingText(ssh.isSignGlowing());
 		sign.update();
+		if(b.getBlockData() instanceof org.bukkit.block.data.type.WallSign)
+		{
+			org.bukkit.block.data.type.WallSign ws = (org.bukkit.block.data.type.WallSign) b.getBlockData();
+			Block behind = b.getRelative(ws.getFacing().getOppositeFace());
+			if(!behind.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
+			{
+				behind.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, new FixedMetadataValue(BaseConstructor.getPlugin(), true));
+			}
+		} else
+		{
+			Block under = b.getRelative(BlockFace.DOWN);
+			if(!under.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
+			{
+				under.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, new FixedMetadataValue(BaseConstructor.getPlugin(), true));
+			}
+		}
 	}
 	
 	public static void clearSign(Block block)
 	{
-		if(!(block instanceof Sign))
+		if(!(block.getState() instanceof Sign))
 		{
 			return;
 		}
-		Sign sign = (Sign) block;
+		if(block.getBlockData() instanceof org.bukkit.block.data.type.WallSign)
+		{
+			org.bukkit.block.data.type.WallSign ws = (org.bukkit.block.data.type.WallSign) block.getBlockData();
+			Block behind = block.getRelative(ws.getFacing().getOppositeFace());
+			behind.removeMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, plugin);
+		} else
+		{
+			Block under = block.getRelative(BlockFace.DOWN);
+			under.removeMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, plugin);
+		}
+		Sign sign = (Sign) block.getState();
 		SignSide front = sign.getSide(Side.FRONT);
 		front.setLine(0, "");
 		front.setLine(1, "");

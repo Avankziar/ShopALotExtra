@@ -38,6 +38,7 @@ import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
 import main.java.me.avankziar.sale.spigot.cmd.TabCompletion;
 import main.java.me.avankziar.sale.spigot.cmd.client.ARGSPDailyLog;
 import main.java.me.avankziar.sale.spigot.cmd.client.ARGSPLog;
+import main.java.me.avankziar.sale.spigot.cmd.sale.ARGDebug;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGDelete;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShop;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShopping;
@@ -213,6 +214,9 @@ public class SaLE extends JavaPlugin
 		
 		TabCompletion tab = new TabCompletion(plugin);
 		
+		ArgumentConstructor debug = new ArgumentConstructor(CommandExecuteType.SALE_DEBUG, "sale_debug", 0, 1, 1, false, null);
+		new ARGDebug(plugin, debug);
+		
 		ArgumentConstructor delete = new ArgumentConstructor(CommandExecuteType.SALE_DELETE, "sale_shop_delete", 1, 1, 99, false, null);
 		new ARGDelete(plugin, delete);
 		
@@ -241,7 +245,7 @@ public class SaLE extends JavaPlugin
 		new ARGShopping(plugin, client);		
 		
 		CommandConstructor sale = new CommandConstructor(CommandExecuteType.SALE, "sale", false,
-				shop, client);
+				debug, shop, client);
 		registerCommand(sale.getPath(), sale.getName());
 		getCommand(sale.getName()).setExecutor(new SaLECommandExecutor(plugin, sale));
 		getCommand(sale.getName()).setTabCompleter(tab);
