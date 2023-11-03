@@ -50,6 +50,7 @@ Future Build
 
 Build 1-5-0
 - /sale debug, TestOnly Command
+- Ein bisschen Async Verhalten, wenn der Spieler mit einem Schildshop interagiert um die Gui aufzurufen.
 - Wenn nun SignShop erstellt oder geupdatet wird, wird dem Block, welcher das Schild als Stütze gilt, mit Metadaten markiert.
   Blöcke, welche nun markiert sind, kann man nicht mehr abbauen. Sollte ein SignShop gelöscht werden, wird die Markierung wieder aufgehoben.
 - Neuer ConfigPfad: SignShop.Gui.ForceSettingsLevel

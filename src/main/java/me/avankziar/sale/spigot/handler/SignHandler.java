@@ -15,6 +15,7 @@ import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
@@ -364,7 +365,14 @@ public class SignHandler
 				.replace("%amount%", String.valueOf(amount))
 				.replace("%now%", String.valueOf(ssh.getItemStorageCurrent())+" / "+String.valueOf(ssh.getItemStorageTotal()))));
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		updateSign(ssh);
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				SignHandler.updateSign(ssh);
+			}
+		}.runTask(plugin);
 		return true;
 	}
 	
@@ -429,7 +437,14 @@ public class SignHandler
 				.replace("%amount%", String.valueOf(amount))
 				.replace("%now%", String.valueOf(ssh.getItemStorageCurrent())+" / "+String.valueOf(ssh.getItemStorageTotal()))));
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		updateSign(ssh);
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				SignHandler.updateSign(ssh);
+			}
+		}.runTask(plugin);
 	}
 	
 	public static void updateSign(SignShop ssh)

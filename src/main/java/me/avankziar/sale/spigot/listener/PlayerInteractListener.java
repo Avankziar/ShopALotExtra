@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
@@ -53,7 +54,21 @@ public class PlayerInteractListener implements Listener
 		{
 			return;
 		}
-		Player player = event.getPlayer();
+		event.setCancelled(true);
+		final Player player = event.getPlayer();
+		final Action action = event.getAction();
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				doAsync(player, b, bs, action);
+			}
+		}.runTaskAsynchronously(plugin);
+	}
+	
+	public void doAsync(Player player, Block b, BlockState bs, Action action)
+	{
 		SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
 				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				plugin.getServername(), player.getWorld().getName(),
@@ -78,27 +93,34 @@ public class PlayerInteractListener implements Listener
 				|| SignHandler.isBypassToggle(player.getUniqueId())))
 		{
 			GuiHandler.openInputInfo(ssh, player, pd.getLastSettingLevel(), true);
-			event.setCancelled(true);
+			//event.setCancelled(true);
 			return;
 		}
-		if(event.getAction() == Action.LEFT_CLICK_BLOCK)
+		if(action == Action.LEFT_CLICK_BLOCK)
 		{
 			if(SignHandler.isOwner(ssh, player.getUniqueId()) || SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
 			{
 				if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 				{
 					SignHandler.takeOutItemFromShop(ssh, player);
-					event.setCancelled(true);
+					//event.setCancelled(true);
 					return;
 				}
 			}
 			if(ssh.isItemHologram())
 			{
-				ItemHologramHandler.spawnHologram(ssh);
+				new BukkitRunnable()
+				{
+					@Override
+					public void run()
+					{
+						ItemHologramHandler.spawnHologram(ssh);
+					}
+				}.runTask(plugin);
 			}				
-			event.setCancelled(true);
+			//event.setCancelled(true);
 			return;
-		} else if(event.getAction() == Action.RIGHT_CLICK_BLOCK)
+		} else if(action == Action.RIGHT_CLICK_BLOCK)
 		{
 			if(SignHandler.isOwner(ssh, player.getUniqueId())
 					|| SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId())
@@ -112,21 +134,28 @@ public class PlayerInteractListener implements Listener
 						{
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.ShopItemIsNull")
 									.replace("%name%", ssh.getDisplayName())));
-							event.setCancelled(true);
+							//event.setCancelled(true);
 							return;
 						}
 						GuiHandler.openAdministration(ssh, player,
 								plugin.getYamlHandler().getConfig().getBoolean("SignShop.Gui.ForceSettingsLevel", false)
 								? SettingsLevel.valueOf(plugin.getYamlHandler().getConfig().getString("SignShop.Gui.ToBeForcedSettingsLevel", "BASE"))
 								: pd.getLastSettingLevel(), true);
-						SignHandler.updateSign(ssh);
-						event.setCancelled(true);
+						new BukkitRunnable()
+						{
+							@Override
+							public void run()
+							{
+								SignHandler.updateSign(ssh);
+							}
+						}.runTask(plugin);
+						//event.setCancelled(true);
 						return;
 					} else
 					{
 						if(SignHandler.putInItemIntoShop(ssh, player, player.getInventory().getItemInMainHand()))
 						{
-							event.setCancelled(true);
+							//event.setCancelled(true);
 							return;
 						}
 					}
@@ -160,11 +189,18 @@ public class PlayerInteractListener implements Listener
 						.replace("%name%", ssh.getSignShopName())));
 				break;
 			}
-			event.setCancelled(true);
+			//event.setCancelled(true);
 			return;
 		}
 		GuiHandler.openShop(ssh, player, pd.getLastSettingLevel(), false);
-		SignHandler.updateSign(ssh);
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				SignHandler.updateSign(ssh);
+			}
+		}.runTask(plugin);
 	}
 	
 	@EventHandler

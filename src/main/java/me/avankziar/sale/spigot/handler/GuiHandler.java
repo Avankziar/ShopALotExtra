@@ -37,6 +37,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -348,11 +349,19 @@ public class GuiHandler
 			}
 			gui.add(i, is, settingsLevel, true, map, getClickFunction(y, String.valueOf(i)));
 		}
-		if(closeInv)
-		{
-			player.closeInventory();
-		}
-		gui.open(player, gt, ssh.getId());
+		new BukkitRunnable()
+		{			
+			@Override
+			public void run()
+			{
+				if(closeInv)
+				{
+					player.closeInventory();
+				}
+				gui.open(player, gt, ssh.getId());
+			}
+		}.runTask(plugin);
+		
 	}
 	
 	@SuppressWarnings("deprecation")
