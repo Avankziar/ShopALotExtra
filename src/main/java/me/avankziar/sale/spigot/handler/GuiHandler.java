@@ -141,6 +141,8 @@ public class GuiHandler
 				}
 			}
 		}
+		boolean fillNotDefineGuiSlots = new ConfigHandler().fillNotDefineGuiSlots();
+		Material filler = Material.valueOf(plugin.getConfig().getString("SignShop.Gui.FillerItemMaterial", "LIGHT_GRAY_STAINED_GLASS_PANE"));
 		YamlConfiguration y = plugin.getYamlHandler().getGui(gt);
 		for(int i = 0; i < 54; i++)
 		{
@@ -154,6 +156,10 @@ public class GuiHandler
 			}
 			if(y.get(i+".Material") == null && y.get(i+".Material."+settingsLevel.toString()) == null)
 			{
+				if(fillNotDefineGuiSlots)
+				{
+					filler(gui, ssh.getId(), i, filler);
+				}
 				continue;
 			}			
 			SettingsLevel itemSL = SettingsLevel.valueOf(y.getString(i+".SettingLevel"));
@@ -163,6 +169,10 @@ public class GuiHandler
 			}
 			if(settingsLevel.getOrdinal() < itemSL.getOrdinal())
 			{
+				if(fillNotDefineGuiSlots)
+				{
+					filler(gui, ssh.getId(), i, filler);
+				}
 				continue;
 			}
 			if(y.get(i+".Permission") != null)
@@ -362,6 +372,21 @@ public class GuiHandler
 			}
 		}.runTask(plugin);
 		
+	}
+	
+	private static void filler(GUIApi gui, int sshId, int i, Material mat)
+	{
+		ItemStack is = new ItemStack(mat, 1);
+		ItemMeta im = is.getItemMeta();
+		im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		im.addItemFlags(ItemFlag.HIDE_DESTROYS);
+		im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		im.setDisplayName(ChatApi.tl("&0"));
+		im.setLore(new ArrayList<>());
+		is.setItemMeta(im);
+		LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
+		map.put(SIGNSHOP_ID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, sshId));
+		gui.add(i, is, SettingsLevel.NOLEVEL, true, map, new ClickFunction[0]);
 	}
 	
 	@SuppressWarnings("deprecation")

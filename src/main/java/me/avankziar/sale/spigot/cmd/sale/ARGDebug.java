@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
@@ -15,6 +16,7 @@ import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler.Type;
+import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class ARGDebug extends ArgumentModule
@@ -36,6 +38,25 @@ public class ARGDebug extends ArgumentModule
 		switch(identifier)
 		{
 		default:
+			break;
+		case "blockdata":
+			Block bl = player.getTargetBlock(null, 10);
+			if(bl.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
+			{
+				player.sendMessage("Yes, Block has Metadata");
+				player.sendMessage("Metadata.Size: "+bl.getMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK).size());
+				player.sendMessage("Metadata.Size: "+bl.getMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK).get(0));
+			} else
+			{
+				player.sendMessage("No, Block hasnt Metadata");
+			}
+			for(MetadataValue l : bl.getMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
+			{
+				SaLE.log.info("1 "+l.asString());
+				SaLE.log.info("2 "+l.toString());
+				SaLE.log.info("3 "+l.getOwningPlugin() != null ? l.getOwningPlugin().getName() : "/");
+			}
+			bl.removeMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, plugin);
 			break;
 		case "blockface":
 			Block b = player.getTargetBlock(null, 10);

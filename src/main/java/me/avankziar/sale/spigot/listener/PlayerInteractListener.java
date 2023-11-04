@@ -54,29 +54,31 @@ public class PlayerInteractListener implements Listener
 		{
 			return;
 		}
-		event.setCancelled(true);
 		final Player player = event.getPlayer();
 		final Action action = event.getAction();
+		final SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
+				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+				plugin.getServername(), player.getWorld().getName(),
+				b.getX(), b.getY(), b.getZ());
+		if(ssh != null)
+		{
+			event.setCancelled(true);
+		} else
+		{
+			return;
+		}
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
-				doAsync(player, b, bs, action);
+				doAsync(player, ssh, b, bs, action);
 			}
 		}.runTaskAsynchronously(plugin);
 	}
 	
-	public void doAsync(Player player, Block b, BlockState bs, Action action)
-	{
-		SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
-				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
-				plugin.getServername(), player.getWorld().getName(),
-				b.getX(), b.getY(), b.getZ());
-		if(ssh == null)
-		{
-			return;
-		}
+	public void doAsync(Player player, SignShop ssh, Block b, BlockState bs, Action action)
+	{		
 		if(SignHandler.isBreakToggle(player.getUniqueId()))
 		{
 			return;

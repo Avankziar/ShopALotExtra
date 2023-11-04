@@ -284,14 +284,16 @@ public class BackgroundTask
 									Block behind = block.getRelative(ws.getFacing().getOppositeFace());
 									if(!behind.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
 									{
-										behind.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, new FixedMetadataValue(BaseConstructor.getPlugin(), true));
+										behind.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK,
+												new FixedMetadataValue(BaseConstructor.getPlugin(), true));
 									}
 								} else
 								{
 									Block under = block.getRelative(BlockFace.DOWN);
 									if(!under.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
 									{
-										under.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, new FixedMetadataValue(BaseConstructor.getPlugin(), true));
+										under.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK,
+												new FixedMetadataValue(BaseConstructor.getPlugin(), true));
 									}
 								}
 							}

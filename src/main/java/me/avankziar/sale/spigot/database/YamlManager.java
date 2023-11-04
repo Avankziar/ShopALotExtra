@@ -291,6 +291,12 @@ public class YamlManager
 		configSpigotKeys.put("SignShop.Gui.ToBeForcedSettingsLevel"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				SettingsLevel.BASE.toString()}));
+		configSpigotKeys.put("SignShop.Gui.FillNotDefineGuiSlots"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
+		configSpigotKeys.put("SignShop.Gui.FillerItemMaterial"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				Material.LIGHT_GRAY_STAINED_GLASS_PANE.toString()}));
 	}
 	
 	//INFO:Commands

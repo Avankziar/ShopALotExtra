@@ -57,4 +57,9 @@ public class ConfigHandler
 	{
 		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("SignShop.ShopCanTradeShulker", true);
 	}
+	
+	public boolean fillNotDefineGuiSlots()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("SignShop.Gui.FillNotDefineGuiSlots", true);
+	}
 }
