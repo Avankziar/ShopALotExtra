@@ -519,6 +519,10 @@ public class AdminstrationFunctionHandler
 				org.bukkit.block.data.type.WallSign ws = (org.bukkit.block.data.type.WallSign) block.getBlockData();
 				Block behind = block.getRelative(ws.getFacing().getOppositeFace());
 				behind.removeMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, plugin);
+			} else if(block.getBlockData() instanceof org.bukkit.block.data.type.HangingSign)
+			{
+				Block above = block.getRelative(BlockFace.UP);
+				above.removeMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, plugin);
 			} else
 			{
 				Block under = block.getRelative(BlockFace.DOWN);

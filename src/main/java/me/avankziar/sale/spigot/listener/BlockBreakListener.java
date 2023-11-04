@@ -56,7 +56,6 @@ public class BlockBreakListener implements Listener
 					plugin.getServername(), player.getWorld().getName(),
 					event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ()))
 			{
-				player.sendMessage("3"); //REMOVEME
 				event.setCancelled(true);
 				return;
 			}
