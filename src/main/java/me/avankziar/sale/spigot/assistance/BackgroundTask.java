@@ -287,6 +287,14 @@ public class BackgroundTask
 										behind.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK,
 												new FixedMetadataValue(BaseConstructor.getPlugin(), true));
 									}
+								} else if(block.getBlockData() instanceof org.bukkit.block.data.type.HangingSign)
+								{
+									Block above = block.getRelative(BlockFace.UP);
+									if(!above.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
+									{
+										above.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK,
+												new FixedMetadataValue(BaseConstructor.getPlugin(), true));
+									}
 								} else
 								{
 									Block under = block.getRelative(BlockFace.DOWN);

@@ -179,6 +179,10 @@ public class GuiHandler
 			{
 				if(!ModifierValueEntry.hasPermission(player, Bypass.Permission.SHOP_GUI_BYPASS, y.getString(i+".Permission")))
 				{
+					if(fillNotDefineGuiSlots)
+					{
+						filler(gui, ssh.getId(), i, filler);
+					}
 					continue;
 				}
 			}
@@ -188,6 +192,10 @@ public class GuiHandler
 				{
 					if(plugin.getIFHEco() == null)
 					{
+						if(fillNotDefineGuiSlots)
+						{
+							filler(gui, ssh.getId(), i, filler);
+						}
 						continue;
 					}
 				}
@@ -198,6 +206,10 @@ public class GuiHandler
 				{
 					if(!ssh.canBuy())
 					{
+						if(fillNotDefineGuiSlots)
+						{
+							filler(gui, ssh.getId(), i, filler);
+						}
 						continue;
 					}
 					if(gt == GuiType.SHOP)
@@ -207,12 +219,20 @@ public class GuiHandler
 							if((ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0)
 									&& (ssh.getDiscountBuyAmount() == null || ssh.getDiscountBuyAmount() < 0.0))
 							{
+								if(fillNotDefineGuiSlots)
+								{
+									filler(gui, ssh.getId(), i, filler);
+								}
 								continue;
 							}
 						} else
 						{
 							if(ssh.getBuyAmount() == null || ssh.getBuyAmount() < 0.0)
 							{
+								if(fillNotDefineGuiSlots)
+								{
+									filler(gui, ssh.getId(), i, filler);
+								}
 								continue;
 							}
 						}
@@ -225,6 +245,10 @@ public class GuiHandler
 				{
 					if(!ssh.canSell())
 					{
+						if(fillNotDefineGuiSlots)
+						{
+							filler(gui, ssh.getId(), i, filler);
+						}
 						continue;
 					}
 					if(gt == GuiType.SHOP)
@@ -234,12 +258,20 @@ public class GuiHandler
 							if((ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0)
 									&& (ssh.getDiscountSellAmount() == null || ssh.getDiscountSellAmount() < 0.0))
 							{
+								if(fillNotDefineGuiSlots)
+								{
+									filler(gui, ssh.getId(), i, filler);
+								}
 								continue;
 							}
 						} else
 						{
 							if(ssh.getSellAmount() == null || ssh.getSellAmount() < 0.0)
 							{
+								if(fillNotDefineGuiSlots)
+								{
+									filler(gui, ssh.getId(), i, filler);
+								}
 								continue;
 							}
 						}
@@ -266,6 +298,10 @@ public class GuiHandler
 					}
 				} catch(Exception e)
 				{
+					if(fillNotDefineGuiSlots)
+					{
+						filler(gui, ssh.getId(), i, filler);
+					}
 					continue;
 				}
 			}
@@ -275,6 +311,10 @@ public class GuiHandler
 			{
 				if(ssh.getNumText().isBlank() || ssh.getNumText().isEmpty())
 				{
+					if(fillNotDefineGuiSlots)
+					{
+						filler(gui, ssh.getId(), i, filler);
+					}
 					continue;
 				}
 				int num = y.getInt(i+".PlayerSearchNum");
@@ -282,6 +322,10 @@ public class GuiHandler
 						MysqlHandler.Type.PLAYERDATA, "`player_name` ASC", num, 1, "`player_name` like ?", "%"+ssh.getNumText()+"%");
 				if(l == null || l.isEmpty())
 				{
+					if(fillNotDefineGuiSlots)
+					{
+						filler(gui, ssh.getId(), i, filler);
+					}
 					continue;
 				}
 				PlayerData pd = PlayerData.convert(l).get(0);
@@ -291,6 +335,10 @@ public class GuiHandler
 				ItemMeta im = is.getItemMeta();
 				if(!(im instanceof SkullMeta))
 				{
+					if(fillNotDefineGuiSlots)
+					{
+						filler(gui, ssh.getId(), i, filler);
+					}
 					continue;
 				}
 				SkullMeta sm = (SkullMeta) im;

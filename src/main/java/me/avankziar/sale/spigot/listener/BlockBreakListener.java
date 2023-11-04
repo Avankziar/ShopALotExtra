@@ -72,6 +72,10 @@ public class BlockBreakListener implements Listener
 				org.bukkit.block.data.type.WallSign ws = (org.bukkit.block.data.type.WallSign) event.getBlock().getBlockData();
 				Block behind = event.getBlock().getRelative(ws.getFacing().getOppositeFace());
 				behind.removeMetadata(SIGNSHOP_CONTACTBLOCK, plugin);
+			} else if(event.getBlock().getBlockData() instanceof org.bukkit.block.data.type.HangingSign)
+			{
+				Block above = event.getBlock().getRelative(BlockFace.UP);
+				above.removeMetadata(SIGNSHOP_CONTACTBLOCK, plugin);
 			} else
 			{
 				Block under = event.getBlock().getRelative(BlockFace.DOWN);

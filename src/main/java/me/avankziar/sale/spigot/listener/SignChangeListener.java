@@ -128,6 +128,14 @@ public class SignChangeListener implements Listener
 			{
 				behind.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, new FixedMetadataValue(BaseConstructor.getPlugin(), true));
 			}
+		} else if(b.getBlockData() instanceof org.bukkit.block.data.type.HangingSign)
+		{
+			Block above = b.getRelative(BlockFace.UP);
+			if(!above.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
+			{
+				above.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK,
+						new FixedMetadataValue(BaseConstructor.getPlugin(), true));
+			}
 		} else
 		{
 			Block under = b.getRelative(BlockFace.DOWN);
