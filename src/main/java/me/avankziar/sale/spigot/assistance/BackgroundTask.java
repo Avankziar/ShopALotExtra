@@ -8,19 +8,15 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
-import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler.Type;
 import main.java.me.avankziar.sale.spigot.handler.Base64Handler;
 import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
-import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
 import main.java.me.avankziar.sale.spigot.listener.ShopPostTransactionListener;
 import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
@@ -50,7 +46,7 @@ public class BackgroundTask
 		cleanUpSignShopDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ShopDailyLog.Active", false));
 		cleanUpClientLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ClientLog.Active", false));
 		cleanUpClientDailyLog(plugin.getYamlHandler().getConfig().getBoolean("CleanUpTask.ClientgDailyLog.Active", false));
-		metaDataAdderAndVoidSignClear();
+		voidSignClear();
 		removeShopItemHologram();
 		msgTransactionMessageToShopOwnerTimer();
 		transactionShopLogTimer();
@@ -254,7 +250,7 @@ public class BackgroundTask
 		}.runTaskLaterAsynchronously(plugin, 20L*9);
 	}
 	
-	public void metaDataAdderAndVoidSignClear()
+	public void voidSignClear()
 	{
 		new BukkitRunnable()
 		{
@@ -276,34 +272,6 @@ public class BackgroundTask
 							{
 								i++;
 								plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ss.getId());
-							} else
-							{
-								if(block.getBlockData() instanceof org.bukkit.block.data.type.WallSign)
-								{
-									org.bukkit.block.data.type.WallSign ws = (org.bukkit.block.data.type.WallSign) block.getBlockData();
-									Block behind = block.getRelative(ws.getFacing().getOppositeFace());
-									if(!behind.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
-									{
-										behind.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK,
-												new FixedMetadataValue(BaseConstructor.getPlugin(), true));
-									}
-								} else if(block.getBlockData() instanceof org.bukkit.block.data.type.HangingSign)
-								{
-									Block above = block.getRelative(BlockFace.UP);
-									if(!above.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
-									{
-										above.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK,
-												new FixedMetadataValue(BaseConstructor.getPlugin(), true));
-									}
-								} else
-								{
-									Block under = block.getRelative(BlockFace.DOWN);
-									if(!under.hasMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK))
-									{
-										under.setMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK,
-												new FixedMetadataValue(BaseConstructor.getPlugin(), true));
-									}
-								}
 							}
 						}
 						plugin.getLogger().info("==========SaLE Database DeleteTask==========");

@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +33,6 @@ import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
-import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
 import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
 import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
@@ -514,20 +512,6 @@ public class AdminstrationFunctionHandler
 				.replace("%amount%", String.valueOf(amount))));
 		if(block != null)
 		{
-			if(block.getBlockData() instanceof org.bukkit.block.data.type.WallSign)
-			{
-				org.bukkit.block.data.type.WallSign ws = (org.bukkit.block.data.type.WallSign) block.getBlockData();
-				Block behind = block.getRelative(ws.getFacing().getOppositeFace());
-				behind.removeMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, plugin);
-			} else if(block.getBlockData() instanceof org.bukkit.block.data.type.HangingSign)
-			{
-				Block above = block.getRelative(BlockFace.UP);
-				above.removeMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, plugin);
-			} else
-			{
-				Block under = block.getRelative(BlockFace.DOWN);
-				under.removeMetadata(BlockBreakListener.SIGNSHOP_CONTACTBLOCK, plugin);
-			}
 			SignHandler.clearSign(block);
 		}
 		return;
