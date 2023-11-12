@@ -33,7 +33,7 @@ public class GuiPreListener implements Listener
 	}
 	
 	@EventHandler
-	public void onClickListener(InventoryClickEvent event)
+	public void onClickListener(final InventoryClickEvent event)
 	{
 		if(event.isCancelled())
 		{

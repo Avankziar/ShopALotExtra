@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
@@ -39,10 +40,10 @@ public class UpperListener implements Listener
 			return;
 		}
 		Player player = (Player) event.getEvent().getWhoClicked();
-		GuiType gt = null;
+		GuiType gut = null;
 		try
 		{
-			gt = GuiType.valueOf(event.getInventoryIdentifier());
+			gut = GuiType.valueOf(event.getInventoryIdentifier());
 		} catch(Exception e)
 		{
 			return;
@@ -57,28 +58,31 @@ public class UpperListener implements Listener
 		{
 			return;
 		}
-		UUID otheruuid = null;
+		UUID ou = null;
 		if(event.getValuesString().containsKey(GuiHandler.PLAYER_UUID))
 		{
-			otheruuid = UUID.fromString(event.getValuesString().get(GuiHandler.PLAYER_UUID));
+			ou = UUID.fromString(event.getValuesString().get(GuiHandler.PLAYER_UUID));
 		}
 		ClickType ct = getClickFunctionType(event.getEvent().getClick(), event.getEvent().getHotbarButton());
 		if(ct == null)
 		{
 			return;
 		}
-		ClickFunctionType cft = null;
+		ClickFunctionType cfct = null;
 		try
 		{
-			cft = ClickFunctionType.valueOf(event.getFunction(ct));
+			cfct = ClickFunctionType.valueOf(event.getFunction(ct));
 		} catch(Exception e)
 		{
 			return;
 		}
-		if(cft == null)
+		if(cfct == null)
 		{
 			return;
 		}
+		final GuiType gt = gut;
+		final ClickFunctionType cft = cfct;
+		final UUID otheruuid = ou;
 		switch(gt)
 		{
 		case ITEM_INPUT:
@@ -101,11 +105,27 @@ public class UpperListener implements Listener
 		case KEYBOARD_MEMBER:
 		case KEYBOARD_SIGNSHOPNAME:
 		case KEYBOARD_WHITELIST:
-			AdminstrationFunctionHandler
-				.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel(), otheruuid);
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					AdminstrationFunctionHandler
+					.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel(), otheruuid);
+				}
+			}.runTaskAsynchronously(plugin);
+			
 			break;
 		case SHOP:
-			ShopFunctionHandler.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel()); break;
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					ShopFunctionHandler.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel());
+				}
+			}.runTaskAsynchronously(plugin);
+			break;
 		}
 	}
 	

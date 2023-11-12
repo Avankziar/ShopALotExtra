@@ -32,7 +32,8 @@ public class BlockBreakListener implements Listener
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void onBlockBreak(BlockBreakEvent event)
 	{
-		if(event.isCancelled())
+		if(event.isCancelled()
+				|| !(event.getBlock().getState() instanceof Sign))
 		{
 			return;
 		}

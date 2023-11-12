@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
@@ -222,7 +223,14 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, false); break;
 		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, true); break;
 		}
-		SignHandler.updateSign(ssh);
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				SignHandler.updateSign(ssh);
+			}
+		}.runTask(plugin);
 	}
 	
 	private static boolean isTooMuchShop(Player player, SignShop ssh)
@@ -468,9 +476,16 @@ public class AdminstrationFunctionHandler
 		ssh.setDisplayName(null);
 		ssh.setMaterial(Material.AIR);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
-		player.closeInventory();
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ItemClear")));
-		SignHandler.updateSign(ssh);
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				player.closeInventory();
+				SignHandler.updateSign(ssh);
+			}
+		}.runTask(plugin);
 	}
 	
 	private static void deleteSoft(Player player, SignShop ssh)
@@ -499,11 +514,12 @@ public class AdminstrationFunctionHandler
 					: is.getType().toString());
 		final long amount = ssh.getItemStorageCurrent();
 		player.closeInventory();
-		Block block = null;
+		Block bl = null;
 		if(Bukkit.getWorld(ssh.getWorld()) != null)
 		{
-			block = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX(), ssh.getY(), ssh.getZ()).getBlock();
+			bl = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX(), ssh.getY(), ssh.getZ()).getBlock();
 		}
+		final Block block = bl;
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssh.getId());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DeleteAll.Delete")
 				.replace("%id%", String.valueOf(sshid))
@@ -512,15 +528,29 @@ public class AdminstrationFunctionHandler
 				.replace("%amount%", String.valueOf(amount))));
 		if(block != null)
 		{
-			SignHandler.clearSign(block);
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					SignHandler.clearSign(block);
+				}
+			}.runTask(plugin);
 		}
 		return;
 	}
 	
 	private static void openShopLog(Player player, SignShop ssh)
 	{
-		player.closeInventory();
-		Bukkit.dispatchCommand(player, CommandSuggest.get(CommandExecuteType.SALE_SHOP_LOG).substring(1)+" "+0+" "+ssh.getId());
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				player.closeInventory();
+				Bukkit.dispatchCommand(player, CommandSuggest.get(CommandExecuteType.SALE_SHOP_LOG).substring(1)+" "+0+" "+ssh.getId());
+			}
+		}.runTask(plugin);
 		return;
 	}
 	
