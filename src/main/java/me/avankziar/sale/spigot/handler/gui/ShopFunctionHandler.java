@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
@@ -79,7 +80,14 @@ public class ShopFunctionHandler
 		case SHOP_SELL_2304: sell(player, ssh, 2304, openInv, settingsLevel); break;
 		case SHOP_TOGGLE_SUBSCRIBE: subscribe(player, ssh, openInv, settingsLevel); break;
 		}
-		SignHandler.updateSign(ssh);
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				SignHandler.updateSign(ssh);
+			}
+		}.runTask(plugin);
 	}
 	
 	private static boolean isDiscount(SignShop ssh, long now)
@@ -367,7 +375,7 @@ public class ShopFunctionHandler
 			}
 			comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
 					.replace("%format%", String.valueOf(samo*d)+" "+ plugin.getVaultEco().currencyNamePlural());
-		}		
+		}
 		if(!ssh.isUnlimitedBuy())
 		{
 			if(ssh.getPossibleBuy() >= 0 || ssh.getDiscountPossibleBuy() >= 0)

@@ -114,7 +114,6 @@ public class UpperListener implements Listener
 					.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel(), otheruuid);
 				}
 			}.runTaskAsynchronously(plugin);
-			
 			break;
 		case SHOP:
 			new BukkitRunnable()

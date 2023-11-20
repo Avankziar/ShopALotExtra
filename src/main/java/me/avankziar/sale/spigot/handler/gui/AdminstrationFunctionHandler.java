@@ -513,7 +513,6 @@ public class AdminstrationFunctionHandler
 					? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
 					: is.getType().toString());
 		final long amount = ssh.getItemStorageCurrent();
-		player.closeInventory();
 		Block bl = null;
 		if(Bukkit.getWorld(ssh.getWorld()) != null)
 		{
@@ -533,6 +532,7 @@ public class AdminstrationFunctionHandler
 				@Override
 				public void run()
 				{
+					player.closeInventory();
 					SignHandler.clearSign(block);
 				}
 			}.runTask(plugin);

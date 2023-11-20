@@ -440,7 +440,7 @@ public class BackgroundTask
 					ShopPostTransactionListener.maping.remove(uuid);
 				}
 			}
-		}.runTaskTimer(plugin, 0L, runEveryXMin*20L);
+		}.runTaskTimerAsynchronously(plugin, 0L, runEveryXMin*20L);
 	}
 	
 	public void transactionShopLogTimer()
@@ -453,7 +453,7 @@ public class BackgroundTask
 			{
 				doShopLog();
 			}
-		}.runTaskTimer(plugin, 0L, runEveryXMin*20L);
+		}.runTaskTimerAsynchronously(plugin, 0L, runEveryXMin*20L);
 	}
 	
 	public void doShopLog()

@@ -3,7 +3,6 @@ package main.java.me.avankziar.sale.spigot.listener;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -22,21 +21,21 @@ public class ShopPostTransactionListener implements Listener
 	@EventHandler
 	public void onShopPostTransaction(ShopPostTransactionEvent event)
 	{
-		SignShop ssh = event.getSignShop();
-		Player client = event.getClient();
-		long iamount = event.getItemAmount();
-		double costPerItem = event.getCostPerItem();
+		final SignShop ssh = event.getSignShop();
+		final UUID client = event.getClient().getUniqueId();
+		final long iamount = event.getItemAmount();
+		final double costPerItem = event.getCostPerItem();
 		doMap(maping, ssh, client, iamount, costPerItem, event.isBuying());
 		doMap(maping2, ssh, client, iamount, costPerItem, event.isBuying());
 	}
 	
 	private void doMap(LinkedHashMap<UUID, LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>>> base,
-			SignShop ssh, Player client, long iamount, double costPerItem, boolean isBuy)
+			SignShop ssh, UUID client, long iamount, double costPerItem, boolean isBuy)
 	{
 		UUID owner = ssh.getOwner();
 		ItemStack is = ssh.getItemStack();
 		LinkedHashMap<UUID, LinkedHashMap<String, ShopLogVar>> sub = base.containsKey(owner) ? base.get(owner) : new LinkedHashMap<>();
-		LinkedHashMap<String, ShopLogVar> sub2 = sub.containsKey(client.getUniqueId()) ? sub.get(client.getUniqueId()) : new LinkedHashMap<>();
+		LinkedHashMap<String, ShopLogVar> sub2 = sub.containsKey(client) ? sub.get(client) : new LinkedHashMap<>();
 		String b64 = new Base64Handler(is).toBase64();
 		ShopLogVar slv = null;
 		if(isBuy)
@@ -75,7 +74,7 @@ public class ShopPostTransactionListener implements Listener
 			}
 		}
 		sub2.put(b64, slv);
-		sub.put(client.getUniqueId(), sub2);
+		sub.put(client, sub2);
 		base.put(owner, sub);
 	}
 }

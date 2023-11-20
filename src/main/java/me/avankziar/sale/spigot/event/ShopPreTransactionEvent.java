@@ -21,6 +21,7 @@ public class ShopPreTransactionEvent extends Event
 	public ShopPreTransactionEvent(SignShop signShop, long itemAmount,
 			double costPerItem, double taxPerItem, boolean transactionType, Player client)
 	{
+		super(true);
 		setCancelled(false);
 		setSignShop(signShop);
 		setItemAmount(itemAmount);

@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
@@ -49,33 +50,47 @@ public class BlockBreakListener implements Listener
 				return;
 			}
 		}
-		SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
-				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
-				plugin.getServername(), player.getWorld().getName(),
-				event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
-		if(ssh != null)
+		final Block block = event.getBlock();
+		new BukkitRunnable()
 		{
-			final int sshid = ssh.getId();
-			final String sshname = ssh.getSignShopName();
-			final ItemStack is = ssh.getItemStack();
-			final String displayname = is.getItemMeta().hasDisplayName() 
-					? is.getItemMeta().getDisplayName() : 
-						(plugin.getEnumTl() != null 
-						? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
-						: is.getType().toString());
-			final long amount = ssh.getItemStorageCurrent();
-			plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP,
-					"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
-					plugin.getServername(), player.getWorld().getName(),
-					event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DeleteAll.Delete")
-					.replace("%id%", String.valueOf(sshid))
-					.replace("%signshop%", sshname)
-					.replace("%displayname%", displayname)
-					.replace("%amount%", String.valueOf(amount))));
-			SignHandler.clearSign(event.getBlock());
-			return;
-		}		
+			@Override
+			public void run()
+			{
+				final SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
+						"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+						plugin.getServername(), player.getWorld().getName(),
+						block.getX(), block.getY(), block.getZ());
+				if(ssh != null)
+				{
+					final int sshid = ssh.getId();
+					final String sshname = ssh.getSignShopName();
+					final ItemStack is = ssh.getItemStack();
+					final String displayname = is.getItemMeta().hasDisplayName() 
+							? is.getItemMeta().getDisplayName() : 
+								(plugin.getEnumTl() != null 
+								? SaLE.getPlugin().getEnumTl().getLocalization(is.getType())
+								: is.getType().toString());
+					final long amount = ssh.getItemStorageCurrent();
+					plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP,
+							"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+							plugin.getServername(), player.getWorld().getName(),
+							event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DeleteAll.Delete")
+							.replace("%id%", String.valueOf(sshid))
+							.replace("%signshop%", sshname)
+							.replace("%displayname%", displayname)
+							.replace("%amount%", String.valueOf(amount))));
+					new BukkitRunnable()
+					{				
+						@Override
+						public void run()
+						{
+							SignHandler.clearSign(block);
+						}
+					}.runTask(plugin);
+				}
+			}
+		}.runTaskAsynchronously(plugin);
 	}	
 	
 	@EventHandler

@@ -50,7 +50,12 @@ Future Build
 
 Build 1-5-0
 - /sale debug, TestOnly Command
-- Ein bisschen Async Verhalten, wenn der Spieler mit einem Schildshop interagiert um die Gui aufzurufen.
+- Ein Async Verhalten, wenn der Spieler mit einem Schildshop interagiert um die Gui aufzurufen.
+- Async Verhalten, wenn der Spieler in der Gui eine Funktion ausführt.
+- Async Verhalten in Hintergrundtasks
+- Async Verhalten wenn der Spieler auf den Server joint.
+- Async Verhalten, wenn im ShopPostTransactionListener der Shoplog zusammengestellt wird.
+- Async Verhalten, wenn versucht wird ein Shopschild abzuschlagen.
 - Bei einem jeden Start eines Servers, wird jedes ShopSchild eines Server geprüft ob es tatsächlich als Schild vorliegt.
   Falls dem nicht so ist, wird es aus der Datenbank gelöscht.
 - Neuer ConfigPfad: SignShop.Gui.ForceSettingsLevel

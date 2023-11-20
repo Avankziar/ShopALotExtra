@@ -21,6 +21,7 @@ public class ShopPostTransactionEvent extends Event
 	public ShopPostTransactionEvent(SignShop signShop, long itemAmount, double costPerItem, boolean transactionType, Player client,
 			String transactionCategory, String transactionComment)
 	{
+		super(true);
 		setSignShop(signShop);
 		setItemAmount(itemAmount);
 		setCostPerItem(costPerItem);
