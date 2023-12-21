@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -53,7 +55,8 @@ import net.milkbowl.vault.economy.EconomyResponse;
 public class ShopFunctionHandler
 {
 	private static SaLE plugin = SaLE.getPlugin();
-	private static Enchantment[] enchs = Enchantment.values();
+	private static List<Enchantment> enchs = Registry.ENCHANTMENT.stream().collect(Collectors.toList());
+	@SuppressWarnings("deprecation")
 	private static PotionEffectType[] poefty = PotionEffectType.values();
 	
 	public static void doClickFunktion(GuiType guiType, ClickFunctionType cft, Player player, SignShop ssh,
@@ -975,12 +978,12 @@ public class ShopFunctionHandler
 					}
 				} else
 				{
-					int pv = 0;
+					/*int pv = 0;
 					if(i.getType() == Material.POTION) {pv = 1;}
 					else if(i.getType() == Material.SPLASH_POTION) {pv = 2;}
-					else if(i.getType() == Material.LINGERING_POTION) {pv = 3;}
-					List<PotionEffect> peil = GuiHandler.getBasePotion(pim.getBasePotionData(), pv);
-					List<PotionEffect> pefl = GuiHandler.getBasePotion(pfm.getBasePotionData(), pv);
+					else if(i.getType() == Material.LINGERING_POTION) {pv = 3;}*/
+					List<PotionEffect> peil = pim.getBasePotionType().getPotionEffects();
+					List<PotionEffect> pefl = pfm.getBasePotionType().getPotionEffects();
 					for(int j = 0; j < peil.size(); j++)
 					{
 						PotionEffect pei = peil.get(j);

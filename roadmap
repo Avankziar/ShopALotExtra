@@ -47,6 +47,10 @@ Future Build
      - Erstellung von Nachrichten im Discord Channel per Webhoock
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
+- Listeneinträge für Black/White etc. anzeigen lassen, wer dadrauf ist.
+
+Build 1-6-0
+- 1.20.4 Support
 
 Build 1-5-0
 - /sale debug, TestOnly Command

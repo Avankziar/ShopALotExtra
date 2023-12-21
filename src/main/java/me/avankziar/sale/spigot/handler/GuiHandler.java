@@ -1,6 +1,6 @@
 package main.java.me.avankziar.sale.spigot.handler;
 
-import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -33,14 +33,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.inventory.meta.TropicalFishBucketMeta;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.profile.PlayerProfile;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
 import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.sale.general.ChatApi;
@@ -437,7 +434,24 @@ public class GuiHandler
 		gui.add(i, is, SettingsLevel.NOLEVEL, true, map, new ClickFunction[0]);
 	}
 	
-	@SuppressWarnings("deprecation")
+	public static ItemStack getSkull(String paramString) 
+	{
+		ItemStack is = new ItemStack(Material.PLAYER_HEAD);
+		SkullMeta paramSkullMeta = (SkullMeta) is.getItemMeta();
+	    try 
+	    {
+	    	UUID uuid = UUID.randomUUID();
+	        PlayerProfile playerProfile = Bukkit.createPlayerProfile(uuid, uuid.toString());
+	        playerProfile.getTextures().setSkin(new URL(paramString));
+	        paramSkullMeta.setOwnerProfile(playerProfile);
+	    } catch (IllegalArgumentException|SecurityException|java.net.MalformedURLException illegalArgumentException) {
+	      illegalArgumentException.printStackTrace();
+	    }
+	    is.setItemMeta(paramSkullMeta);
+	    return is;
+	}
+	
+	/*@SuppressWarnings("deprecation") für 1.20.4 nicht zulässig
 	public static ItemStack getSkull(String url) 
 	{
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
@@ -461,7 +475,7 @@ public class GuiHandler
         }
         skull.setItemMeta(skullMeta);
         return skull;
-    }
+    }*/
 	
 	private static List<String> getLorePlaceHolder(SignShop ssh, Player player, List<String> lore, String playername)
 	{
@@ -490,7 +504,6 @@ public class GuiHandler
 		return list;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private static ArrayList<String> getStringPlaceHolder(ItemStack is, UUID uuid)
 	{
 		if(is == null)
@@ -508,7 +521,7 @@ public class GuiHandler
 		if(im instanceof PotionMeta)
 		{
 			pmd = (PotionMeta) im;
-			ptd = pmd.getBasePotionData().getType();
+			ptd = pmd.getBasePotionType();
 		}
 		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Displayname") 
 				+ (is.getItemMeta().hasDisplayName() 
@@ -561,7 +574,7 @@ public class GuiHandler
 					list.add(ChatApi.tl("&7"+
 							(plugin.getEnumTl() != null 
 							? plugin.getEnumTl().getLocalization(en.getKey())
-							: en.getKey().getName())
+							: en.getKey().getKey().getKey())
 					+" "+GuiHandler.IntegerToRomanNumeral(level)));
 				}
 			}
@@ -579,7 +592,7 @@ public class GuiHandler
 						list.add(ChatApi.tl("&7"+
 								(plugin.getEnumTl() != null 
 								? plugin.getEnumTl().getLocalization(en.getKey())
-								: en.getKey().getName())
+								: en.getKey().getKey().getKey())
 						+" "+GuiHandler.IntegerToRomanNumeral(level)));
 					}
 				}
@@ -613,12 +626,13 @@ public class GuiHandler
 				}
 			} else
 			{
+				/* Checken ob es für die 1.20.4 klappt
 				int pv = 0;
 				if(is.getType() == Material.POTION) {pv = 1;}
 				else if(is.getType() == Material.SPLASH_POTION) {pv = 2;}
 				else if(is.getType() == Material.LINGERING_POTION) {pv = 3;}
-				else if(is.getType() == Material.TIPPED_ARROW) {pv = 4;}
-				for(PotionEffect pe : GuiHandler.getBasePotion(pm.getBasePotionData(), pv))
+				else if(is.getType() == Material.TIPPED_ARROW) {pv = 4;}*/
+				for(PotionEffect pe : pm.getBasePotionType().getPotionEffects())
 				{
 					int level = pe.getAmplifier()+1;
 					long dur = pe.getDuration()*50;
@@ -733,12 +747,12 @@ public class GuiHandler
 			SpawnEggMeta sem = (SpawnEggMeta) im;
 			try
 			{
-				if(sem.getSpawnedType() != null)
+				if(sem.getSpawnedEntity().getEntityType() != null)
 				{
 					list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.SpawnEggMeta") 
 							+ (plugin.getEnumTl() != null 
-							? SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())
-							: sem.getSpawnedType().toString())));
+							? SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedEntity().getEntityType())
+							: sem.getSpawnedEntity().getEntityType().toString())));
 				}				
 			} catch(Exception e)
 			{
@@ -773,6 +787,7 @@ public class GuiHandler
 		return list;
 	}
 	
+	/* Seit der 1.20.4 Veraltet. TODO Checken ob es so korrekt läuft
 	public static List<PotionEffect> getBasePotion(PotionData pd, int pv) //pv PotionVariation, 1 Normal, 2 Splash, 3 Linger
 	{
 		PotionType pt = pd.getType();
@@ -930,7 +945,7 @@ public class GuiHandler
 			break;
 		}
 		return list;
-	}
+	}*/
 	
 	public static String getPotionColor(PotionEffect pe)
 	{

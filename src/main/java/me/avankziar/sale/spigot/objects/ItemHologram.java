@@ -43,7 +43,6 @@ public class ItemHologram
 {
 	private ArrayList<UUID> entitys = new ArrayList<>();
 	
-	@SuppressWarnings("deprecation")
 	public ItemHologram(ItemStack is, Location loc)
 	{
 		ArrayList<String> lines = new ArrayList<>();
@@ -53,7 +52,7 @@ public class ItemHologram
 		if(im instanceof PotionMeta)
 		{
 			pmd = (PotionMeta) im;
-			ptd = pmd.getBasePotionData().getType();
+			ptd = pmd.getBasePotionType();
 		}
 		lines.add(ChatApi.tl(im.hasDisplayName() 
 				? im.getDisplayName() 
@@ -146,12 +145,12 @@ public class ItemHologram
 					}
 				} else
 				{
-					int pv = 0;
+					/*int pv = 0;
 					if(is.getType() == Material.POTION) {pv = 1;}
 					else if(is.getType() == Material.SPLASH_POTION) {pv = 2;}
 					else if(is.getType() == Material.LINGERING_POTION) {pv = 3;}
-					else if(is.getType() == Material.TIPPED_ARROW) {pv = 4;}
-					for(PotionEffect pe : GuiHandler.getBasePotion(pm.getBasePotionData(), pv))
+					else if(is.getType() == Material.TIPPED_ARROW) {pv = 4;}*/
+					for(PotionEffect pe : pm.getBasePotionType().getPotionEffects())
 					{
 						int level = pe.getAmplifier()+1;
 						long dur = pe.getDuration()*50;
@@ -247,12 +246,12 @@ public class ItemHologram
 				SpawnEggMeta sem = (SpawnEggMeta) im;
 				try
 				{
-					if(sem.getSpawnedType() != null)
+					if(sem.getSpawnedEntity().getEntityType() != null)
 					{
 						lines.add(ChatApi.tl("&7"+
 								(SaLE.getPlugin().getEnumTl() != null 
-								? SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedType())
-								: sem.getSpawnedType().toString())));
+								? SaLE.getPlugin().getEnumTl().getLocalization(sem.getSpawnedEntity().getEntityType())
+								: sem.getSpawnedEntity().getEntityType().toString())));
 					}
 					
 				} catch(Exception e)
