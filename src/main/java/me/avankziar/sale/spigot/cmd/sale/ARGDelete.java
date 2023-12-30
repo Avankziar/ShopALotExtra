@@ -100,6 +100,11 @@ public class ARGDelete extends ArgumentModule
 				break;
 			}
 		}
+		if(query.isEmpty())
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.Delete.NoFoundToDelete")));
+			return;
+		}
 		ArrayList<SignShop> sshl = SignShop.convert(plugin.getMysqlHandler().getFullList(MysqlHandler.Type.SIGNSHOP,
 				"`id` ASC", query, ol.toArray(new Object[ol.size()])));
 		final int sshla = sshl.size();
