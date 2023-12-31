@@ -1,5 +1,6 @@
 package main.java.me.avankziar.sale.spigot.handler.gui;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +24,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
@@ -1000,11 +1003,34 @@ public class ShopFunctionHandler
 					}
 				}
 			}
-        	return i.toString().equals(f.toString());
+        	String v1 = toBase64(i);
+        	String f1 = toBase64(f);
+        	return v1.equals(f1);
         } else
     	{
-        	return i.toString().equals(f.toString());
+        	String v1 = toBase64(i);
+        	String f1 = toBase64(f);
+        	return v1.equals(f1);
     	}
+	}
+	
+	public static String toBase64(ItemStack is)
+	{
+		if(is == null)
+		{
+			return null;
+		}
+		try 
+		{
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            dataOutput.writeObject(is);
+            dataOutput.close();
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) 
+		{
+            throw new IllegalStateException("Unable to save item stacks.", e);
+        }
 	}
 	
 	public static ItemMeta orderEnchantments(ItemMeta i)
