@@ -137,6 +137,8 @@ public class SaLE extends JavaPlugin
 			return;
 		}
 		
+		setupIFHItemStackComparison();
+		
 		utility = new Utility(plugin);
 		backgroundTask = new BackgroundTask(this);
 		
@@ -157,7 +159,10 @@ public class SaLE extends JavaPlugin
 			e.getValue().despawn();
 		}
 		log.info(pluginName + " do all open Shoplogs!");
-		backgroundTask.doShopLog();
+		if(backgroundTask != null)
+		{
+			backgroundTask.doShopLog();
+		}
 		log.info(pluginName + " done all open Shoplogs!");
 		Bukkit.getScheduler().cancelTasks(this);
 		HandlerList.unregisterAll(this);
@@ -473,7 +478,6 @@ public class SaLE extends JavaPlugin
 		setupIFHValueEntry();
 		setupIFHModifier();
 		setupIFHEnumTranslation();
-		setupIFHItemStackComparison();
 		setupIFHEconomy();
 		setupIFHMessageToBungee();
 		setupIFHBaseComponentToBungee();
@@ -620,40 +624,21 @@ public class SaLE extends JavaPlugin
 	{
 		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
 	    {
+			log.severe("ItemStackComparison Interface dependency cannot found!");
+			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 	    	return;
 	    }
-        new BukkitRunnable()
-        {
-        	int i = 0;
-			@Override
-			public void run()
-			{
-				try
-				{
-					if(i == 20)
-				    {
-						cancel();
-						log.severe("ItemStackComparison Interface dependency cannot found!");
-						Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
-				    	return;
-				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison> rsp = 
-		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison.class);
-				    if(rsp == null) 
-				    {
-				    	i++;
-				        return;
-				    }
-				    itemStackComparisonConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> ItemStackComparison.class is consumed!");
-				    cancel();
-				} catch(NoClassDefFoundError e)
-				{
-					cancel();
-				}			    
-			}
-        }.runTaskTimer(plugin, 0L, 20*2);
+	    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison> rsp = 
+                         getServer().getServicesManager().getRegistration(
+                        		 main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison.class);
+	    if(rsp == null) 
+	    {
+	    	log.severe("ItemStackComparison Interface dependency cannot found!");
+			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
+	    	return;
+	    }
+	    itemStackComparisonConsumer = rsp.getProvider();
+	    log.info(pluginName + " detected InterfaceHub >>> ItemStackComparison.class is consumed!");
 	}
 	
 	public ItemStackComparison getItemStackComparison()

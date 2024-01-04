@@ -55,6 +55,9 @@ Build 1-6-0
 - Das Plugin RootAdministration Vs. 1-4-0 (https://www.spigotmc.org/resources/rootadministration.104833/) wird nun benötigt.
   (Dort wird nur eine Interfaceintegration benötigt. D.h. wenn ihr das Plugin noch nicht habt, müsst ihr die Config von
   RootAdministration nicht bearbeiten.)
+  Der Grund dafür ist, dass viele Änderungen innerhalb des ItemStack, bzw. spezifischer der ItemMetas und dessen Interfaces wie die PotionMeta etc.
+  in der neuen Version erfolgt wurden. Dazu wurde intern in MC selber bestimmte Methoden so geändert, dass diese Versionsübergreifend nicht mehr
+  einen Vergleich von Items zulassen, nur innerhalb der Version. Das ist natürlich blöd, wenn der Server schon etwas länger läuft.
 
 Build 1-5-0
 - /sale debug, TestOnly Command
