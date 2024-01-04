@@ -52,6 +52,9 @@ Future Build
 Build 1-6-0
 - 1.20.4 Support
 - /sale delete, Fix SQLError wenn nichts definiert wurde.
+- Das Plugin RootAdministration Vs. 1-4-0 (https://www.spigotmc.org/resources/rootadministration.104833/) wird nun benötigt.
+  (Dort wird nur eine Interfaceintegration benötigt. D.h. wenn ihr das Plugin noch nicht habt, müsst ihr die Config von
+  RootAdministration nicht bearbeiten.)
 
 Build 1-5-0
 - /sale debug, TestOnly Command

@@ -28,6 +28,7 @@ import main.java.me.avankziar.ifh.general.modifier.ModificationType;
 import main.java.me.avankziar.ifh.general.modifier.Modifier;
 import main.java.me.avankziar.ifh.general.valueentry.ValueEntry;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
+import main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation;
 import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee;
@@ -95,6 +96,7 @@ public class SaLE extends JavaPlugin
 	
 	private Administration administrationConsumer;
 	private EnumTranslation enumTranslationConsumer;
+	private ItemStackComparison itemStackComparisonConsumer;
 	private Economy ecoConsumer;
 	private ValueEntry valueEntryConsumer;
 	private Modifier modifierConsumer;
@@ -471,6 +473,7 @@ public class SaLE extends JavaPlugin
 		setupIFHValueEntry();
 		setupIFHModifier();
 		setupIFHEnumTranslation();
+		setupIFHItemStackComparison();
 		setupIFHEconomy();
 		setupIFHMessageToBungee();
 		setupIFHBaseComponentToBungee();
@@ -611,6 +614,51 @@ public class SaLE extends JavaPlugin
 	public EnumTranslation getEnumTl()
 	{
 		return enumTranslationConsumer;
+	}
+	
+	private void setupIFHItemStackComparison() 
+	{
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+	    	return;
+	    }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						log.severe("ItemStackComparison Interface dependency cannot found!");
+						Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
+				    	return;
+				    }
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    itemStackComparisonConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> ItemStackComparison.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 0L, 20*2);
+	}
+	
+	public ItemStackComparison getItemStackComparison()
+	{
+		return itemStackComparisonConsumer;
 	}
 	
 	private void setupIFHEconomy()

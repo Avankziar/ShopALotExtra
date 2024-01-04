@@ -765,7 +765,6 @@ public class ShopFunctionHandler
 		GuiHandler.openShop(ssh, player, settingsLevel, inv, false);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static boolean isSimilar(ItemStack item, ItemStack filter)
 	{
 		//TODO Eventuell die Mechanik so verfeineren, dass man kein String Vergleich mehr macht.
@@ -777,7 +776,8 @@ public class ShopFunctionHandler
         final ItemStack f = filter.clone();
         i.setAmount(1);
         f.setAmount(1);
-        if(i.getType() != f.getType())
+        return SaLE.getPlugin().getItemStackComparison().isSimilar(i, f);
+        /*if(i.getType() != f.getType())
         {
         	return false;
         }
@@ -985,7 +985,7 @@ public class ShopFunctionHandler
 					if(i.getType() == Material.POTION) {pv = 1;}
 					else if(i.getType() == Material.SPLASH_POTION) {pv = 2;}
 					else if(i.getType() == Material.LINGERING_POTION) {pv = 3;}*/
-					List<PotionEffect> peil = pim.getBasePotionType().getPotionEffects();
+					/*List<PotionEffect> peil = pim.getBasePotionType().getPotionEffects();
 					List<PotionEffect> pefl = pfm.getBasePotionType().getPotionEffects();
 					for(int j = 0; j < peil.size(); j++)
 					{
@@ -1011,7 +1011,7 @@ public class ShopFunctionHandler
         	String v1 = toBase64(i);
         	String f1 = toBase64(f);
         	return v1.equals(f1);
-    	}
+    	}*/
 	}
 	
 	public static String toBase64(ItemStack is)
