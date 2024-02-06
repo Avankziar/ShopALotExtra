@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.ifh.general.assistance.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
@@ -60,6 +61,24 @@ public class ARGDebug extends ArgumentModule
 			break;
 		case "searchvoidsignandclear":
 			searchvoidsignandclear(player);
+			break;
+		case "itemcomparison":
+			if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInOffHand() == null)
+			{
+				player.sendMessage("Items in Main/Off Hand are null!");
+				return;
+			}
+			player.sendMessage(ChatApi.tl("&7===&cItemComparison&7==="));
+			player.sendMessage("Item MainHand: "+(player.getInventory().getItemInMainHand().hasItemMeta() 
+					? player.getInventory().getItemInMainHand().getItemMeta().toString()
+					: "No ItemMeta"));
+			player.sendMessage("Item OffHand: "+(player.getInventory().getItemInOffHand().hasItemMeta() 
+					? player.getInventory().getItemInOffHand().getItemMeta().toString()
+					: "No ItemMeta"));
+			player.sendMessage(ChatApi.tl("&7vvvvvvvvvv"));
+			player.sendMessage("Items are same: "+plugin.getItemStackComparison()
+				.isSimilar(player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()));
+			player.sendMessage(ChatApi.tl("&7^^^^^^^^^^^"));
 			break;
 		}
 	}

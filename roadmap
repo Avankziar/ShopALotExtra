@@ -1,4 +1,4 @@
-Future Build
+Future Build Ideas
 - Worldguardflag für das erstellen von Shops
 - Shop ist leer, kommt nicht, wenn der Shop gerade mit der Aktion leer gekauft ist.
 - Adminshops sollen eine neue ShopGui methode bekommen/weiterleiten an diese, damit auch der Eigentümer diesen benutzen kann.
@@ -48,6 +48,19 @@ Future Build
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
 - Listeneinträge für Black/White etc. anzeigen lassen, wer dadrauf ist.
+- /sale shop searchbuy|searchsell [Material] [Displayname...],
+  Befehl zum Suchen vom Shop mit dem Jeweiligen Item in der Hand.
+  Wenn Argumente dazugeschrieben worden sind, wird danach geschaut. Es baut sich eine Gui auf.
+  Per Config, wird determiniert, ob die Shops in der Gui random oder Nach preis geordnet sind. Natürlich muss der Shop auch vorrat haben.
+  Per Config, wird determiniert, ob beim Klicken auf den Shops in der Gui nur die Position des Shops per Chat geschrieben wird
+  oder der Shop direkt aufgerufen wird als GUI.
+  GuiItem soll anzeigen: Wo, Wieviel ist da, Was kosten es.
+
+Realized Build xxx
+- Consolennachricht im BackgroundTask hinzugefügt, wenn die angegebene Welt nicht existieret
+
+Build 1-6-1
+- Nachricht hinzugefügt, welche waren soll, wenn der Ankaufswert höher ist als der Kaufwert
 
 Build 1-6-0
 - 1.20.4 Support

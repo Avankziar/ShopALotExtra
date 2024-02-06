@@ -224,7 +224,7 @@ public class SaLE extends JavaPlugin
 		ArgumentConstructor debug = new ArgumentConstructor(CommandExecuteType.SALE_DEBUG, "sale_debug", 0, 1, 1, false, null);
 		new ARGDebug(plugin, debug);
 		
-		ArgumentConstructor delete = new ArgumentConstructor(CommandExecuteType.SALE_DELETE, "sale_shop_delete", 1, 1, 99, false, null);
+		ArgumentConstructor delete = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_DELETE, "sale_shop_delete", 1, 1, 99, false, null);
 		new ARGDelete(plugin, delete);
 		
 		ArgumentConstructor breaktoggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_BREAKTOGGLE, "sale_shop_breaktoggle",

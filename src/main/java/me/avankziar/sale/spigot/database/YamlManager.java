@@ -878,6 +878,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast von %amount% Shops die Rabattaktion für %hour% gestartet.",
 						"&eYou have started the discount promotion for %hour% from %amount% stores."}));
+		languageKeys.put("AdminstrationFunctionHandler.SellHigherAsBuy"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAchtung! Du kaufst mit einem höheren Wert die Waren an, als Ihn zuverkaufen!",
+						"&cAttention! You buy the goods with a higher value than you sell them!"}));
 		
 		languageKeys.put("ShopFunctionHandler.NoEmptySlot"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {

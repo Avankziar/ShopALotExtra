@@ -6,7 +6,7 @@ public enum CommandExecuteType
 	SALE_SHOP, //Überbefehl für die statistischen Befehle
 	//SALE_GUI, //Ruft ein Gui auf, zum öffnen von den SignShop Guis. ?Eventuell?
 	SALE_DEBUG, //Only for Debugging Purpose
-	SALE_DELETE, //Admincmd zum delete
+	SALE_SHOP_DELETE, //Admincmd zum delete
 	SALE_SHOP_TOGGLE, //Toggle um in AdminGui
 	SALE_SHOP_BREAKTOGGLE, //Breaktoggle um schilder schnell abzubauen.
 	/*
