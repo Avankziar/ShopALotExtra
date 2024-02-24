@@ -752,7 +752,7 @@ public class AdminstrationFunctionHandler
 			}
 			ssh.setBuyAmount(Double.parseDouble(ssh.getNumText()));
 			if(ssh.getSellAmount() != null
-					&& ssh.canSell() && ssh.getSellAmount() > ssh.getBuyAmount())
+					&& ssh.getBuyAmount() != null && ssh.getSellAmount() > ssh.getBuyAmount())
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SellHigherAsBuy")));
 			}
@@ -765,8 +765,8 @@ public class AdminstrationFunctionHandler
 				break;
 			}
 			ssh.setSellAmount(Double.parseDouble(ssh.getNumText()));
-			if(ssh.getBuyAmount() != null
-					&& ssh.canBuy() && ssh.getSellAmount() > ssh.getBuyAmount())
+			if(ssh.getSellAmount() != null
+					&& ssh.getBuyAmount() != null && ssh.getSellAmount() > ssh.getBuyAmount())
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SellHigherAsBuy")));
 			}
