@@ -55,12 +55,26 @@ Future Build Ideas
   Per Config, wird determiniert, ob beim Klicken auf den Shops in der Gui nur die Position des Shops per Chat geschrieben wird
   oder der Shop direkt aufgerufen wird als GUI.
   GuiItem soll anzeigen: Wo, Wieviel ist da, Was kosten es.
+  Möglichkeit den eigenen Shop in der Suche zu halten könnte Geld kosten..
+  - Die Suche *könne* auch nur innerhalb von Welt oder Server alle Shops suchen
+  Kriterien um als Shop im Menu auzutauchen:
+    - Shop muss mindestens 1 Item beinhalten, bei **buy**.
+    - Shop muss mindestens 1 Itemplatzt frei haben, bei **sell**.
+  GuiMenu zeigt per **Material zum Verkaufen/Freie Plätze zum Ankaufen-Reihenfolge** die Shops an.
+  
+Future Build
+- Copy und Move Funktion per Schilder einbauen. Um Shopschilder repositionieren oder seine Einstellung zu kopieren.
+  (Bis auf inhalt und lagergröße) (Auch Whitelist etc. mitnehemn)
+  1. Zeile  [shop]
+  2. Zeile  move/copy
+  3. Zeile: shopID
+  Auf das neue Schild schreiben und erstellen, bzw. ändern. Sollte das Schild auf dem gleichen Server sein, die Schrift entfernen.
 
-Realized Build xxx
-- Consolennachricht im BackgroundTask hinzugefügt, wenn die angegebene Welt nicht existieret
 
 Build 1-6-1
 - Nachricht hinzugefügt, welche waren soll, wenn der Ankaufswert höher ist als der Kaufwert
+- Consolennachricht im BackgroundTask hinzugefügt, wenn die angegebene Welt nicht existieret
+- Shift+Rechtsklick Fehler behoben, um Items in den Shop hineinzupacken
 
 Build 1-6-0
 - 1.20.4 Support
