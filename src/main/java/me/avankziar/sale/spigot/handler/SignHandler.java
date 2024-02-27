@@ -301,44 +301,37 @@ public class SignHandler
 		final boolean isShift = player.isSneaking();
 		ItemStack c = toPutIn.clone();
 		c.setAmount(1);
+		int amount = 0;
 		if(isShift)
 		{
 			if(!ssh.getItemStack().toString().equals(c.toString()))
 			{
 				return false;
 			}
-			new BukkitRunnable()
+			for(int i = 0; i < player.getInventory().getStorageContents().length; i++)
 			{
-				int amount = 0;
-				@Override
-				public void run()
+				ItemStack is = player.getInventory().getStorageContents()[i];
+				if(is == null || is.getType() == Material.AIR)
 				{
-					for(int i = 0; i < player.getInventory().getStorageContents().length; i++)
-					{
-						ItemStack is = player.getInventory().getStorageContents()[i];
-						if(is == null || is.getType() == Material.AIR)
-						{
-							continue;
-						}
-						ItemStack cc = is.clone();
-						cc.setAmount(1);
-						if(!ShopFunctionHandler.isSimilar(ssh.getItemStack(), cc))
-						{
-							continue;
-						}
-						if(ssh.getItemStorageTotal() <= ssh.getItemStorageCurrent() + amount + is.getAmount())
-						{
-							long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent() - amount;
-							amount += v;
-							is.setAmount(is.getAmount() - (int) v);
-							break;
-						}
-						amount += is.getAmount();
-						is.setAmount(0);
-					}
-					putInItemIntoShopMsg(ssh, amount, player);
+					continue;
 				}
-			}.runTask(plugin);
+				ItemStack cc = is.clone();
+				cc.setAmount(1);
+				if(!ShopFunctionHandler.isSimilar(ssh.getItemStack(), cc))
+				{
+					continue;
+				}
+				if(ssh.getItemStorageTotal() <= ssh.getItemStorageCurrent() + amount + is.getAmount())
+				{
+					long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent() - amount;
+					amount += v;
+					is.setAmount(is.getAmount() - (int) v);
+					break;
+				}
+				amount += is.getAmount();
+				is.setAmount(0);
+			}
+			putInItemIntoShopMsg(ssh, amount, player);
 		} else
 		{
 			if(toPutIn == null || toPutIn.getType() == Material.AIR)
@@ -354,32 +347,16 @@ public class SignHandler
 				return false;
 			} else if(ssh.getItemStorageTotal() < ssh.getItemStorageCurrent() + toPutIn.getAmount())
 			{
-				new BukkitRunnable()
-				{
-					int amount = 0;
-					@Override
-					public void run()
-					{
-						long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent();
-						amount += v;
-						toPutIn.setAmount(toPutIn.getAmount()-(int) v);
-						putInItemIntoShopMsg(ssh, amount, player);
-					}
-				}.runTask(plugin);
+				long v = ssh.getItemStorageTotal() - ssh.getItemStorageCurrent();
+				amount += v;
+				toPutIn.setAmount(toPutIn.getAmount()-(int) v);
+				putInItemIntoShopMsg(ssh, amount, player);
 				
 			} else
 			{
-				new BukkitRunnable()
-				{
-					int amount = 0;
-					@Override
-					public void run()
-					{
-						amount = toPutIn.getAmount();
-						toPutIn.setAmount(0);
-						putInItemIntoShopMsg(ssh, amount, player);
-					}
-				}.runTask(plugin);	
+				amount = toPutIn.getAmount();
+				toPutIn.setAmount(0);
+				putInItemIntoShopMsg(ssh, amount, player);
 			}
 		}
 		new BukkitRunnable()
@@ -443,6 +420,7 @@ public class SignHandler
 			{
 				player.getInventory().addItem(is);
 			}
+			takeOutItemFromShopMsg(ssh, amount, player);
 		} else
 		{
 			ItemStack out = ssh.getItemStack().clone();
@@ -458,11 +436,8 @@ public class SignHandler
 				ssh.setItemStorageCurrent(ssh.getItemStorageCurrent()-amount);
 			}
 			player.getInventory().setItemInMainHand(out);
+			takeOutItemFromShopMsg(ssh, amount, player);		
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ItemsRemovedToShop")
-				.replace("%amount%", String.valueOf(amount))
-				.replace("%now%", String.valueOf(ssh.getItemStorageCurrent())+" / "+String.valueOf(ssh.getItemStorageTotal()))));
-		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		new BukkitRunnable()
 		{
 			@Override
@@ -471,6 +446,14 @@ public class SignHandler
 				SignHandler.updateSign(ssh);
 			}
 		}.runTask(plugin);
+	}
+	
+	private static void takeOutItemFromShopMsg(SignShop ssh, long amount, Player player)
+	{
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignHandler.ItemsRemovedToShop")
+				.replace("%amount%", String.valueOf(amount))
+				.replace("%now%", String.valueOf(ssh.getItemStorageCurrent())+" / "+String.valueOf(ssh.getItemStorageTotal()))));
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 	}
 	
 	public static void updateSign(SignShop ssh)

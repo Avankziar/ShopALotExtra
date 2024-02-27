@@ -67,17 +67,10 @@ public class PlayerInteractListener implements Listener
 		{
 			return;
 		}
-		new BukkitRunnable()
-		{
-			@Override
-			public void run()
-			{
-				doAsync(player, ssh, b, bs, action);
-			}
-		}.runTaskAsynchronously(plugin);
+		dodo(player, ssh, b, bs, action);
 	}
 	
-	public void doAsync(Player player, SignShop ssh, Block b, BlockState bs, Action action)
+	public void dodo(Player player, SignShop ssh, Block b, BlockState bs, Action action)
 	{		
 		if(SignHandler.isBreakToggle(player.getUniqueId()))
 		{
@@ -94,8 +87,14 @@ public class PlayerInteractListener implements Listener
 				|| SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId())
 				|| SignHandler.isBypassToggle(player.getUniqueId())))
 		{
-			GuiHandler.openInputInfo(ssh, player, pd.getLastSettingLevel(), true);
-			//event.setCancelled(true);
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					GuiHandler.openInputInfo(ssh, player, pd.getLastSettingLevel(), true);
+				}
+			}.runTaskAsynchronously(plugin);
 			return;
 		}
 		if(action == Action.LEFT_CLICK_BLOCK)
@@ -105,22 +104,13 @@ public class PlayerInteractListener implements Listener
 				if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 				{
 					SignHandler.takeOutItemFromShop(ssh, player);
-					//event.setCancelled(true);
 					return;
 				}
 			}
 			if(ssh.isItemHologram())
 			{
-				new BukkitRunnable()
-				{
-					@Override
-					public void run()
-					{
-						ItemHologramHandler.spawnHologram(ssh);
-					}
-				}.runTask(plugin);
-			}				
-			//event.setCancelled(true);
+				ItemHologramHandler.spawnHologram(ssh);
+			}
 			return;
 		} else if(action == Action.RIGHT_CLICK_BLOCK)
 		{
@@ -136,65 +126,69 @@ public class PlayerInteractListener implements Listener
 						{
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.ShopItemIsNull")
 									.replace("%name%", ssh.getDisplayName())));
-							//event.setCancelled(true);
 							return;
 						}
-						GuiHandler.openAdministration(ssh, player,
-								plugin.getYamlHandler().getConfig().getBoolean("SignShop.Gui.ForceSettingsLevel", false)
-								? SettingsLevel.valueOf(plugin.getYamlHandler().getConfig().getString("SignShop.Gui.ToBeForcedSettingsLevel", "BASE"))
-								: pd.getLastSettingLevel(), true);
 						new BukkitRunnable()
 						{
 							@Override
 							public void run()
 							{
-								SignHandler.updateSign(ssh);
+								GuiHandler.openAdministration(ssh, player,
+										plugin.getYamlHandler().getConfig().getBoolean("SignShop.Gui.ForceSettingsLevel", false)
+										? SettingsLevel.valueOf(plugin.getYamlHandler().getConfig().getString("SignShop.Gui.ToBeForcedSettingsLevel", "BASE"))
+										: pd.getLastSettingLevel(), true);
 							}
-						}.runTask(plugin);
-						//event.setCancelled(true);
+						}.runTaskAsynchronously(plugin);
+						SignHandler.updateSign(ssh);
 						return;
 					} else
 					{
 						if(SignHandler.putInItemIntoShop(ssh, player, player.getInventory().getItemInMainHand()))
 						{
-							//event.setCancelled(true);
 							return;
 						}
 					}
 				}
 			}
 		}
-		if((ssh.getListedType() == ListedType.BLACKLIST && SignHandler.isListed(ListedType.BLACKLIST, ssh, player.getUniqueId()))
-				|| (ssh.getListedType() == ListedType.WHITELIST && !SignHandler.isListed(ListedType.WHITELIST, ssh, player.getUniqueId()))
-				|| (ssh.getListedType() == ListedType.MEMBER && !SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
-				|| (ssh.getListedType() == ListedType.CUSTOM && !SignHandler.isListed(ListedType.CUSTOM, ssh, player.getUniqueId()))
-			)
+		new BukkitRunnable()
 		{
-			switch(ssh.getListedType())
+			@Override
+			public void run()
 			{
-			case ALL:
-				break;
-			case BLACKLIST:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsBlackList")
-						.replace("%name%", ssh.getSignShopName())));
-				break;
-			case WHITELIST:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotWhiteList")
-						.replace("%name%", ssh.getSignShopName())));
-				break;
-			case CUSTOM:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotCustomList")
-						.replace("%name%", ssh.getSignShopName())));
-				break;
-			case MEMBER:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotMember")
-						.replace("%name%", ssh.getSignShopName())));
-				break;
+				if((ssh.getListedType() == ListedType.BLACKLIST && SignHandler.isListed(ListedType.BLACKLIST, ssh, player.getUniqueId()))
+						|| (ssh.getListedType() == ListedType.WHITELIST && !SignHandler.isListed(ListedType.WHITELIST, ssh, player.getUniqueId()))
+						|| (ssh.getListedType() == ListedType.MEMBER && !SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
+						|| (ssh.getListedType() == ListedType.CUSTOM && !SignHandler.isListed(ListedType.CUSTOM, ssh, player.getUniqueId()))
+					)
+				{
+					switch(ssh.getListedType())
+					{
+					case ALL:
+						break;
+					case BLACKLIST:
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsBlackList")
+								.replace("%name%", ssh.getSignShopName())));
+						break;
+					case WHITELIST:
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotWhiteList")
+								.replace("%name%", ssh.getSignShopName())));
+						break;
+					case CUSTOM:
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotCustomList")
+								.replace("%name%", ssh.getSignShopName())));
+						break;
+					case MEMBER:
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.IsNotMember")
+								.replace("%name%", ssh.getSignShopName())));
+						break;
+					}
+					//event.setCancelled(true);
+					return;
+				}
+				GuiHandler.openShop(ssh, player, pd.getLastSettingLevel(), false);
 			}
-			//event.setCancelled(true);
-			return;
-		}
-		GuiHandler.openShop(ssh, player, pd.getLastSettingLevel(), false);
+		}.runTaskAsynchronously(plugin);
 		new BukkitRunnable()
 		{
 			@Override
