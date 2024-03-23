@@ -339,7 +339,15 @@ public class GuiHandler
 					continue;
 				}
 				SkullMeta sm = (SkullMeta) im;
-				sm.setOwningPlayer(Bukkit.getOfflinePlayer(pd.getUUID()));
+				try
+				{
+					sm.setOwningPlayer(Bukkit.getOfflinePlayer(pd.getUUID()));
+				} catch(Exception e)
+				{
+					PlayerProfile profile = Bukkit.createPlayerProfile(pd.getUUID(), "");
+					sm.setOwnerProfile(profile);
+				}
+				
 				is.setItemMeta(sm);
 			}
 			int amount = 1;

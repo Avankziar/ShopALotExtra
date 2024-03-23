@@ -2,6 +2,7 @@ Future Build Ideas
 - Worldguardflag für das erstellen von Shops
 - Shop ist leer, kommt nicht, wenn der Shop gerade mit der Aktion leer gekauft ist.
 - Adminshops sollen eine neue ShopGui methode bekommen/weiterleiten an diese, damit auch der Eigentümer diesen benutzen kann.
+- Also, es soll einen Boolean in der Config existierten, der das automatische Löschen von Shops verhindert.
 
 - Konzept Auktion
   - Hauptgui per Befehl/NPC erreichbar machen.
@@ -69,6 +70,9 @@ Future Build
   2. Zeile  move/copy
   3. Zeile: shopID
   Auf das neue Schild schreiben und erstellen, bzw. ändern. Sollte das Schild auf dem gleichen Server sein, die Schrift entfernen.
+
+Build 1-6-3
+- Köpfe von Spieler bspw. in der Blacklist, werden nun, falls warum auch immer diese Nicht geladen werden können, mit einem default Kopf geladen.
 
 Build 1-6-2
 - Shift+Rechtsklick Fehler behoben, um Items in den Shop hineinzupacken.
