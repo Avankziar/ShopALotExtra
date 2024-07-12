@@ -70,9 +70,12 @@ Future Build
   2. Zeile  move/copy
   3. Zeile: shopID
   Auf das neue Schild schreiben und erstellen, bzw. ändern. Sollte das Schild auf dem gleichen Server sein, die Schrift entfernen.
+- Leviorsky aka Pierre — heute um 10:39 Uhr
+  1000er Trennzeichen für Shopschilder hinzufügen. (3500000 -> 3.500.000) Somit wäre es nicht mehr so anstrengend, Preise zu lesen, aber auch fehlerresistenter. + Kommastelle nicht mit anzeigen, wenn nicht vorhanden. (3500000.0 -> 3.500.000)
 
 Build 1-6-3
 - Köpfe von Spieler bspw. in der Blacklist, werden nun, falls warum auch immer diese Nicht geladen werden können, mit einem default Kopf geladen.
+- Java 21 Dependency
 
 Build 1-6-2
 - Shift+Rechtsklick Fehler behoben, um Items in den Shop hineinzupacken.
