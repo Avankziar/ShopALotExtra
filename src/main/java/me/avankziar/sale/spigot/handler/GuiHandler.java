@@ -39,7 +39,6 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
@@ -56,6 +55,7 @@ import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
+import me.avankziar.ifh.spigot.economy.account.Account;
 
 public class GuiHandler
 {
@@ -442,6 +442,7 @@ public class GuiHandler
 		gui.add(i, is, SettingsLevel.NOLEVEL, true, map, new ClickFunction[0]);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static ItemStack getSkull(String paramString) 
 	{
 		ItemStack is = new ItemStack(Material.PLAYER_HEAD);
@@ -524,7 +525,7 @@ public class GuiHandler
 		list.add(ChatApi.tl(y.getString("GuiHandler.InfoLore.Owner") 
 				+ (Utility.convertUUIDToName(uuid.toString()) == null 
 				? "/" : Utility.convertUUIDToName(uuid.toString()))));
-		PotionType ptd = PotionType.UNCRAFTABLE;
+		PotionType ptd = PotionType.WATER;
 		PotionMeta pmd = null;
 		if(im instanceof PotionMeta)
 		{
@@ -616,7 +617,8 @@ public class GuiHandler
 					int level = pe.getAmplifier()+1;
 					long dur = pe.getDuration()*50;
 					String color = GuiHandler.getPotionColor(pe);
-					if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
+					if(pe.getType() == PotionEffectType.INSTANT_HEALTH 
+							|| pe.getType() == PotionEffectType.INSTANT_DAMAGE)
 					{
 						list.add(ChatApi.tl(color+
 								(plugin.getEnumTl() != null 
@@ -645,7 +647,7 @@ public class GuiHandler
 					int level = pe.getAmplifier()+1;
 					long dur = pe.getDuration()*50;
 					String color = GuiHandler.getPotionColor(pe);
-					if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
+					if(pe.getType() == PotionEffectType.INSTANT_HEALTH || pe.getType() == PotionEffectType.INSTANT_DAMAGE)
 					{
 						list.add(ChatApi.tl(color+
 								(plugin.getEnumTl() != null 
@@ -959,11 +961,11 @@ public class GuiHandler
 	{
 		String color = "";
 		if(pe.getType() == PotionEffectType.ABSORPTION || pe.getType() == PotionEffectType.CONDUIT_POWER
-				|| pe.getType() == PotionEffectType.DAMAGE_RESISTANCE || pe.getType() == PotionEffectType.DOLPHINS_GRACE
-				|| pe.getType() == PotionEffectType.FAST_DIGGING || pe.getType() == PotionEffectType.FIRE_RESISTANCE
-				|| pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HEALTH_BOOST
-				|| pe.getType() == PotionEffectType.HERO_OF_THE_VILLAGE || pe.getType() == PotionEffectType.INCREASE_DAMAGE
-				|| pe.getType() == PotionEffectType.INVISIBILITY || pe.getType() == PotionEffectType.JUMP
+				|| pe.getType() == PotionEffectType.RESISTANCE || pe.getType() == PotionEffectType.DOLPHINS_GRACE
+				|| pe.getType() == PotionEffectType.HASTE || pe.getType() == PotionEffectType.FIRE_RESISTANCE
+				|| pe.getType() == PotionEffectType.INSTANT_HEALTH || pe.getType() == PotionEffectType.HEALTH_BOOST
+				|| pe.getType() == PotionEffectType.HERO_OF_THE_VILLAGE || pe.getType() == PotionEffectType.STRENGTH
+				|| pe.getType() == PotionEffectType.INVISIBILITY || pe.getType() == PotionEffectType.JUMP_BOOST
 				|| pe.getType() == PotionEffectType.LUCK || pe.getType() == PotionEffectType.NIGHT_VISION
 				|| pe.getType() == PotionEffectType.REGENERATION || pe.getType() == PotionEffectType.SATURATION
 				|| pe.getType() == PotionEffectType.SLOW_FALLING || pe.getType() == PotionEffectType.SPEED
@@ -971,10 +973,10 @@ public class GuiHandler
 		{
 			color = "&9";
 		} else if(pe.getType() == PotionEffectType.BAD_OMEN || pe.getType() == PotionEffectType.BLINDNESS
-				|| pe.getType() == PotionEffectType.CONFUSION || pe.getType() == PotionEffectType.DARKNESS
-				|| pe.getType() == PotionEffectType.HARM || pe.getType() == PotionEffectType.HUNGER
+				|| pe.getType() == PotionEffectType.BLINDNESS || pe.getType() == PotionEffectType.DARKNESS
+				|| pe.getType() == PotionEffectType.INSTANT_DAMAGE || pe.getType() == PotionEffectType.HUNGER
 				|| pe.getType() == PotionEffectType.LEVITATION || pe.getType() == PotionEffectType.POISON
-				|| pe.getType() == PotionEffectType.SLOW || pe.getType() == PotionEffectType.SLOW_DIGGING
+				|| pe.getType() == PotionEffectType.SLOWNESS || pe.getType() == PotionEffectType.MINING_FATIGUE
 				|| pe.getType() == PotionEffectType.SLOW_FALLING || pe.getType() == PotionEffectType.UNLUCK
 				|| pe.getType() == PotionEffectType.WEAKNESS || pe.getType() == PotionEffectType.WITHER)
 		{

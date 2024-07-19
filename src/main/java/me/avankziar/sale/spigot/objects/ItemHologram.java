@@ -47,7 +47,7 @@ public class ItemHologram
 	{
 		ArrayList<String> lines = new ArrayList<>();
 		ItemMeta im = is.getItemMeta();
-		PotionType ptd = PotionType.UNCRAFTABLE;
+		PotionType ptd = PotionType.WATER;
 		PotionMeta pmd = null;
 		if(im instanceof PotionMeta)
 		{
@@ -127,7 +127,8 @@ public class ItemHologram
 						int level = pe.getAmplifier()+1;
 						long dur = pe.getDuration();
 						String color = GuiHandler.getPotionColor(pe);
-						if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
+						if(pe.getType() == PotionEffectType.INSTANT_HEALTH 
+								|| pe.getType() == PotionEffectType.INSTANT_DAMAGE)
 						{
 							lines.add(ChatApi.tl(color+
 									(SaLE.getPlugin().getEnumTl() != null 
@@ -155,7 +156,7 @@ public class ItemHologram
 						int level = pe.getAmplifier()+1;
 						long dur = pe.getDuration()*50;
 						String color = GuiHandler.getPotionColor(pe);
-						if(pe.getType() == PotionEffectType.HEAL || pe.getType() == PotionEffectType.HARM)
+						if(pe.getType() == PotionEffectType.INSTANT_HEALTH || pe.getType() == PotionEffectType.INSTANT_DAMAGE)
 						{
 							lines.add(ChatApi.tl(color+
 									(SaLE.getPlugin().getEnumTl() != null 

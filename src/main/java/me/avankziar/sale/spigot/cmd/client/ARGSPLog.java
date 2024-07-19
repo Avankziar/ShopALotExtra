@@ -8,9 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import main.java.me.avankziar.ifh.general.assistance.ChatApi;
-import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
-import main.java.me.avankziar.ifh.spigot.economy.currency.EconomyCurrency;
+import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
@@ -25,6 +23,8 @@ import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.ClientLog;
 import main.java.me.avankziar.sale.spigot.objects.ClientLog.WayType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
+import me.avankziar.ifh.general.economy.currency.CurrencyType;
+import me.avankziar.ifh.spigot.economy.currency.EconomyCurrency;
 
 public class ARGSPLog extends ArgumentModule
 {

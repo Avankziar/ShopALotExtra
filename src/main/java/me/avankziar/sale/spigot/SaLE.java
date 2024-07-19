@@ -24,15 +24,6 @@ import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.me.avankziar.ifh.general.modifier.ModificationType;
-import main.java.me.avankziar.ifh.general.modifier.Modifier;
-import main.java.me.avankziar.ifh.general.valueentry.ValueEntry;
-import main.java.me.avankziar.ifh.spigot.administration.Administration;
-import main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison;
-import main.java.me.avankziar.ifh.spigot.economy.Economy;
-import main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation;
-import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee;
-import main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
 import main.java.me.avankziar.sale.spigot.assistance.BackgroundTask;
 import main.java.me.avankziar.sale.spigot.assistance.Utility;
 import main.java.me.avankziar.sale.spigot.cmd.SaLECommandExecutor;
@@ -72,6 +63,15 @@ import main.java.me.avankziar.sale.spigot.listener.SignChangeListener;
 import main.java.me.avankziar.sale.spigot.metrics.Metrics;
 import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
 import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
+import me.avankziar.ifh.general.modifier.ModificationType;
+import me.avankziar.ifh.general.modifier.Modifier;
+import me.avankziar.ifh.general.valueentry.ValueEntry;
+import me.avankziar.ifh.spigot.administration.Administration;
+import me.avankziar.ifh.spigot.comparison.ItemStackComparison;
+import me.avankziar.ifh.spigot.economy.Economy;
+import me.avankziar.ifh.spigot.interfaces.EnumTranslation;
+import me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee;
+import me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
 
 public class SaLE extends JavaPlugin
 {
@@ -92,7 +92,7 @@ public class SaLE extends JavaPlugin
 	
 	public static String infoCommand = "/";
 	
-	private main.java.me.avankziar.ifh.spigot.shop.SignShop signShopProvider;
+	private me.avankziar.ifh.spigot.shop.SignShop signShopProvider;
 	
 	private Administration administrationConsumer;
 	private EnumTranslation enumTranslationConsumer;
@@ -453,7 +453,7 @@ public class SaLE extends JavaPlugin
 	    {
 	    	return;
 	    }
-		RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.administration.Administration> rsp = 
+		RegisteredServiceProvider<me.avankziar.ifh.spigot.administration.Administration> rsp = 
                 getServer().getServicesManager().getRegistration(Administration.class);
 		if (rsp == null) 
 		{
@@ -506,9 +506,9 @@ public class SaLE extends JavaPlugin
 						cancel();
 				    	return;
 				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.valueentry.ValueEntry> rsp = 
+				    RegisteredServiceProvider<me.avankziar.ifh.general.valueentry.ValueEntry> rsp = 
 		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.general.valueentry.ValueEntry.class);
+		                            		 me.avankziar.ifh.general.valueentry.ValueEntry.class);
 				    if(rsp == null) 
 				    {
 				    	i++;
@@ -569,7 +569,7 @@ public class SaLE extends JavaPlugin
 	    }
 		signShopProvider = new SignShopProvider(plugin);
     	plugin.getServer().getServicesManager().register(
-    			main.java.me.avankziar.ifh.spigot.shop.SignShop.class,
+    			me.avankziar.ifh.spigot.shop.SignShop.class,
     	signShopProvider,
         this,
         ServicePriority.Normal);
@@ -596,9 +596,9 @@ public class SaLE extends JavaPlugin
 						cancel();
 				    	return;
 				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation> rsp = 
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.interfaces.EnumTranslation> rsp = 
 		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.spigot.interfaces.EnumTranslation.class);
+		                            		 me.avankziar.ifh.spigot.interfaces.EnumTranslation.class);
 				    if(rsp == null) 
 				    {
 				    	i++;
@@ -628,9 +628,9 @@ public class SaLE extends JavaPlugin
 			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 	    	return;
 	    }
-	    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison> rsp = 
+	    RegisteredServiceProvider<me.avankziar.ifh.spigot.comparison.ItemStackComparison> rsp = 
                          getServer().getServicesManager().getRegistration(
-                        		 main.java.me.avankziar.ifh.spigot.comparison.ItemStackComparison.class);
+                        		 me.avankziar.ifh.spigot.comparison.ItemStackComparison.class);
 	    if(rsp == null) 
 	    {
 	    	log.severe("ItemStackComparison Interface dependency cannot found!");
@@ -658,7 +658,7 @@ public class SaLE extends JavaPlugin
 	    }
 		if(plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub"))
 		{
-			RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.economy.Economy> rsp = 
+			RegisteredServiceProvider<me.avankziar.ifh.spigot.economy.Economy> rsp = 
 	                getServer().getServicesManager().getRegistration(Economy.class);
 			if (rsp == null) 
 			{
@@ -729,9 +729,9 @@ public class SaLE extends JavaPlugin
 						cancel();
 						return;
 				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.modifier.Modifier> rsp = 
+				    RegisteredServiceProvider<me.avankziar.ifh.general.modifier.Modifier> rsp = 
 		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.general.modifier.Modifier.class);
+		                            		 me.avankziar.ifh.general.modifier.Modifier.class);
 				    if(rsp == null) 
 				    {
 				    	i++;
@@ -802,9 +802,9 @@ public class SaLE extends JavaPlugin
 						cancel();
 						return;
 				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee> rsp = 
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee> rsp = 
 		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee.class);
+		                            		 me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee.class);
 				    if(rsp == null) 
 				    {
 				    	i++;
@@ -845,9 +845,9 @@ public class SaLE extends JavaPlugin
 						cancel();
 						return;
 				    }
-				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee> rsp = 
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee> rsp = 
 		                             getServer().getServicesManager().getRegistration(
-		                            		 main.java.me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee.class);
+		                            		 me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee.class);
 				    if(rsp == null) 
 				    {
 				    	i++;

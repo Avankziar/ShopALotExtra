@@ -6,15 +6,15 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import main.java.me.avankziar.ifh.spigot.position.ServerLocation;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.MessageHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
+import me.avankziar.ifh.spigot.position.ServerLocation;
 
-public class SignShopProvider implements main.java.me.avankziar.ifh.spigot.shop.SignShop
+public class SignShopProvider implements me.avankziar.ifh.spigot.shop.SignShop
 {
 	private SaLE plugin;
 	
