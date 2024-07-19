@@ -74,7 +74,8 @@ Future Build
   1000er Trennzeichen für Shopschilder hinzufügen. (3500000 -> 3.500.000) Somit wäre es nicht mehr so anstrengend, Preise zu lesen, aber auch fehlerresistenter. + Kommastelle nicht mit anzeigen, wenn nicht vorhanden. (3500000.0 -> 3.500.000)
 
 Build 1-7-0
-- MC 1.21 Support
+- Java 21 Dependency
+- Spigot 1.21 Support
 - Wegen den API Änderungen, kann es zu noch nicht entdeckten Fehler kommen. Bitte meldet diese sofort!
 
 Build 1-6-3
