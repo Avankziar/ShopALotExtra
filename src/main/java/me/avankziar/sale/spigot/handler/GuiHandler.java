@@ -1,6 +1,6 @@
 package main.java.me.avankziar.sale.spigot.handler;
 
-import java.net.URL;
+import java.lang.reflect.Field;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -38,6 +38,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
@@ -442,7 +445,7 @@ public class GuiHandler
 		gui.add(i, is, SettingsLevel.NOLEVEL, true, map, new ClickFunction[0]);
 	}
 	
-	@SuppressWarnings("deprecation")
+	/*@SuppressWarnings("deprecation")
 	public static ItemStack getSkull(String paramString) 
 	{
 		ItemStack is = new ItemStack(Material.PLAYER_HEAD);
@@ -458,16 +461,21 @@ public class GuiHandler
 	    }
 	    is.setItemMeta(paramSkullMeta);
 	    return is;
-	}
+	}*/
 	
-	/*@SuppressWarnings("deprecation") für 1.20.4 nicht zulässig
 	public static ItemStack getSkull(String url) 
 	{
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+		return getSkull(url, 1);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static ItemStack getSkull(String url, int amount) 
+	{
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, amount, (short) 3);
         if (url == null || url.isEmpty())
             return skull;
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "null");
         byte[] encodedData = org.apache.commons.codec.binary.Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
         profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
         Field profileField = null;
@@ -484,7 +492,7 @@ public class GuiHandler
         }
         skull.setItemMeta(skullMeta);
         return skull;
-    }*/
+    }
 	
 	private static List<String> getLorePlaceHolder(SignShop ssh, Player player, List<String> lore, String playername)
 	{

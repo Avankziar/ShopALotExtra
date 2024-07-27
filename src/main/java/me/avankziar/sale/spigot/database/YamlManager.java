@@ -1187,29 +1187,41 @@ public class YamlManager
 				Arrays.asList(new Material[] {
 						Material.ACACIA_SIGN,
 						Material.ACACIA_WALL_SIGN,
+						Material.ACACIA_HANGING_SIGN,
 						Material.BIRCH_SIGN,
 						Material.BIRCH_WALL_SIGN,
+						Material.BIRCH_HANGING_SIGN,
+						Material.CHERRY_SIGN,
+						Material.CHERRY_WALL_SIGN,
+						Material.CHERRY_HANGING_SIGN,
 						Material.CRIMSON_SIGN,
 						Material.CRIMSON_WALL_SIGN,
+						Material.CRIMSON_HANGING_SIGN,
 						Material.DARK_OAK_SIGN,
 						Material.DARK_OAK_WALL_SIGN,
+						Material.DARK_OAK_HANGING_SIGN,
 						Material.JUNGLE_SIGN,
 						Material.JUNGLE_WALL_SIGN,
+						Material.JUNGLE_HANGING_SIGN,
 						Material.MANGROVE_SIGN,
 						Material.MANGROVE_WALL_SIGN,
+						Material.MANGROVE_HANGING_SIGN,
 						Material.OAK_SIGN,
 						Material.OAK_WALL_SIGN,
+						Material.OAK_HANGING_SIGN,
 						Material.SPRUCE_SIGN,
 						Material.SPRUCE_WALL_SIGN,
+						Material.SPRUCE_HANGING_SIGN,
 						Material.WARPED_SIGN,
 						Material.WARPED_WALL_SIGN,
+						Material.WARPED_HANGING_SIGN
 				});
 		for(Material m : signList)
 		{
 			String c = "";
 			switch(m)
 			{
-			default: continue;
+			default:
 			case OAK_SIGN:
 			case OAK_WALL_SIGN:
 			case BIRCH_SIGN:
@@ -1219,17 +1231,23 @@ public class YamlManager
 				c = "&0"; break;
 			case SPRUCE_SIGN:
 			case SPRUCE_WALL_SIGN:
+			case SPRUCE_HANGING_SIGN:
 			case ACACIA_SIGN:
 			case ACACIA_WALL_SIGN:
+			case ACACIA_HANGING_SIGN:
 			case DARK_OAK_SIGN:
 			case DARK_OAK_WALL_SIGN:
+			case DARK_OAK_HANGING_SIGN:
 			case MANGROVE_SIGN:
 			case MANGROVE_WALL_SIGN:
+			case MANGROVE_HANGING_SIGN:
 			case CRIMSON_SIGN:
 			case CRIMSON_WALL_SIGN:
+			case CRIMSON_HANGING_SIGN:
 				c = "&f"; break;
 			case WARPED_SIGN:
 			case WARPED_WALL_SIGN:
+			case WARPED_HANGING_SIGN:
 				c = "&e"; break;
 			}
 			matlanguageKeys.put(m.toString()+"_SignStartColor",

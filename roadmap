@@ -76,7 +76,15 @@ Future Build
 Build 1-7-0
 - Java 21 Dependency
 - Spigot 1.21 Support
-- Wegen den API Änderungen, kann es zu noch nicht entdeckten Fehler kommen. Bitte meldet diese sofort!
+- Es haben sich mit der 1.21 bestehende Materialnamen geändert. Damit geht einher, dass diese Shop mit diesem Item nicht mehr funktionieren.
+  Das betriff folgende Materialien:
+  - SCUTE > TURTLE_SCUTE
+  - GRASS > SHORT_GRASS
+  Auch kann es Probleme mit Bannern & Tränke geben, das sich dort ebenso viel geändert hat!
+  Bitte somit Updates machen und checken ob sich diese speziellen 1.20.4 Shop in 1.21 übertragen lassen.
+  Falls nicht, kommt kein Weg daran vorbei, diese Shop VOR dem Update abzubauen und im Nachhinein wieder auszubauen. Bzw. einfach das gelagerte Item 
+  kurzfristig herauszunehmen.
+
 
 Build 1-6-3
 - Köpfe von Spieler bspw. in der Blacklist, werden nun, falls warum auch immer diese Nicht geladen werden können, mit einem default Kopf geladen.
