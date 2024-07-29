@@ -350,8 +350,9 @@ public class ShopFunctionHandler
 						plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.YouDontHaveAccountToWithdraw")));
 				return;
 			}
+			taxation = taxation/100.0;
 			double w = samo*d;
-			if(taxation > 0 && taxation < 100)
+			if(taxation > 0.0 && taxation < 100.0)
 			{
 				w = samo*d + samo*d*taxation;
 			}
@@ -364,14 +365,20 @@ public class ShopFunctionHandler
 			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(player, samo*d);
 			if(!er.transactionSuccess())
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				if(er.errorMessage != null)
+				{
+					player.sendMessage(ChatApi.tl(er.errorMessage));
+				}
 				return;
 			}
 			er = plugin.getVaultEco().depositPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), w);
 			if(!er.transactionSuccess())
 			{
 				plugin.getVaultEco().depositPlayer(player, w);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				if(er.errorMessage != null)
+				{
+					player.sendMessage(ChatApi.tl(er.errorMessage));
+				}
 				return;
 			}
 			comment = comment + plugin.getYamlHandler().getLang().getString("Economy.CommentAddition")
@@ -675,6 +682,7 @@ public class ShopFunctionHandler
 				}
 				return;
 			}
+			taxation = taxation/100.0;
 			double w = samo*d;
 			if(taxation > 0 && taxation < 100)
 			{
@@ -693,7 +701,10 @@ public class ShopFunctionHandler
 			EconomyResponse er = plugin.getVaultEco().withdrawPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), samo*d);
 			if(!er.transactionSuccess())
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				if(er.errorMessage != null)
+				{
+					player.sendMessage(ChatApi.tl(er.errorMessage));
+				}
 				for(ItemStack is : islist)
 				{
 					player.getInventory().addItem(is);
@@ -704,7 +715,10 @@ public class ShopFunctionHandler
 			if(!er.transactionSuccess())
 			{
 				plugin.getVaultEco().depositPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()), w);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(er.errorMessage)));
+				if(er.errorMessage != null)
+				{
+					player.sendMessage(ChatApi.tl(er.errorMessage));
+				}
 				for(ItemStack is : islist)
 				{
 					player.getInventory().addItem(is);

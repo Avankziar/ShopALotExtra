@@ -57,7 +57,7 @@ public class ShopPostTransactionListener implements Listener
 			}
 		} else 
 		{
-			if(SaLE.getPlugin() != null)
+			if(SaLE.getPlugin().getIFHEco() != null)
 			{
 				slv = (sub2.containsKey(b64) 
 						? sub2.get(b64).addSell(iamount, costPerItem) 
