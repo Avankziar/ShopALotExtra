@@ -16,6 +16,7 @@ import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler.Type;
+import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -139,7 +140,7 @@ public class ARG_SearchSell extends ArgumentModule
 				w = player.getWorld().getName();
 				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 							+ Type.SIGNSHOP.getValue()+
-							"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ?"
+							"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
 							+ "AND `server_name` = ? AND `world` = ? "
 							+ "AND `x` < ? AND `x` > ? "
 							+ "AND `y` < ? AND `y` > ? "
@@ -160,7 +161,7 @@ public class ARG_SearchSell extends ArgumentModule
 			case "SERVER":
 				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
-						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ?"
+						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
@@ -170,7 +171,7 @@ public class ARG_SearchSell extends ArgumentModule
 			case "WORLD":
 				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
-						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ?"
+						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? AND `world` = ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
@@ -193,7 +194,7 @@ public class ARG_SearchSell extends ArgumentModule
 				int zmin = player.getLocation().getBlockZ()-r;
 				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
-						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ?"
+						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? AND `world` = ? "
 						+ "AND `x` < ? AND `x` > ? "
 						+ "AND `y` < ? AND `y` > ? "
@@ -207,7 +208,7 @@ public class ARG_SearchSell extends ArgumentModule
 			case "PROXY":
 				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
-						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ?"
+						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), "%"+searchDisplayname+"%", true, 0));
@@ -215,7 +216,7 @@ public class ARG_SearchSell extends ArgumentModule
 			case "SERVER":
 				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
-						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ?"
+						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
@@ -225,7 +226,7 @@ public class ARG_SearchSell extends ArgumentModule
 			case "WORLD":
 				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
-						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ?"
+						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? AND `world` = ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
@@ -243,6 +244,6 @@ public class ARG_SearchSell extends ArgumentModule
 			removeCooldown(player.getUniqueId());
 			return;
 		}
-		GuiHandler.openSearchBuy(list, player, SettingsLevel.NOLEVEL, true, searchMat, teleport_OR_Location);
+		GuiHandler.openSearch(list, player, GuiType.SEARCH_SELL, SettingsLevel.NOLEVEL, true, searchMat, teleport_OR_Location);
 	}
 }

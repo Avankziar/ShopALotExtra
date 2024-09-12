@@ -124,6 +124,10 @@ public class BackgroundTask
 					plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP,
 							"`id` = ?", ssid);
 				}
+				if(playerCount <= 0)
+				{
+					return;
+				}
 				plugin.getLogger().info("==========SaLE Database DeleteTask==========");
 				plugin.getLogger().info("Deleted PlayerData: "+playerCount);
 				plugin.getLogger().info("Deleted ClientLog: "+ClientLogCount);

@@ -71,5 +71,13 @@ public class SearchFunctionHandler
 					SaLE.getPlugin().getYamlHandler().getLang().getStringList("Cmd.Search."+buyOrSell+".LocationInfo"), player.getName());
 			list.stream().forEach(x -> player.sendMessage(ChatApi.tl(x)));
 		}
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				player.closeInventory();
+			}
+		}.runTask(SaLE.getPlugin());
 	}
 }

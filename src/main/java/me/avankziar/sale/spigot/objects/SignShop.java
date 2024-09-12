@@ -711,8 +711,8 @@ public class SignShop implements MysqlHandable
 				ps.setObject(i, o);
 				i++;
 			}
-			
 			ResultSet rs = ps.executeQuery();
+			
 			MysqlHandler.addRows(MysqlHandler.QueryType.READ, rs.getMetaData().getColumnCount());
 			ArrayList<Object> al = new ArrayList<>();
 			while (rs.next()) 

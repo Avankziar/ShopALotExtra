@@ -502,10 +502,17 @@ public class SignHandler
 		sign.update();
 	}
 	
+	public static Locale locale = null;
+	
+	static
+	{
+		
+	}
+	
 	public static String formatDouble(double d)
 	{
-		String locale = SaLE.getPlugin().getYamlHandler().getConfig().getString("SignShop.Sign.LocaleForDecimalAndThousandSeperator", "ENGLISH");
-		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.forLanguageTag(locale));
+		//String locale = SaLE.getPlugin().getYamlHandler().getConfig().getString("SignShop.Sign.LocaleForDecimalAndThousandSeperator", "ENGLISH");
+		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.getDefault());
 		formatter.setMaximumFractionDigits(3);
 		formatter.setMinimumFractionDigits(0);
 		return formatter.format(d);

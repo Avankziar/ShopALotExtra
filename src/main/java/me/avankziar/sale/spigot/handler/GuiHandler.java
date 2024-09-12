@@ -116,12 +116,12 @@ public class GuiHandler
 		openGui(ssh2, player, gt, gui, settingsLevel, closeInv);
 	}
 	
-	public static void openSearchBuy(ArrayList<SignShop> list, Player player, SettingsLevel settingsLevel, boolean closeInv,
+	public static void openSearch(ArrayList<SignShop> list, Player player, GuiType gt, SettingsLevel settingsLevel, boolean closeInv,
 			Material searchMat, boolean teleport_OR_Location)
 	{
-		GuiType gt = GuiType.SEARCH_BUY;
-		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, "Search:"+searchMat.toString(), settingsLevel);
-		
+		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6,
+				ChatApi.tl(plugin.getYamlHandler().getLang().getString("SearchFunctionHandler.Title")
+				.replace("%mat%", searchMat.toString())), settingsLevel);
 		openSearchGui(list, player, gt, gui, settingsLevel, closeInv, searchMat, teleport_OR_Location);
 	}
 	
@@ -497,7 +497,7 @@ public class GuiHandler
 		{
 			if(fillNotDefineGuiSlots)
 			{
-				filler(gui, 0, i, filler);
+				filler(gui, 0, j, filler);
 			}
 		}
 		new BukkitRunnable()

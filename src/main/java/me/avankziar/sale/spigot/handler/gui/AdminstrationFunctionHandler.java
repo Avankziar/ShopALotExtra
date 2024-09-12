@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
+import main.java.me.avankziar.sale.spigot.assistance.Utility;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandExecuteType;
 import main.java.me.avankziar.sale.spigot.cmdtree.CommandSuggest;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
@@ -222,6 +224,10 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, false, true); break;
 		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, false); break;
 		case ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE_WORLD: addPlayerToList(player, ssh, guiType, openInv, settingsLevel, ListedType.CUSTOM, otheruuid, true, true); break;
+		case ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_BLACKLIST: sendPlayerOnList(player, ssh, ListedType.BLACKLIST); break;
+		case ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_WHITELIST: sendPlayerOnList(player, ssh, ListedType.WHITELIST); break;
+		case ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_MEMBER: sendPlayerOnList(player, ssh, ListedType.MEMBER); break;
+		case ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_CUSTOM: sendPlayerOnList(player, ssh, ListedType.CUSTOM); break;
 		}
 		new BukkitRunnable()
 		{
@@ -1124,5 +1130,30 @@ public class AdminstrationFunctionHandler
 							plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+listType.toString()))));
 		}
 		GuiHandler.openKeyOrNumInput(ssh, player, gt, settingsLevel, " Keyboard", false);
+	}
+	
+	private static void sendPlayerOnList(Player player, SignShop ssh,
+			ListedType listType)
+	{
+		List<String> players = ShopAccessType.convert(plugin.getMysqlHandler().getFullList(MysqlHandler.Type.SHOPACCESSTYPE,
+				"`id` ASC", "`sign_shop_id` = ? AND `listed_type` = ?",	ssh.getId(), listType.toString()))
+				.stream()
+				.map(x -> x.getUUID())
+				.map(x -> Utility.convertUUIDToName(x.toString()))
+				.filter(x -> x != null)
+				.collect(Collectors.toList());
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.Listed.List")
+				.replace("%players%", "["+String.join(", ", players)+"]")
+				.replace("%list%", 
+						plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.ListedType."+listType.toString()))));
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				player.closeInventory();
+			}
+		}.runTask(plugin);
+		return;
 	}
 }

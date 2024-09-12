@@ -16,6 +16,7 @@ import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler.Type;
+import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -133,25 +134,25 @@ public class ARG_SearchBuy extends ArgumentModule
 				s = plugin.getServername();
 				w = player.getWorld().getName();
 				list = SignShop.convert(plugin.getMysqlHandler().getList(Type.SIGNSHOP, orderBy, 0, 53,
-						"`material` = ? AND `item_storage_current` > ? AND `can_buy` = ? AND `buy_amount` > ?"
+						"`material` = ? AND `item_storage_current` > ? AND `can_buy` = ? AND `buy_amount` > ? "
 						+ "AND `server_name` = ? AND `world` = ? "
 						+ "AND `x` < ? AND `x` > ? "
 						+ "AND `y` < ? AND `y` > ? "
 						+ "AND `z` < ? AND `z` > ?",
-						searchMat.toString(), 1, true, 0,
+						searchMat.toString(), 0, true, 0,
 						s, w, xmax, xmin, ymax, ymin, zmax, zmin));
 				break;
 			case "PROXY":
 				list = SignShop.convert(plugin.getMysqlHandler().getList(Type.SIGNSHOP, orderBy, 0, 53,
 						"`material` = ? AND `item_storage_current` > ?  AND `can_buy` = ? AND `buy_amount` > ?",
-						searchMat.toString(), 1, true, 0));
+						searchMat.toString(), 0, true, 0));
 				break;
 			case "SERVER":
 				s = plugin.getServername();
 				list = SignShop.convert(plugin.getMysqlHandler().getList(Type.SIGNSHOP, orderBy, 0, 53,
 						"`material` = ? AND `item_storage_current` > ? AND `can_buy` = ? AND `buy_amount` > ? "
 						+ "AND `server_name` = ?",
-						searchMat.toString(), 1, true, 0, s));
+						searchMat.toString(), 0, true, 0, s));
 				break;
 			case "WORLD":
 				s = plugin.getServername();
@@ -159,7 +160,7 @@ public class ARG_SearchBuy extends ArgumentModule
 				list = SignShop.convert(plugin.getMysqlHandler().getList(Type.SIGNSHOP, orderBy, 0, 53,
 						"`material` = ? AND `item_storage_current` > ? AND `can_buy` = ? AND `buy_amount` > ? "
 						+ "AND `server_name` = ? AND `world` = ? ",
-						searchMat.toString(), 1, true, 0, s, w));
+						searchMat.toString(), 0, true, 0, s, w));
 				break;
 			}
 		} else
@@ -182,27 +183,27 @@ public class ARG_SearchBuy extends ArgumentModule
 						+ "AND `x` < ? AND `x` > ? "
 						+ "AND `y` < ? AND `y` > ? "
 						+ "AND `z` < ? AND `z` > ?",
-						searchMat.toString(), "%"+searchDisplayname+"%", 1, true, 0, s, w, xmax, xmin, ymax, ymin, zmax, zmin));
+						searchMat.toString(), "%"+searchDisplayname+"%", 0, true, 0, s, w, xmax, xmin, ymax, ymin, zmax, zmin));
 				break;
 			case "PROXY":
 				list = SignShop.convert(plugin.getMysqlHandler().getList(Type.SIGNSHOP, orderBy, 0, 53,
-						"`material` = ? AND `display_name` LIKE ? AND `item_storage_current` > ? AND `can_buy` = ? AND `buy_amount` > ? ",
-						searchMat.toString(), "%"+searchDisplayname+"%", 1, true, 0));
+						"`material` = ? AND `display_name` LIKE ? AND `item_storage_current` > ? AND `can_buy` = ? AND `buy_amount` > ?",
+						searchMat.toString(), "%"+searchDisplayname+"%", 0, true, 0));
 				break;
 			case "SERVER":
 				s = plugin.getServername();
 				list = SignShop.convert(plugin.getMysqlHandler().getList(Type.SIGNSHOP, orderBy, 0, 53,
 						"`material` = ? AND `display_name` LIKE ? AND `item_storage_current` > ? AND `can_buy` = ? AND `buy_amount` > ? "
 						+ "AND `server_name` = ?",
-						searchMat.toString(), "%"+searchDisplayname+"%", 1, true, 0, s));
+						searchMat.toString(), "%"+searchDisplayname+"%", 0, true, 0, s));
 				break;
 			case "WORLD":
 				s = plugin.getServername();
 				w = player.getWorld().getName();
 				list = SignShop.convert(plugin.getMysqlHandler().getList(Type.SIGNSHOP, orderBy, 0, 53,
 						"`material` = ? AND `display_name` LIKE ? AND `item_storage_current` > ? AND `can_buy` = ? AND `buy_amount` > ? "
-						+ "AND `server_name` = ? AND `world` = ? ",
-						searchMat.toString(), "%"+searchDisplayname+"%", 1, true, 0, s, w));
+						+ "AND `server_name` = ? AND `world` = ?",
+						searchMat.toString(), "%"+searchDisplayname+"%", 0, true, 0, s, w));
 				break;
 			}
 		}
@@ -214,6 +215,6 @@ public class ARG_SearchBuy extends ArgumentModule
 			removeCooldown(player.getUniqueId());
 			return;
 		}
-		GuiHandler.openSearchBuy(list, player, SettingsLevel.NOLEVEL, true, searchMat, teleport_OR_Location);
+		GuiHandler.openSearch(list, player, GuiType.SEARCH_BUY, SettingsLevel.NOLEVEL, true, searchMat, teleport_OR_Location);
 	}
 }

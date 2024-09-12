@@ -1,5 +1,4 @@
 Future Build Ideas
-- Worldguardflag für das erstellen von Shops
 - Shop ist leer, kommt nicht, wenn der Shop gerade mit der Aktion leer gekauft ist.
 - Adminshops sollen eine neue ShopGui methode bekommen/weiterleiten an diese, damit auch der Eigentümer diesen benutzen kann.
 - Also, es soll einen Boolean in der Config existierten, der das automatische Löschen von Shops verhindert.
@@ -51,12 +50,7 @@ Future Build Ideas
 - Listeneinträge für Black/White etc. anzeigen lassen, wer dadrauf ist.
   
 Future Build
-- Copy und Move Funktion per Schilder einbauen. Um Shopschilder repositionieren oder seine Einstellung zu kopieren.
-  (Bis auf inhalt und lagergröße) (Auch Whitelist etc. mitnehemn)
-  1. Zeile  [shop]
-  2. Zeile  move/copy
-  3. Zeile: shopID
-  Auf das neue Schild schreiben und erstellen, bzw. ändern. Sollte das Schild auf dem gleichen Server sein, die Schrift entfernen.
+
   
 Build 1-8-0
 - InterfaceHub spigot.teleport.Teleport als Consumer angeschlossen.
@@ -76,6 +70,8 @@ Build 1-8-0
   1. Zeile  [SaleShop]
   2. Zeile  [Move] oder [Copy]
   3. Zeile: ShopID
+- Ein Button im AdministrationGui hinzugefügt, welche per Chat anzeigt, welcher Spieler sich für diesen Shop auf welcher Liste steht.
+  Zum sehen diesen Button, müssen die Gui Datein neu erstellt werden.
 
 Build 1-7-1
 - Vault Buy / Sell Funktion fix

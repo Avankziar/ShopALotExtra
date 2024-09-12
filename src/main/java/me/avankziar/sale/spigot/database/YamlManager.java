@@ -501,14 +501,6 @@ public class YamlManager
 				"Wenn 'true' dann wird die 4 Zeile des Schildes des Shops in Stacks berechnet, ansteller einzelner Items.",
 				"",
 				"If 'true' then the 4 line of the store's sign is calculated in stacks instead of individual items."});
-		addConfig("SignShop.Sign.LocaleForDecimalAndThousandSeperator",
-				new Object[] {
-				"ENGLISH"},
-				new Object[] {
-				"",
-				"Sprache für die Seperatoren von Dezimal- und Tausend-Zeichen. Siehe https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html",
-				"",
-				"Language for the separators of decimal and thousand characters. See https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html"});
 		addConfig("SignShop.Tax.BuyInPercent",
 				new Object[] {
 				1.0},
@@ -747,6 +739,22 @@ public class YamlManager
 				"&bCommandright for &f/sale shop dailylog",
 				"&eBefehl zeigt die Shop Aktivitäten des Eigentümer an.",
 				"&eCommand for displays the shop activities of the owner.");
+		argumentInput("sale_shop_searchbuy", "searchbuy", basePermission+".signshop",
+				"/sale shop searchbuy [Material] [Displayname...]", "/sale shop searchbuy", false,
+				"&c/sale shop searchbuy [Material] [Displayname...] &f| Sucht alle Shops nach den angegebenen Parameter für Items zum kaufen.",
+				"&c/sale shop searchbuy [Material] [Displayname...] &f| Searches all stores for the specified parameters for items to buy.",
+				"&bBefehlsrecht für &f/sale shop searchbuy",
+				"&bCommandright for &f/sale shop searchbuy",
+				"&eSucht alle Shops nach den angegebenen Parameter für Items zum kaufen.",
+				"&eSearches all stores for the specified parameters for items to buy.");
+		argumentInput("sale_shop_searchsell", "searchsell", basePermission+".signshop",
+				"/sale shop searchsell [Material] [Displayname...]", "/sale shop searchsell", false,
+				"&c/sale shop searchsell [Material] [Displayname...] &f| Sucht alle Shops nach den angegebenen Parameter für Items zum verkaufen.",
+				"&c/sale shop searchsell [Material] [Displayname...] &f| Searches all stores for the specified parameters for items to sell.",
+				"&bBefehlsrecht für &f/sale shop searchsell",
+				"&bCommandright for &f/sale shop searchsell",
+				"&eSucht alle Shops nach den angegebenen Parameter für Items zum verkaufen.",
+				"&eSearches all stores for the specified parameters for items to sell.");
 		argumentInput("sale_client", "client", basePermission,
 				"/sale client", "/sale client ", false,
 				"&c/sale client &f| Zwischenbefehl.",
@@ -1257,6 +1265,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast %amount% Spieler/Einträge von der Liste %list% &eentfernt.",
 						"&eYou have removed %amount% players/entrys from the %list% &elist."}));
+		languageKeys.put("AdminstrationFunctionHandler.Listed.List"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eFolgende Spieler stehen auf Liste %list%: %players%",
+						"&eThe following players are on list %list%: %players%"}));
 		languageKeys.put("AdminstrationFunctionHandler.DiscountStartWorld"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast von %amount% Shops die Rabattstartzeit gesetzt.",
@@ -1372,6 +1384,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast den Shop &c%shop% &edeabonniert!",
 						"&eYou have unsubscribed the shop &a%shop%&e!"}));
+		languageKeys.put("SearchFunctionHandler.Title"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eSuche: &f%mat%",
+						"&eSearch: &f%mat%"}));
 		languageKeys.put("SignShopProvider.GetOutOfStorage"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eVom Shop &f%shopname% &ewurden &f%amount% &eItems ins Lager verschoben.",
@@ -2260,6 +2276,44 @@ public class YamlManager
 		admin.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_ADDLISTEDTYPE_PLAYER_OPENKEYBOARD_CUSTOM.toString()}));
+		path = "12"; //PlayersOnList
+		admin.put(path+".SettingLevel",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						SettingsLevel.EXPERT.toString()}));
+		admin.put(path+".Material",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						Material.ZOMBIE_HEAD.toString()}));
+		admin.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&dSpieler auf den jeweiligen Listen",
+						"&dPlayers on the respective lists"}));
+		admin.put(path+".Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bÖffnet einen Chateintrag,",
+						"&bvon Spieler die auf den jeweiligen Listen sind.",
+						"&cLinksklick &bfür die Blacklist.",
+						"&cRechtsklick &bfür die Whitelist.",
+						"&cShift-L.Klick &bfür die Mitglieder.",
+						"&cShift-R.Klick &bfür die benutzerdefinierte Liste.",
+						
+						"&bOpens a chatentry",
+						"&bof players from the respective lists.",
+						"&cLeftclick &bfor the blacklist.",
+						"&cRightclick &bfor the whitelist.",
+						"&cShift-leftclick &bfor the members.",
+						"&cShift-rightclick &bfor the user-defined list."}));
+		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_BLACKLIST.toString()}));
+		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_WHITELIST.toString()}));
+		admin.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_MEMBER.toString()}));
+		admin.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_CUSTOM.toString()}));
 		path = "20"; //ToggleItemHologram
 		admin.put(path+".Permission",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -5005,10 +5059,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"",
 						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
-						"&eKosten: &f%buyraw1%",
+						"&eKosten: &f%sellraw1%",
 						"",
 						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
-						"&eKosten: &f%buyraw1%",}));
+						"&eKosten: &f%sellraw1%",}));
 		ssell.put("ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.SEARCH_SELL.toString()}));
