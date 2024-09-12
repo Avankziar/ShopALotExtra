@@ -16,6 +16,7 @@ import main.java.me.avankziar.sale.spigot.gui.objects.ClickType;
 import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.AdminstrationFunctionHandler;
+import main.java.me.avankziar.sale.spigot.handler.gui.SearchFunctionHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.ShopFunctionHandler;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
@@ -54,15 +55,14 @@ public class UpperListener implements Listener
 		}
 		int sshID = event.getValuesInteger().get(GuiHandler.SIGNSHOP_ID);
 		SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", sshID);
-		if(ssh == null)
-		{
-			return;
-		}
 		UUID ou = null;
 		if(event.getValuesString().containsKey(GuiHandler.PLAYER_UUID))
 		{
 			ou = UUID.fromString(event.getValuesString().get(GuiHandler.PLAYER_UUID));
 		}
+		boolean teleport_OR_location = event.getValuesString().containsKey(GuiHandler.SEARCH_TELEPORT_OR_LOCATION)
+				? Boolean.valueOf(event.getValuesString().get(GuiHandler.SEARCH_TELEPORT_OR_LOCATION))
+				: false;
 		ClickType ct = getClickFunctionType(event.getEvent().getClick(), event.getEvent().getHotbarButton());
 		if(ct == null)
 		{
@@ -110,8 +110,8 @@ public class UpperListener implements Listener
 				@Override
 				public void run()
 				{
-					AdminstrationFunctionHandler
-					.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel(), otheruuid);
+					AdminstrationFunctionHandler.doClickFunktion(gt, cft, player, ssh,
+							event.getEvent().getClickedInventory(), event.getSettingsLevel(), otheruuid);
 				}
 			}.runTaskAsynchronously(plugin);
 			break;
@@ -122,6 +122,17 @@ public class UpperListener implements Listener
 				public void run()
 				{
 					ShopFunctionHandler.doClickFunktion(gt, cft, player, ssh, event.getEvent().getClickedInventory(), event.getSettingsLevel());
+				}
+			}.runTaskAsynchronously(plugin);
+			break;
+		case SEARCH_BUY:
+		case SEARCH_SELL:
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					SearchFunctionHandler.doClickFunktion(cft, player, ssh, event.getEvent().getClickedInventory(), teleport_OR_location);
 				}
 			}.runTaskAsynchronously(plugin);
 			break;

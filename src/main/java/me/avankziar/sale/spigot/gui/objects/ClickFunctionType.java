@@ -217,5 +217,9 @@ public enum ClickFunctionType
 	SHOP_SELL_64,
 	SHOP_SELL_576,
 	SHOP_SELL_1728,
-	SHOP_SELL_2304
+	SHOP_SELL_2304,
+	
+	//Search Gui
+	SEARCH_BUY,
+	SEARCH_SELL
 }

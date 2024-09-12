@@ -168,6 +168,38 @@ public class PlayerData implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
+	@Override
+	public ArrayList<Object> get(Connection conn, String tablename, String sql, Object... whereObject)
+	{
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int i = 1;
+			for(Object o : whereObject)
+			{
+				ps.setObject(i, o);
+				i++;
+			}
+			
+			ResultSet rs = ps.executeQuery();
+			MysqlHandler.addRows(MysqlHandler.QueryType.READ, rs.getMetaData().getColumnCount());
+			ArrayList<Object> al = new ArrayList<>();
+			while (rs.next()) 
+			{
+				al.add(new PlayerData(rs.getInt("id"),
+						UUID.fromString(rs.getString("player_uuid")),
+						rs.getString("player_name"),
+						SettingsLevel.valueOf(rs.getString("last_setting_level")),
+						rs.getLong("last_login")));
+			}
+			return al;
+		} catch (SQLException e)
+		{
+			this.log(Level.WARNING, "SQLException! Could not get a "+this.getClass().getSimpleName()+" Object!", e);
+		}
+		return new ArrayList<>();
+	}
+	
 	public static ArrayList<PlayerData> convert(ArrayList<Object> arrayList)
 	{
 		ArrayList<PlayerData> l = new ArrayList<>();

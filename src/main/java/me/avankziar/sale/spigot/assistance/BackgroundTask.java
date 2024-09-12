@@ -453,7 +453,7 @@ public class BackgroundTask
 	
 	public void transactionShopLogTimer()
 	{
-		long runEveryXMin = plugin.getYamlHandler().getConfig().getInt("SignShop.TransactionSummary.ShopLop.RunTimerInMinutes", 15)*60;
+		long runEveryXMin = plugin.getYamlHandler().getConfig().getInt("SignShop.TransactionSummary.ShopLog.RunTimerInMinutes", 15)*60;
 		new BukkitRunnable()
 		{
 			@Override

@@ -335,4 +335,25 @@ public class MysqlHandler
 		}
 		return new ArrayList<>();
 	}
+	
+	public ArrayList<Object> getSQL(Type type, String sql, Object...whereObject)
+	{
+		Object object = type.getObject();
+		if(object instanceof MysqlHandable)
+		{
+			MysqlHandable mh = (MysqlHandable) object;
+			try (Connection conn = plugin.getMysqlSetup().getConnection();)
+			{
+				ArrayList<Object> list = mh.get(conn, type.getValue(), sql, whereObject);
+				if(!list.isEmpty())
+				{
+					return list;
+				}
+			} catch (Exception e)
+			{
+				mh.log(Level.WARNING, "Could not create "+object.getClass().getName()+" Object!", e);
+			}
+		}
+		return new ArrayList<>();
+	}
 }

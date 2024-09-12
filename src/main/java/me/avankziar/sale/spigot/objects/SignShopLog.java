@@ -290,6 +290,44 @@ public class SignShopLog implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
+	@Override
+	public ArrayList<Object> get(Connection conn, String tablename, String sql, Object... whereObject)
+	{
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int i = 1;
+			for(Object o : whereObject)
+			{
+				ps.setObject(i, o);
+				i++;
+			}
+			
+			ResultSet rs = ps.executeQuery();
+			MysqlHandler.addRows(MysqlHandler.QueryType.READ, rs.getMetaData().getColumnCount());
+			ArrayList<Object> al = new ArrayList<>();
+			while (rs.next()) 
+			{
+				al.add(new SignShopLog(rs.getInt("id"),
+						rs.getInt("sign_shop_id"),
+						rs.getLong("date_time"),
+						rs.getString("itemstack_base64"),
+						rs.getString("display_name"),
+						rs.getString("material"),
+						rs.getString("way_type"),
+						rs.getDouble("amount"),
+						rs.getInt("item_amount"),
+						UUID.fromString(rs.getString("client")),
+						UUID.fromString(rs.getString("player_uuid"))));
+			}
+			return al;
+		} catch (SQLException e)
+		{
+			this.log(Level.WARNING, "SQLException! Could not get a "+this.getClass().getSimpleName()+" Object!", e);
+		}
+		return new ArrayList<>();
+	}
+	
 	public static ArrayList<SignShopLog> convert(ArrayList<Object> arrayList)
 	{
 		ArrayList<SignShopLog> l = new ArrayList<>();

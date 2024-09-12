@@ -14,6 +14,7 @@ import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
+import main.java.me.avankziar.sale.spigot.hook.WorldGuardHook;
 import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
 import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
@@ -63,6 +64,14 @@ public class SignChangeListener implements Listener
 		}
 		if(!ModifierValueEntry.hasPermission(player, Bypass.Permission.SHOP_CREATION))
 		{
+			if(SaLE.getWorldGuard())
+			{
+				if(!WorldGuardHook.canCreateShop(player, event.getBlock().getLocation()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.WorldGuardCreateDeny")));
+					return;
+				}
+			}
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 			return;
 		}

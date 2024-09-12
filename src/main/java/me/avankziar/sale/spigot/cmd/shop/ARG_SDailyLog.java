@@ -22,11 +22,11 @@ import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import main.java.me.avankziar.sale.spigot.objects.SignShopDailyLog;
 
-public class ARGSDailyLog extends ArgumentModule
+public class ARG_SDailyLog extends ArgumentModule
 {
 	private SaLE plugin;
 	
-	public ARGSDailyLog(SaLE plugin, ArgumentConstructor argumentConstructor)
+	public ARG_SDailyLog(SaLE plugin, ArgumentConstructor argumentConstructor)
 	{
 		super(argumentConstructor);
 		this.plugin = plugin;

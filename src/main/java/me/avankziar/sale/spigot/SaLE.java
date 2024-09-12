@@ -34,10 +34,12 @@ import main.java.me.avankziar.sale.spigot.cmd.sale.ARGDebug;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGDelete;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShop;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShopping;
-import main.java.me.avankziar.sale.spigot.cmd.shop.ARGBreakToggle;
-import main.java.me.avankziar.sale.spigot.cmd.shop.ARGSDailyLog;
-import main.java.me.avankziar.sale.spigot.cmd.shop.ARGSLog;
-import main.java.me.avankziar.sale.spigot.cmd.shop.ARGToggle;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_BreakToggle;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SDailyLog;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SLog;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SearchBuy;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SearchSell;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_Toggle;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
@@ -53,6 +55,7 @@ import main.java.me.avankziar.sale.spigot.gui.listener.UpperListener;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
 import main.java.me.avankziar.sale.spigot.handler.MaterialHandler;
+import main.java.me.avankziar.sale.spigot.hook.WorldGuardHook;
 import main.java.me.avankziar.sale.spigot.ifh.SignShopProvider;
 import main.java.me.avankziar.sale.spigot.listener.BlockBreakListener;
 import main.java.me.avankziar.sale.spigot.listener.PlayerArmorStandManipulateListener;
@@ -70,6 +73,7 @@ import me.avankziar.ifh.spigot.administration.Administration;
 import me.avankziar.ifh.spigot.comparison.ItemStackComparison;
 import me.avankziar.ifh.spigot.economy.Economy;
 import me.avankziar.ifh.spigot.interfaces.EnumTranslation;
+import me.avankziar.ifh.spigot.teleport.Teleport;
 import me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee;
 import me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
 
@@ -102,8 +106,15 @@ public class SaLE extends JavaPlugin
 	private Modifier modifierConsumer;
 	private MessageToBungee mtbConsumer;
 	private BaseComponentToBungee bctbConsumer;
+	private Teleport teleportConsumer;
+	private static boolean worldGuard = false;
 	
 	private net.milkbowl.vault.economy.Economy vEco;
+	
+	public void onLoad() 
+	{
+		setupWordEditGuard();
+	}
 	
 	public void onEnable()
 	{
@@ -229,15 +240,19 @@ public class SaLE extends JavaPlugin
 		
 		ArgumentConstructor breaktoggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_BREAKTOGGLE, "sale_shop_breaktoggle",
 				1, 1, 1, false, null);
-		new ARGBreakToggle(plugin, breaktoggle);
+		new ARG_BreakToggle(plugin, breaktoggle);
 		ArgumentConstructor toggle = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_TOGGLE, "sale_shop_toggle", 1, 1, 1, false, null);
-		new ARGToggle(plugin, toggle);
+		new ARG_Toggle(plugin, toggle);
 		ArgumentConstructor slog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_LOG, "sale_shop_log", 1, 1, 5, false, null);
-		new ARGSLog(plugin, slog);
+		new ARG_SLog(plugin, slog);
 		ArgumentConstructor sdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_DAILYLOG, "sale_shop_dailylog", 1, 1, 4, false, null);
-		new ARGSDailyLog(plugin, sdailylog);
+		new ARG_SDailyLog(plugin, sdailylog);
+		ArgumentConstructor searchbuy = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_SEARCHBUY, "sale_shop_searchbuy", 1, 1, 999, false, null);
+		new ARG_SearchBuy(plugin, searchbuy);
+		ArgumentConstructor searchsell = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_SEARCHBUY, "sale_shop_searchsell", 1, 1, 999, false, null);
+		new ARG_SearchSell(plugin, searchsell);
 		ArgumentConstructor shop = new ArgumentConstructor(CommandExecuteType.SALE_SHOP, "sale_shop", 0, 0, 0, false, null,
-				breaktoggle, delete, toggle, slog, sdailylog);
+				breaktoggle, delete, toggle, slog, sdailylog, searchbuy, searchsell);
 		new ARGShop(plugin, shop);
 		
 		
@@ -481,6 +496,7 @@ public class SaLE extends JavaPlugin
 		setupIFHEconomy();
 		setupIFHMessageToBungee();
 		setupIFHBaseComponentToBungee();
+		setupIFHTeleport();
 	}
 	
 	public void setupIFHValueEntry()
@@ -867,6 +883,62 @@ public class SaLE extends JavaPlugin
 	public BaseComponentToBungee getBctB()
 	{
 		return bctbConsumer;
+	}
+	
+	private void setupIFHTeleport() 
+	{
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.teleport.Teleport> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 me.avankziar.ifh.spigot.teleport.Teleport.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    teleportConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> Teleport.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public Teleport getTeleport()
+	{
+		return teleportConsumer;
+	}
+	
+	private void setupWordEditGuard()
+	{
+		if(Bukkit.getPluginManager().getPlugin("WorldGuard") != null)
+		{
+			worldGuard = WorldGuardHook.init();
+		}
+	}
+	
+	public static boolean getWorldGuard()
+	{
+		return worldGuard;
 	}
 	
 	public void setupBstats()

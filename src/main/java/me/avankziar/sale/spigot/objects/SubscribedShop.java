@@ -155,6 +155,38 @@ public class SubscribedShop implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
+	@Override
+	public ArrayList<Object> get(Connection conn, String tablename, String sql, Object... whereObject)
+	{
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int i = 1;
+			for(Object o : whereObject)
+			{
+				ps.setObject(i, o);
+				i++;
+			}
+			
+			ResultSet rs = ps.executeQuery();
+			MysqlHandler.addRows(MysqlHandler.QueryType.READ, rs.getMetaData().getColumnCount());
+			ArrayList<Object> al = new ArrayList<>();
+			while (rs.next()) 
+			{
+				al.add(new SubscribedShop(
+						rs.getInt("id"),
+						UUID.fromString(rs.getString("player_uuid")),
+						rs.getInt("sign_shop_id"),
+						rs.getLong("subscribed_date_time")));
+			}
+			return al;
+		} catch (SQLException e)
+		{
+			this.log(Level.WARNING, "SQLException! Could not get a "+this.getClass().getSimpleName()+" Object!", e);
+		}
+		return new ArrayList<>();
+	}
+	
 	public static ArrayList<SubscribedShop> convert(ArrayList<Object> arrayList)
 	{
 		ArrayList<SubscribedShop> l = new ArrayList<>();

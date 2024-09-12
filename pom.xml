@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>main.java.me.avankziar</groupId>
 	<artifactId>shopalotextra</artifactId>
-	<version>1-7-1</version>
+	<version>1-8-0</version>
 	<name>ShopALotExtra</name>
 	<url>https://github.com/${repository-owner}/${repository-name}.git</url>
     <scm>
@@ -75,7 +75,7 @@
 			    <artifactId>maven-jar-plugin</artifactId>
 			    <version>2.4</version>
 			    <configuration>
-			      <outputDirectory>F:\Datein\Dev\Dev Server 1.21</outputDirectory>
+			      <outputDirectory>F:\Datein\Dev\Dev Server 1.21.1</outputDirectory>
 			      <finalName>${project.artifactId}-${project.version}</finalName>
 			    </configuration>
 			    <executions>
@@ -111,13 +111,18 @@
             <id>minecraft-repo</id>
             <url>https://libraries.minecraft.net/</url>
         </repository>
+         <!-- WorldGuard -->
+        <repository>
+	        <id>sk89q-repo</id>
+	        <url>https://maven.enginehub.org/repo/</url>
+	    </repository>
 	</repositories>
 	<dependencies>
 		<!--Spigot API -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.21-R0.1-SNAPSHOT</version>
+			<version>1.21.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- MysqlConnector -->
@@ -161,6 +166,13 @@
 		  <artifactId>commons-io</artifactId>
 		  <version>2.16.1</version>
 		  <scope>provided</scope>
+		</dependency>
+		 <!-- WorldGuard -->
+        <dependency>
+		    <groupId>com.sk89q.worldguard</groupId>
+		    <artifactId>worldguard-bukkit</artifactId>
+		    <version>7.0.10</version>
+		    <scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

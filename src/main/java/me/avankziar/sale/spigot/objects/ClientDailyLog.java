@@ -208,6 +208,41 @@ public class ClientDailyLog implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
+	@Override
+	public ArrayList<Object> get(Connection conn, String tablename, String sql, Object... whereObject)
+	{
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int i = 1;
+			for(Object o : whereObject)
+			{
+				ps.setObject(i, o);
+				i++;
+			}
+			
+			ResultSet rs = ps.executeQuery();
+			MysqlHandler.addRows(MysqlHandler.QueryType.READ, rs.getMetaData().getColumnCount());
+			ArrayList<Object> al = new ArrayList<>();
+			while (rs.next()) 
+			{
+				al.add(new ClientDailyLog(
+						rs.getInt("id"),
+						UUID.fromString(rs.getString("player_uuid")),
+						rs.getLong("dates"),
+						rs.getDouble("buy_amount"),
+						rs.getDouble("sell_amount"),
+						rs.getInt("buy_item_amount"),
+						rs.getInt("sell_item_amount")));
+			}
+			return al;
+		} catch (SQLException e)
+		{
+			this.log(Level.WARNING, "SQLException! Could not get a "+this.getClass().getSimpleName()+" Object!", e);
+		}
+		return new ArrayList<>();
+	}
+	
 	public static ArrayList<ClientDailyLog> convert(ArrayList<Object> arrayList)
 	{
 		ArrayList<ClientDailyLog> l = new ArrayList<>();

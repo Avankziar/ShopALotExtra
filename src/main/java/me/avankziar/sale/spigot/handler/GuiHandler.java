@@ -65,6 +65,7 @@ public class GuiHandler
 	private static SaLE plugin = SaLE.getPlugin();
 	public static String SIGNSHOP_ID = "signshop_id";
 	public static String PLAYER_UUID = "player_uuid";
+	public static String SEARCH_TELEPORT_OR_LOCATION = "search_teleport_or_location";
 	
 	public static void openAdministration(SignShop ssh, Player player, SettingsLevel settingsLevel, boolean closeInv)
 	{
@@ -113,6 +114,15 @@ public class GuiHandler
 		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, ssh.getSignShopName()+keyboardOrNumpad, settingsLevel);
 		SignShop ssh2 = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssh.getId());
 		openGui(ssh2, player, gt, gui, settingsLevel, closeInv);
+	}
+	
+	public static void openSearchBuy(ArrayList<SignShop> list, Player player, SettingsLevel settingsLevel, boolean closeInv,
+			Material searchMat, boolean teleport_OR_Location)
+	{
+		GuiType gt = GuiType.SEARCH_BUY;
+		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, "Search:"+searchMat.toString(), settingsLevel);
+		
+		openSearchGui(list, player, gt, gui, settingsLevel, closeInv, searchMat, teleport_OR_Location);
 	}
 	
 	private static void openGui(SignShop ssh, Player player, GuiType gt, GUIApi gui, SettingsLevel settingsLevel, boolean closeInv)
@@ -430,6 +440,80 @@ public class GuiHandler
 		
 	}
 	
+	private static void openSearchGui(ArrayList<SignShop> list, Player player, GuiType gt, GUIApi gui, SettingsLevel settingsLevel, boolean closeInv,
+			Material searchMat, boolean teleport_OR_Location)
+	{
+		boolean fillNotDefineGuiSlots = new ConfigHandler().fillNotDefineGuiSlots();
+		Material filler = Material.valueOf(plugin.getConfig().getString("SignShop.Gui.FillerItemMaterial", "LIGHT_GRAY_STAINED_GLASS_PANE"));
+		YamlConfiguration y = plugin.getYamlHandler().getGui(gt);
+		int i = 0;
+		for(SignShop ssh : list)
+		{
+			ArrayList<String> lore = null;
+			if(y.get("Lore."+settingsLevel.toString()) != null)
+			{
+				lore = (ArrayList<String>) y.getStringList("Lore."+settingsLevel.toString());
+			} else
+			{
+				if(y.get("Lore") != null)
+				{
+					lore = (ArrayList<String>) y.getStringList("Lore");
+				}
+			}
+			if(lore != null)
+			{
+				lore = (ArrayList<String>) getLorePlaceHolder(ssh, player, lore, player.getName());
+			}
+			String displayname = y.get("Displayname") != null 
+					? y.getString("Displayname") 
+					: (SaLE.getPlugin().getEnumTl() != null
+							  ? SaLE.getPlugin().getEnumTl().getLocalization(searchMat)
+							  : searchMat.toString());
+			displayname = getStringPlaceHolder(ssh, player, displayname, player.getName());
+			ItemStack is = new ItemStack(Material.PLAYER_HEAD);
+			ItemMeta im = is.getItemMeta();
+			SkullMeta sm = (SkullMeta) im;
+			try
+			{
+				sm.setOwningPlayer(Bukkit.getOfflinePlayer(ssh.getOwner()));
+			} catch(Exception e)
+			{
+				PlayerProfile profile = Bukkit.createPlayerProfile(ssh.getOwner(), "");
+				sm.setOwnerProfile(profile);
+			}
+			im.setDisplayName(displayname);
+			if(lore != null)
+			{
+				im.setLore(lore);
+			}
+			is.setItemMeta(im);
+			LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
+			map.put(SIGNSHOP_ID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, ssh.getId()));
+			map.put(SEARCH_TELEPORT_OR_LOCATION, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.STRING, String.valueOf(teleport_OR_Location)));
+			gui.add(i, is, settingsLevel, true, map, getClickFunction(y, null));
+			i++;
+		}
+		for(int j = i; j < 53; j++)
+		{
+			if(fillNotDefineGuiSlots)
+			{
+				filler(gui, 0, i, filler);
+			}
+		}
+		new BukkitRunnable()
+		{			
+			@Override
+			public void run()
+			{
+				if(closeInv)
+				{
+					player.closeInventory();
+				}
+				gui.open(player, gt, 0);
+			}
+		}.runTask(plugin);
+	}
+	
 	private static void filler(GUIApi gui, int sshId, int i, Material mat)
 	{
 		ItemStack is = new ItemStack(mat, 1);
@@ -494,7 +578,7 @@ public class GuiHandler
         return skull;
     }
 	
-	private static List<String> getLorePlaceHolder(SignShop ssh, Player player, List<String> lore, String playername)
+	public static List<String> getLorePlaceHolder(SignShop ssh, Player player, List<String> lore, String playername)
 	{
 		List<String> list = new ArrayList<>();
 		for(String s : lore)
@@ -1215,7 +1299,7 @@ public class GuiHandler
 	    return s;
 	}
 	
-	private static String getStringPlaceHolder(SignShop ssh, Player player, String text, String playername)
+	public static String getStringPlaceHolder(SignShop ssh, Player player, String text, String playername)
 	{
 		String s = text;
 		if(text.contains("%owner%"))
@@ -2161,19 +2245,37 @@ public class GuiHandler
 		List<ClickType> list = new ArrayList<ClickType>(EnumSet.allOf(ClickType.class));
 		for(ClickType ct : list)
 		{
-			if(y.get(pathBase+".ClickFunction."+ct.toString()) == null)
+			if(pathBase == null)
 			{
-				continue;
+				if(y.get("ClickFunction."+ct.toString()) == null)
+				{
+					continue;
+				}
+				ClickFunctionType cft = null;
+				try
+				{
+					cft = ClickFunctionType.valueOf(y.getString("ClickFunction."+ct.toString()));
+				} catch(Exception e)
+				{
+					continue;
+				}
+				ctar.add(new ClickFunction(ct, cft));
+			} else
+			{
+				if(y.get(pathBase+".ClickFunction."+ct.toString()) == null)
+				{
+					continue;
+				}
+				ClickFunctionType cft = null;
+				try
+				{
+					cft = ClickFunctionType.valueOf(y.getString(pathBase+".ClickFunction."+ct.toString()));
+				} catch(Exception e)
+				{
+					continue;
+				}
+				ctar.add(new ClickFunction(ct, cft));
 			}
-			ClickFunctionType cft = null;
-			try
-			{
-				cft = ClickFunctionType.valueOf(y.getString(pathBase+".ClickFunction."+ct.toString()));
-			} catch(Exception e)
-			{
-				continue;
-			}
-			ctar.add(new ClickFunction(ct, cft));
 		}
 		return ctar.toArray(new ClickFunction[ctar.size()]);
 	}

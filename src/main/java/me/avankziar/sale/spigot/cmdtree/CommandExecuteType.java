@@ -9,6 +9,8 @@ public enum CommandExecuteType
 	SALE_SHOP_DELETE, //Admincmd zum delete
 	SALE_SHOP_TOGGLE, //Toggle um in AdminGui
 	SALE_SHOP_BREAKTOGGLE, //Breaktoggle um schilder schnell abzubauen.
+	SALE_SHOP_SEARCHBUY,
+	SALE_SHOP_SEARCHSELL,
 	/*
 	 * Aufrufen des globalen GUI, das es ermöglich alle Shops aller Spieler aus der Ferne zu erreichen.
 	 * Auch soll man hier nach allen Shops filtern können, welches x material anbieten. (Tastaturpad a la NumPad gui?)

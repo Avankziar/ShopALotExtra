@@ -699,6 +699,67 @@ public class SignShop implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
+	@Override
+	public ArrayList<Object> get(Connection conn, String tablename, String sql, Object... whereObject)
+	{
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int i = 1;
+			for(Object o : whereObject)
+			{
+				ps.setObject(i, o);
+				i++;
+			}
+			
+			ResultSet rs = ps.executeQuery();
+			MysqlHandler.addRows(MysqlHandler.QueryType.READ, rs.getMetaData().getColumnCount());
+			ArrayList<Object> al = new ArrayList<>();
+			while (rs.next()) 
+			{
+				al.add(new SignShop(rs.getInt("id"),
+						UUID.fromString(rs.getString("player_uuid")),
+						rs.getString("sign_shop_name"),
+						rs.getInt("account_id"),
+						rs.getLong("creation_date_time"),
+						rs.getString("itemstack_base64"),
+						rs.getString("display_name"),
+						rs.getString("material"),
+						rs.getLong("item_storage_total"),
+						rs.getLong("item_storage_current"),
+						rs.getDouble("buy_amount"),
+						rs.getDouble("sell_amount"),
+						rs.getLong("possible_buy"),
+						rs.getLong("possible_sell"),
+						rs.getLong("discount_start"),
+						rs.getLong("discount_end"),
+						rs.getDouble("discount_buy_amount"),
+						rs.getDouble("discount_sell_amount"),
+						rs.getLong("discount_possible_buy"),
+						rs.getLong("discount_possible_sell"),
+						rs.getString("server_name"),
+						rs.getString("world"),
+						rs.getInt("x"),
+						rs.getInt("y"),
+						rs.getInt("z"),
+						rs.getInt("storage_id"),
+						rs.getBoolean("unlimited_buy"),
+						rs.getBoolean("unlimited_sell"),
+						rs.getBoolean("can_buy"),
+						rs.getBoolean("can_sell"),
+						rs.getString("num_text"),
+						rs.getBoolean("sign_glowing"),
+						rs.getString("listed_type"),
+						rs.getBoolean("item_hologram")));
+			}
+			return al;
+		} catch (SQLException e)
+		{
+			this.log(Level.WARNING, "SQLException! Could not get a "+this.getClass().getSimpleName()+" Object!", e);
+		}
+		return new ArrayList<>();
+	}
+	
 	public static ArrayList<SignShop> convert(ArrayList<Object> arrayList)
 	{
 		ArrayList<SignShop> l = new ArrayList<>();

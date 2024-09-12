@@ -14,6 +14,8 @@ public interface MysqlHandable
 	
 	public ArrayList<Object> get(Connection conn, String tablename, String orderby, String limit, String whereColumn, Object... whereObject);
 	
+	public ArrayList<Object> get(Connection conn, String tablename, String sql, Object... whereObject);
+	
 	default void log(Level level, String log, Exception e)
 	{
 		SaLE.log.log(level, log, e);

@@ -49,19 +49,6 @@ Future Build Ideas
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
 - Listeneinträge für Black/White etc. anzeigen lassen, wer dadrauf ist.
-- /sale shop searchbuy|searchsell [Material] [Displayname...],
-  Befehl zum Suchen vom Shop mit dem Jeweiligen Item in der Hand.
-  Wenn Argumente dazugeschrieben worden sind, wird danach geschaut. Es baut sich eine Gui auf.
-  Per Config, wird determiniert, ob die Shops in der Gui random oder Nach preis geordnet sind. Natürlich muss der Shop auch vorrat haben.
-  Per Config, wird determiniert, ob beim Klicken auf den Shops in der Gui nur die Position des Shops per Chat geschrieben wird
-  oder der Shop direkt aufgerufen wird als GUI.
-  GuiItem soll anzeigen: Wo, Wieviel ist da, Was kosten es.
-  Möglichkeit den eigenen Shop in der Suche zu halten könnte Geld kosten..
-  - Die Suche *könne* auch nur innerhalb von Welt oder Server alle Shops suchen
-  Kriterien um als Shop im Menu auzutauchen:
-    - Shop muss mindestens 1 Item beinhalten, bei **buy**.
-    - Shop muss mindestens 1 Itemplatzt frei haben, bei **sell**.
-  GuiMenu zeigt per **Material zum Verkaufen/Freie Plätze zum Ankaufen-Reihenfolge** die Shops an.
   
 Future Build
 - Copy und Move Funktion per Schilder einbauen. Um Shopschilder repositionieren oder seine Einstellung zu kopieren.
@@ -72,6 +59,17 @@ Future Build
   Auf das neue Schild schreiben und erstellen, bzw. ändern. Sollte das Schild auf dem gleichen Server sein, die Schrift entfernen.
 - Leviorsky aka Pierre — heute um 10:39 Uhr
   1000er Trennzeichen für Shopschilder hinzufügen. (3500000 -> 3.500.000) Somit wäre es nicht mehr so anstrengend, Preise zu lesen, aber auch fehlerresistenter. + Kommastelle nicht mit anzeigen, wenn nicht vorhanden. (3500000.0 -> 3.500.000)
+  
+Build 1-8-0
+- InterfaceHub spigot.teleport.Teleport als Consumer angeschlossen.
+- /sale shop searchbuy|searchsell [Material] [Displayname...] hinzugefügt.
+  Sucht nach Shops nach dem jeweiligen Item in deiner Hand und wenn du nichts in der Hand hast, das was du angegeben hast, sowie einen möglichen angegebenen
+  Displayname des Items.
+  Öffnet bei Erfolg eine Gui mit 54 möglichen Shop.
+  Sortierung der Shops in der Gui durch Configpfad 'SignShop.Search.SortType'. Möglich ist PRICE & RANDOM.
+  Suchradius der möglichen Shops in der Gui durch Configpfad 'SignShop.Search.Radius' einstellbar. Möglich ist PROXY, SERVER, WORLD & Ganzzahlen.
+  Einstellbar, was beim klicken auf einem Slot gemacht werden soll. Koordinaten oder Teleport zum Shop.
+- WorldGuard Shop-Erstellung Flag hinzugefügt (sale-shop-create). Default 'true'.
 
 Build 1-7-1
 - Vault Buy / Sell Funktion fix

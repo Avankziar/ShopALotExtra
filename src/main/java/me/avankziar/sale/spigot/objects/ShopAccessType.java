@@ -157,6 +157,37 @@ public class ShopAccessType implements MysqlHandable
 		return new ArrayList<>();
 	}
 	
+	@Override
+	public ArrayList<Object> get(Connection conn, String tablename, String sql, Object... whereObject)
+	{
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int i = 1;
+			for(Object o : whereObject)
+			{
+				ps.setObject(i, o);
+				i++;
+			}
+			
+			ResultSet rs = ps.executeQuery();
+			MysqlHandler.addRows(MysqlHandler.QueryType.READ, rs.getMetaData().getColumnCount());
+			ArrayList<Object> al = new ArrayList<>();
+			while (rs.next()) 
+			{
+				al.add(new ShopAccessType(rs.getInt("id"),
+						rs.getInt("sign_shop_id"),
+						UUID.fromString(rs.getString("player_uuid")),
+						ListedType.valueOf(rs.getString("listed_type"))));
+			}
+			return al;
+		} catch (SQLException e)
+		{
+			this.log(Level.WARNING, "SQLException! Could not get a "+this.getClass().getSimpleName()+" Object!", e);
+		}
+		return new ArrayList<>();
+	}
+	
 	public static ArrayList<ShopAccessType> convert(ArrayList<Object> arrayList)
 	{
 		ArrayList<ShopAccessType> l = new ArrayList<>();

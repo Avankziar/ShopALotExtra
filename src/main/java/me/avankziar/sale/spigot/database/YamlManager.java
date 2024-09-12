@@ -43,6 +43,8 @@ public class YamlManager
 		initGuiShop();
 		initGuiItemInput();
 		initGuiKeyboard();
+		initGuiSearchBuy();
+		initGuiSearchSell();
 	}
 	
 	public ISO639_2B getLanguageType()
@@ -104,6 +106,45 @@ public class YamlManager
 		{
 			return;
 		}
+		if(key.startsWith("#"))
+		{
+			//Comments
+			String k = key.replace("#", "");
+			if(yml.get(k) == null)
+			{
+				//return because no aktual key are present
+				return;
+			}
+			if(yml.getComments(k) != null && !yml.getComments(k).isEmpty())
+			{
+				//Return, because the comments are already present, and there could be modified. F.e. could be comments from a admin.
+				return;
+			}
+			if(keyMap.get(key).languageValues.get(languageType).length == 1)
+			{
+				if(keyMap.get(key).languageValues.get(languageType)[0] instanceof String)
+				{
+					String s = ((String) keyMap.get(key).languageValues.get(languageType)[0]).replace("\r\n", "");
+					yml.setComments(k, Arrays.asList(s));
+				}
+			} else
+			{
+				List<Object> list = Arrays.asList(keyMap.get(key).languageValues.get(languageType));
+				ArrayList<String> stringList = new ArrayList<>();
+				if(list instanceof List<?>)
+				{
+					for(Object o : list)
+					{
+						if(o instanceof String)
+						{
+							stringList.add(((String) o).replace("\r\n", ""));
+						}
+					}
+				}
+				yml.setComments(k, (List<String>) stringList);
+			}
+			return;
+		}
 		if(yml.get(key) != null)
 		{
 			return;
@@ -138,49 +179,161 @@ public class YamlManager
 		}
 	}
 	
+	private void addComments(LinkedHashMap<String, Language> mapKeys, String path, Object[] o)
+	{
+		mapKeys.put(path, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, o));
+	}
+	
+	private void addConfig(String path, Object[] c, Object[] o)
+	{
+		configSpigotKeys.put(path, new Language(new ISO639_2B[] {ISO639_2B.GER}, c));
+		addComments(configSpigotKeys, "#"+path, o);
+	}
+	
 	public void initConfig() //INFO:Config
 	{
-		configSpigotKeys.put("useIFHAdministration"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("IFHAdministrationPath"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"sale"}));
+		addConfig("useIFHAdministration",
+				new Object[] {
+				true},
+				new Object[] {
+				"Boolean um auf das IFH Interface Administration zugreifen soll.",
+				"Wenn 'true' eingegeben ist, aber IFH Administration ist nicht vorhanden, so werden automatisch die eigenen Configwerte genommen.",
+				"Boolean to access the IFH Interface Administration.",
+				"If 'true' is entered, but IFH Administration is not available, the own config values are automatically used."});
+		addConfig("IFHAdministrationPath", 
+				new Object[] {
+				"sale"},
+				new Object[] {
+				"",
+				"Diese Funktion sorgt dafür, dass das Plugin auf das IFH Interface Administration zugreifen kann.",
+				"Das IFH Interface Administration ist eine Zentrale für die Daten von Sprache, Servername und Mysqldaten.",
+				"Diese Zentralisierung erlaubt für einfache Änderung/Anpassungen genau dieser Daten.",
+				"Sollte das Plugin darauf zugreifen, werden die Werte in der eigenen Config dafür ignoriert.",
+				"",
+				"This function ensures that the plugin can access the IFH Interface Administration.",
+				"The IFH Interface Administration is a central point for the language, server name and mysql data.",
+				"This centralization allows for simple changes/adjustments to precisely this data.",
+				"If the plugin accesses it, the values in its own config are ignored."});
 		
-		configSpigotKeys.put("Language"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"ENG"}));
-		configSpigotKeys.put("ServerName"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"hub"}));
+		addConfig("Language",
+				new Object[] {
+				"ENG"},
+				new Object[] {
+				"",
+				"Die eingestellte Sprache. Von Haus aus sind 'ENG=Englisch' und 'GER=Deutsch' mit dabei.",
+				"Falls andere Sprachen gewünsch sind, kann man unter den folgenden Links nachschauen, welchs Kürzel für welche Sprache gedacht ist.",
+				"Siehe hier nach, sowie den Link, welche dort auch für Wikipedia steht.",
+				"https://github.com/Avankziar/RootAdministration/blob/main/src/main/java/me/avankziar/roota/general/Language.java",
+				"",
+				"The set language. By default, ENG=English and GER=German are included.",
+				"If other languages are required, you can check the following links to see which abbreviation is intended for which language.",
+				"See here, as well as the link, which is also there for Wikipedia.",
+				"https://github.com/Avankziar/RootAdministration/blob/main/src/main/java/me/avankziar/roota/general/Language.java"});
+		addConfig("ServerName",
+				new Object[] {
+				"hub"},
+				new Object[] {
+				"",
+				"Der Server steht für den Namen des Spigotservers, wie er in BungeeCord/Waterfall/Velocity config.yml unter dem Pfad 'servers' angegeben ist.",
+				"Sollte kein BungeeCord/Waterfall oder andere Proxys vorhanden sein oder du nutzt IFH Administration, so kannst du diesen Bereich ignorieren.",
+				"",
+				"The server stands for the name of the spigot server as specified in BungeeCord/Waterfall/Velocity config.yml under the path 'servers'.",
+				"If no BungeeCord/Waterfall or other proxies are available or you are using IFH Administration, you can ignore this area."});
 		
-		configSpigotKeys.put("Mysql.Status"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configSpigotKeys.put("Mysql.Host"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"127.0.0.1"}));
-		configSpigotKeys.put("Mysql.Port"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				3306}));
-		configSpigotKeys.put("Mysql.DatabaseName"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"mydatabase"}));
-		configSpigotKeys.put("Mysql.SSLEnabled"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configSpigotKeys.put("Mysql.AutoReconnect"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("Mysql.VerifyServerCertificate"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configSpigotKeys.put("Mysql.User"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"admin"}));
-		configSpigotKeys.put("Mysql.Password"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"not_0123456789"}));
+		addConfig("Mysql.Status",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"'Status' ist ein simple Sicherheitsfunktion, damit nicht unnötige Fehler in der Konsole geworfen werden.",
+				"Stelle diesen Wert auf 'true', wenn alle Daten korrekt eingetragen wurden.",
+				"",
+				"'Status' is a simple security function so that unnecessary errors are not thrown in the console.",
+				"Set this value to 'true' if all data has been entered correctly."});
+		addComments(configSpigotKeys, "#Mysql", 
+				new Object[] {
+				"",
+				"Mysql ist ein relationales Open-Source-SQL-Databaseverwaltungssystem, das von Oracle entwickelt und unterstützt wird.",
+				"'My' ist ein Namenkürzel und 'SQL' steht für Structured Query Language. Eine Programmsprache mit der man Daten auf einer relationalen Datenbank zugreifen und diese verwalten kann.",
+				"Link https://www.mysql.com/de/",
+				"Wenn du IFH Administration nutzt, kann du diesen Bereich ignorieren.",
+				"",
+				"Mysql is an open source relational SQL database management system developed and supported by Oracle.",
+				"'My' is a name abbreviation and 'SQL' stands for Structured Query Language. A program language that can be used to access and manage data in a relational database.",
+				"Link https://www.mysql.com",
+				"If you use IFH Administration, you can ignore this section."});
+		addConfig("Mysql.Host",
+				new Object[] {
+				"127.0.0.1"},
+				new Object[] {
+				"",
+				"Der Host, oder auch die IP. Sie kann aus einer Zahlenkombination oder aus einer Adresse bestehen.",
+				"Für den Lokalhost, ist es möglich entweder 127.0.0.1 oder 'localhost' einzugeben. Bedenke, manchmal kann es vorkommen,",
+				"das bei gehosteten Server die ServerIp oder Lokalhost möglich ist.",
+				"",
+				"The host, or IP. It can consist of a number combination or an address.",
+				"For the local host, it is possible to enter either 127.0.0.1 or >localhost<.",
+				"Please note that sometimes the serverIp or localhost is possible for hosted servers."});
+		addConfig("Mysql.Port",
+				new Object[] {
+				3306},
+				new Object[] {
+				"",
+				"Ein Port oder eine Portnummer ist in Rechnernetzen eine Netzwerkadresse,",
+				"mit der das Betriebssystem die Datenpakete eines Transportprotokolls zu einem Prozess zuordnet.",
+				"Ein Port für Mysql ist standart gemäß 3306.",
+				"",
+				"In computer networks, a port or port number ",
+				"is a network address with which the operating system assigns the data packets of a transport protocol to a process.",
+				"A port for Mysql is standard according to 3306."});
+		addConfig("Mysql.DatabaseName",
+				new Object[] {
+				"mydatabase"},
+				new Object[] {
+				"",
+				"Name der Datenbank in Mysql.",
+				"",
+				"Name of the database in Mysql."});
+		addConfig("Mysql.SSLEnabled",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"SSL ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
+				"",
+				"SSL is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+		addConfig("Mysql.AutoReconnect",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"AutoReconnect ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
+				"",
+				"AutoReconnect is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+		addConfig("Mysql.VerifyServerCertificate",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"VerifyServerCertificate ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
+				"",
+				"VerifyServerCertificate is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+		addConfig("Mysql.User",
+				new Object[] {
+				"admin"},
+				new Object[] {
+				"",
+				"Der User, welcher auf die Mysql zugreifen soll.",
+				"",
+				"The user who should access the Mysql."});
+		addConfig("Mysql.Password",
+				new Object[] {
+				"not_0123456789"},
+				new Object[] {
+				"",
+				"Das Passwort des Users, womit er Zugang zu Mysql bekommt.",
+				"",
+				"The user's password, with which he gets access to Mysql."});
 		
 		configSpigotKeys.put("Enable.SignShop"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -198,105 +351,299 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				false}));
 		
-		configSpigotKeys.put("CleanUpTask.Player.Active"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("CleanUpTask.Player.DeleteAfterXDaysOffline"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				365}));
-		configSpigotKeys.put("CleanUpTask.ShopLog.Active"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("CleanUpTask.ShopLog.DeleteAfterXDays"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				365}));
-		configSpigotKeys.put("CleanUpTask.ShopDailyLog.Active"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("CleanUpTask.ShopDailyLog.DeleteAfterXDays"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				365}));
-		configSpigotKeys.put("CleanUpTask.ClientLog.Active"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("CleanUpTask.ClientLog.DeleteAfterXDays"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				365}));
-		configSpigotKeys.put("CleanUpTask.ClientDailyLog.Active"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("CleanUpTask.ClientDailyLog.DeleteAfterXDays"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				365}));
+		addConfig("CleanUpTask.Player.Active",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true' dann ist der Aufräumtask für Datenbankeinträge für Spieler aktiv.",
+				"",
+				"If 'true' then the cleanup task for database entries for players is active."});
+		addConfig("CleanUpTask.Player.DeleteAfterXDaysOffline",
+				new Object[] {
+				365},
+				new Object[] {
+				"",
+				"Löscht alle Spieler, die nach X Tage nicht online sind.",
+				"",
+				"Deletes all players who are not online after X days."});
+		addConfig("CleanUpTask.ShopLog.Active",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true' dann ist der Aufräumtask für Datenbankeinträge für Shoplog aktiv.",
+				"",
+				"If 'true' then the cleanup task for database entries for Shoplog is active."});
+		addConfig("CleanUpTask.ShopLog.DeleteAfterXDays",
+				new Object[] {
+				365},
+				new Object[] {
+				"",
+				"Löscht alle Shoplogs, die älter als X Tage sind.",
+				"",
+				"Deletes all store logs that are older than X days."});
+		addConfig("CleanUpTask.ShopDailyLog.Active",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true' dann ist der Aufräumtask für Datenbankeinträge für Shopdailylog aktiv.",
+				"",
+				"If 'true' then the cleanup task for database entries for Shopdailylog is active."});
+		addConfig("CleanUpTask.ShopDailyLog.DeleteAfterXDays",
+				new Object[] {
+				365},
+				new Object[] {
+				"",
+				"Löscht alle Shopdailylogs, die älter als X Tage sind.",
+				"",
+				"If 'true' then the cleanup task for database entries for client log is active."});
+		addConfig("CleanUpTask.ClientLog.Active",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true' dann ist der Aufräumtask für Datenbankeinträge für Clientlog aktiv.",
+				"",
+				""});
+		addConfig("CleanUpTask.ClientLog.DeleteAfterXDays",
+				new Object[] {
+				365},
+				new Object[] {
+				"",
+				"Löscht alle Clientlogs, die älter als X Tage sind.",
+				"",
+				"Deletes all client logs that are older than X days."});
+		addConfig("CleanUpTask.ClientDailyLog.Active",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true' dann ist der Aufräumtask für Datenbankeinträge für Clientdailylog aktiv.",
+				"",
+				"Deletes all client dailylogs that are older than X days."});
+		addConfig("CleanUpTask.ClientDailyLog.DeleteAfterXDays",
+				new Object[] {
+				365},
+				new Object[] {
+				"",
+				"Löscht alle Clientdailylogs, die älter als X Tage sind.",
+				"",
+				""});
 		
 		configSpigotKeys.put("Mechanic.CountPerm"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"ADDUP"}));
-		configSpigotKeys.put("SignShop.SignInitializationLine"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"[SaleShop]"}));
-		configSpigotKeys.put("SignShop.DefaultStartItemStorage"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				3456}));
-		configSpigotKeys.put("SignShop.CostToAdd1Storage"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+		addConfig("SignShop.SignInitializationLine",
+				new Object[] {
+				"[SaleShop]"},
+				new Object[] {
+				"",
+				"Zeile welche zum initialisieren genutzt wird um ein SignShop zu gründen.",
+				"",
+				"Line which is used for initialization to create a SignShop."});
+		addConfig("SignShop.DefaultStartItemStorage",
+				new Object[] {
+				3456},
+				new Object[] {
+				"",
+				"Die Anzahl an Standartlagerplatz für ein neuer Shop.",
+				"",
+				"The number of standard storage spaces for a new store."});
+		addConfig("SignShop.CostToAdd1Storage",
+				new Object[] {
 				"dollar;1000.0",
 				"token;99.0",
-				"vault;100.0"}));
-		configSpigotKeys.put("SignShop.ForbiddenWorld"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"hubs", "spawns"}));
-		configSpigotKeys.put("SignShop.DiscountTimePattern"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"yyyy.MM.dd.HH:mm:ss"}));
-		configSpigotKeys.put("SignShop.Sign.Line4CalculateInStack"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configSpigotKeys.put("SignShop.Tax.BuyInPercent"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				1.0}));
-		configSpigotKeys.put("SignShop.Tax.SellInPercent"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				1.1}));
-		configSpigotKeys.put("SignShop.ItemHologram.CanSpawn"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("SignShop.ItemHologram.RunTimerInSeconds"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				2}));
-		configSpigotKeys.put("SignShop.ItemHologram.VisibilityTimeInSeconds"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				3}));
-		configSpigotKeys.put("SignShop.TransactionSummary.MessageToShopOwner.RunTimerInMinutes"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				5}));
-		configSpigotKeys.put("SignShop.TransactionSummary.ShopLop.RunTimerInMinutes"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				15}));
-		configSpigotKeys.put("SignShop.ShopLog.TimePattern"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"dd-MM-yyyy/HH:mm"}));
-		configSpigotKeys.put("SignShop.ShopDailyLog.TimePattern"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"dd-MM-yyyy"}));
-		configSpigotKeys.put("SignShop.ShopCanTradeShulker"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configSpigotKeys.put("SignShop.ShopUseMaterialAsShopName"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
+				"vault;100.0"},
+				new Object[] {
+				"",
+				"Die Kosten pro Währung um den Lagerplatz eines Shops um 1 zu erhöhen.",
+				"",
+				"The cost per currency to increase the storage space of a store by 1."});
+		addConfig("SignShop.ForbiddenWorld",
+				new Object[] {
+				"hubs", "spawns"},
+				new Object[] {
+				"",
+				"Die Welten, wo es verboten ist, Shops zu erstellen.",
+				"",
+				"The worlds where it is forbidden to create stores."});
+		addConfig("SignShop.DiscountTimePattern",
+				new Object[] {
+				"yyyy.MM.dd.HH:mm:ss"},
+				new Object[] {
+				"",
+				"Das Zeitformat um Rabatt zu definieren.",
+				"",
+				"The time format to define discount."});
+		addConfig("SignShop.Sign.Line4CalculateInStack",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"Wenn 'true' dann wird die 4 Zeile des Schildes des Shops in Stacks berechnet, ansteller einzelner Items.",
+				"",
+				"If 'true' then the 4 line of the store's sign is calculated in stacks instead of individual items."});
+		addConfig("SignShop.Tax.BuyInPercent",
+				new Object[] {
+				1.0},
+				new Object[] {
+				"",
+				"Anzahl an Steuer in Prozent beim Kaufen in einem Shop.",
+				"",
+				"Number of tax in percent when buying in a store."});
+		addConfig("SignShop.Tax.SellInPercent",
+				new Object[] {
+				1.1},
+				new Object[] {
+				"",
+				"Anzahl an Steuer in Prozent beim Verkaufen in einem Shop.",
+				"",
+				"Number of tax in percent when selling in a store."});
+		addConfig("SignShop.ItemHologram.CanSpawn",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true' dann können ItemHologram spawnen.",
+				"",
+				"If 'true' then ItemHologram can spawn."});
+		addConfig("SignShop.ItemHologram.RunTimerInSeconds",
+				new Object[] {
+				2},
+				new Object[] {
+				"",
+				"Wie lange die Wiederholung der Schedular des ItemHologram läuft.",
+				"",
+				"How long the repetition of the ItemHologram's Schedular runs."});
+		addConfig("SignShop.ItemHologram.VisibilityTimeInSeconds",
+				new Object[] {
+				3},
+				new Object[] {
+				"",
+				"Wie lange das ItemHologram sichtbar ist. Mit dem Schedular könnte die Sichtbarkeit länger sein.",
+				"",
+				"How long the ItemHologram is visible. With the Schedular, the visibility could be longer."});
+		addConfig("SignShop.TransactionSummary.MessageToShopOwner.RunTimerInMinutes",
+				new Object[] {
+				5},
+				new Object[] {
+				"",
+				"Anzahl an Minuten wie lange die Wiederholungszeit des Scheduals ist, welcher für die Nachrichten der Shopeigentümer zuständig ist.",
+				"Dieser Schedular sammelt alle Nachrichten an die Shopeigentümer und fasst sie zusammen um sie an den Shopeigentümer zu schicken.",
+				"",
+				"Number of minutes how long the repetition time of the scheduler is, which is responsible for the messages of the store owners.",
+				"This scheduler collects all messages to the store owners and summarizes them to send them to the store owner."});
+		addConfig("SignShop.TransactionSummary.ShopLog.RunTimerInMinutes",
+				new Object[] {
+				15},
+				new Object[] {
+				"",
+				"Anzahl in Minuten für die Wiederholungsrate für die Transaktionzusammenfassung Schedular.",
+				"",
+				"Number in minutes for the repetition rate for the transaction summary Schedular."});
+		addConfig("SignShop.ShopLog.TimePattern",
+				new Object[] {
+				"dd-MM-yyyy/HH:mm"},
+				new Object[] {
+				"",
+				"ZeitFormat für den Shoplog.",
+				"",
+				"TimeFormat for the shoplog."});
+		addConfig("SignShop.ShopDailyLog.TimePattern",
+				new Object[] {
+				"dd-MM-yyyy"},
+				new Object[] {
+				"",
+				"Zeitformat für den Shopdailylog.",
+				"",
+				"Time format for the shopdailylog."});
+		addConfig("SignShop.ShopCanTradeShulker",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"Erlaubt den Shop Shulker zu verkaufen.",
+				"",
+				"Allows the store to sell Shulker."});
+		addConfig("SignShop.ShopUseMaterialAsShopName",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true' dann wird das Material als Shopname verwendet, wenn kein Displayname festgelegt wurde.",
+				"",
+				"If 'true' then the material is used as the store name if no display name has been defined."});
 		configSpigotKeys.put("SignShop.Gui.ForceSettingsLevel"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				false}));
-		configSpigotKeys.put("SignShop.Gui.ToBeForcedSettingsLevel"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				SettingsLevel.BASE.toString()}));
-		configSpigotKeys.put("SignShop.Gui.FillNotDefineGuiSlots"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configSpigotKeys.put("SignShop.Gui.FillerItemMaterial"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				Material.LIGHT_GRAY_STAINED_GLASS_PANE.toString()}));
+		addConfig("SignShop.Gui.ForceSettingsLevel",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"Wenn 'true' dann wird bei jedem öffnen des Shop & AdministrationGui das Settingslevel auf den unten angegeben Wert gesetzt.",
+				"",
+				"If 'true' then the settings level is set to the value specified below each time the Shop & AdministrationGui is opened."});
+		addConfig("SignShop.Gui.ToBeForcedSettingsLevel",
+				new Object[] {
+				SettingsLevel.BASE.toString()},
+				new Object[] {
+				"",
+				"SettingsLevel welches gesetzt wird, wenn es geforced wird.",
+				"",
+				"SettingsLevel which is set when it is forced."});
+		addConfig("SignShop.Gui.FillNotDefineGuiSlots",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true' werden alle leeren Slots in einem Gui mit Füllitems aufgefüllt.",
+				"",
+				"If 'true', all empty slots in a gui are filled with filler items."});
+		addConfig("SignShop.Gui.FillerItemMaterial",
+				new Object[] {
+				Material.LIGHT_GRAY_STAINED_GLASS_PANE.toString()},
+				new Object[] {
+				"",
+				"Füllmaterial für die Guis",
+				"",
+				"Filling material for the guis"});
+		addConfig("SignShop.Search.Radius",
+				new Object[] {
+				"PROXY"},
+				new Object[] {
+				"",
+				"Der 'Suchradius' für die Suchbefehle. Er determiniert, in welchem Bezugsradius er suchen soll.",
+				"PROXY - sucht auf allen Server nach den Shops.",
+				"SERVER - sucht auf dem Server wo sich der Spieler befindet nach den Shops.",
+				"WORLD - sucht auf der Welt wo sich der Spieler befindet nach den Shops.",
+				"Ganzzahl - bspw. 50 sucht innerhalb von +50 und -50 Blöcken in allen Richtungen nach den Shops.",
+				"",
+				"The 'search radius' for the search commands. It determines the reference radius in which it should search.",
+				"PROXY - searches for the stores on all servers.",
+				"SERVER - searches for stores on the server where the player is located.",
+				"WORLD - searches for stores in the world where the player is located.",
+				"Integer - e.g. 50 searches for the stores within +50 and -50 blocks in all directions."});
+		addConfig("SignShop.Search.SortType",
+				new Object[] {
+				"PRICE"},
+				new Object[] {
+				"",
+				"Die Sortierungsmethode für die Reihenfolge. Möglich sind: PRICE oder RANDOM",
+				"",
+				"The sorting method for the sequence. The following are possible: PRICE or RANDOM"});
+		addConfig("SignShop.Search.DoAfterGuiClick",
+				new Object[] {
+				"LOCATION"},
+				new Object[] {
+				"",
+				"Determiniert, was bei dem Klicken auf die Shops von den Suchbefehlen Guis gemacht wird.",
+				"Bei LOCATION wird nur die Location des Shops und ein paar andere Daten per Chat geschrieben. Bei TELEPORT wird der Spieler teleportiert.",
+				"",
+				"Determines what is done by the search commands Guis when clicking on the stores.",
+				"With LOCATION, only the location of the store and a few other details are written via chat. With TELEPORT the player is teleported."});
 	}
 	
 	//INFO:Commands
@@ -525,6 +872,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast nicht genug Geld!",
 						"&cYou dont have enough money!"}));
+		languageKeys.put("OnCooldown",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Befehl ist in Cooldown!",
+						"&cThe command is in cooldown!"}));
 		languageKeys.put("ShopOwnerNotEnought",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer ShopEigentümer hat nicht genug Geld!",
@@ -1085,6 +1436,54 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&7%time% &e>> &7[&#FF8800K&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aV&7] &rx &e%sellamo% &e>> &r%sellformat%",
 						"&7%time% &e>> &7[&#FF8800B&7] &rx &e%buyamo% &e>> &r%buyformat% &r| &7[&aS&7] &rx &e%sellamo% &e>> &r%sellformat%"}));
+		languageKeys.put("Cmd.Search.NoItemInHand", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast kein Item in HauptHand!",
+						"&cYou have no item in your main hand!"}));
+		languageKeys.put("Cmd.Search.MaterialDontExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas angegebene Material existiert nicht!",
+						"&cThe specified material does not exist!"}));
+		languageKeys.put("Cmd.Search.SearchRadiusNoCorrectFormat", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn der Config ist der Suchradius für den Searchbefehl unkorrekt. Möglich ist: PROXY, SERVER; WORLD, oder eine Zahl für einen Blockradius.",
+						"&cThe search radius for the search command is incorrect in the config. The following is possible: PROXY, SERVER; WORLD, or a number for a block radius."}));
+		languageKeys.put("Cmd.Search.SearchListEmpty", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDeine Suchparameter ergab kein Ergebnis! Parameter: %mat%, %displayname%",
+						"&cYour search parameters did not return any results! Parameters: %mat%, %displayname%"}));
+		languageKeys.put("Cmd.Search.Buy.LocationInfo", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7====================",
+						"&eShop &f%signshopname% &e- Eigentümer &f%owner%",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eKaufkosten: &f%buyraw1%",
+						"&eLocation: &f%server% - %world% | %x% %y% %z%",
+						"&7====================",
+						"&7====================",
+						"&eShop &f%signshopname% &e- Owner &f%owner%",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eBuycosts: &f%buyraw1%",
+						"&eLocation: &f%server% - %world% | %x% %y% %z%",
+						"&7===================="}));
+		languageKeys.put("Cmd.Search.Sell.LocationInfo", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7====================",
+						"&eShop &f%signshopname% &e- Eigentümer &f%owner%",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eVerkaufkosten: &f%sellraw1%",
+						"&eLocation: &f%server% - %world% | %x% %y% %z%",
+						"&7====================",
+						"&7====================",
+						"&eShop &f%signshopname% &e- Owner &f%owner%",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eSellcosts: &f%sellraw1%",
+						"&eLocation: &f%server% - %world% | %x% %y% %z%",
+						"&7===================="}));
+		languageKeys.put("Cmd.Search.TeleportIsNull", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas Plugin kann nicht auf Serverübergreifend teleportieren. API-Zugang fehlt.",
+						"&cThe plugin cannot teleport across servers. API access is missing."}));
 	}
 	
 	public void initModifierValueEntryLanguage() //INFO:ModifierValueEntryLanguages
@@ -4529,5 +4928,53 @@ public class YamlManager
 		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_LEFT.toString(), lSLC);
 		keyboard_custom.put(path+".ClickFunction."+ClickType.SHIFT_RIGHT.toString(), lSRC);
 		guiKeys.put(GuiType.KEYBOARD_CUSTOM, keyboard_custom);
+	}
+	
+	private void initGuiSearchBuy() //INFO:GuiSearchBuy
+	{
+		LinkedHashMap<String, Language> sbuy = new LinkedHashMap<>();
+		sbuy.put("Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e%signshopname% &f- &e%owner%",
+						"&e%signshopname% &f- &e%owner%"}));
+		sbuy.put("Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eKosten: &f%buyraw1%",
+						"",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eKosten: &f%buyraw1%",}));
+		sbuy.put("ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SEARCH_BUY.toString()}));
+		sbuy.put("ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SEARCH_BUY.toString()}));
+		guiKeys.put(GuiType.SEARCH_BUY, sbuy);
+	}
+	
+	private void initGuiSearchSell() //INFO:GuiSearchSell
+	{
+		LinkedHashMap<String, Language> ssell = new LinkedHashMap<>();
+		ssell.put("Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e%signshopname% &f- &e%owner%",
+						"&e%signshopname% &f- &e%owner%"}));
+		ssell.put("Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eKosten: &f%buyraw1%",
+						"",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eKosten: &f%buyraw1%",}));
+		ssell.put("ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SEARCH_SELL.toString()}));
+		ssell.put("ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SEARCH_SELL.toString()}));
+		guiKeys.put(GuiType.SEARCH_SELL, ssell);
 	}
 }

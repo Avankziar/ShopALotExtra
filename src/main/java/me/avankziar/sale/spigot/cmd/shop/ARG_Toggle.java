@@ -11,29 +11,29 @@ import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 
-public class ARGBreakToggle extends ArgumentModule
+public class ARG_Toggle extends ArgumentModule
 {
 	private SaLE plugin;
 	
-	public ARGBreakToggle(SaLE plugin, ArgumentConstructor argumentConstructor)
+	public ARG_Toggle(SaLE plugin, ArgumentConstructor argumentConstructor)
 	{
 		super(argumentConstructor);
 		this.plugin = plugin;
 	}
 
-	//sale shop breaktoggle
+	//sale shop toggle
 	@Override
 	public void run(CommandSender sender, String[] args) throws IOException
 	{
 		Player player = (Player) sender;
-		if(SignHandler.isBreakToggle(player.getUniqueId()))
+		if(SignHandler.bypassToggle.contains(player.getUniqueId().toString()))
 		{
-			SignHandler.breakToggle.remove(player.getUniqueId().toString());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.BreakToggle.Deactive")));
+			SignHandler.bypassToggle.remove(player.getUniqueId().toString());
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.Toggle.Deactive")));
 		} else
 		{
-			SignHandler.breakToggle.add(player.getUniqueId().toString());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.BreakToggle.Active")));
+			SignHandler.bypassToggle.add(player.getUniqueId().toString());
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.Toggle.Active")));
 		}
 	}
 }

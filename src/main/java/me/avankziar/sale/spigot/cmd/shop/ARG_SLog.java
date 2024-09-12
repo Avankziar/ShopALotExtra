@@ -28,11 +28,11 @@ import main.java.me.avankziar.sale.spigot.objects.SignShopLog.WayType;
 import me.avankziar.ifh.general.economy.currency.CurrencyType;
 import me.avankziar.ifh.spigot.economy.currency.EconomyCurrency;
 
-public class ARGSLog extends ArgumentModule
+public class ARG_SLog extends ArgumentModule
 {
 	private SaLE plugin;
 	
-	public ARGSLog(SaLE plugin, ArgumentConstructor argumentConstructor)
+	public ARG_SLog(SaLE plugin, ArgumentConstructor argumentConstructor)
 	{
 		super(argumentConstructor);
 		this.plugin = plugin;
