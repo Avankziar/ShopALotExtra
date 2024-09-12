@@ -48,6 +48,16 @@ public class ConfigHandler
 		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getString("SignShop.SignInitializationLine", "[SaleShop]");
 	}
 	
+	public String getSignShopCopyLine()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getString("SignShop.SignCopyLine", "[Copy]");
+	}
+	
+	public String getSignShopMoveLine()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getString("SignShop.SignMoveLine", "[Move]");
+	}
+	
 	public long getDefaulStartItemStorage()
 	{
 		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getLong("SignShop.DefaultStartItemStorage", 3456);

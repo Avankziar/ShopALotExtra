@@ -1,6 +1,9 @@
 package main.java.me.avankziar.sale.spigot.handler;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -27,20 +30,6 @@ public class SignHandler
 	private static SaLE plugin = SaLE.getPlugin();
 	public static ArrayList<String> bypassToggle = new ArrayList<>();
 	public static ArrayList<String> breakToggle = new ArrayList<>();
-	
-	public static Sign getSign(SignShop ssh) //REMOVEME deprecated
-	{
-		if(!plugin.getServername().equals(ssh.getServer()))
-		{
-			return null;
-		}
-		Block b = Bukkit.getWorld(ssh.getWorld()).getBlockAt(ssh.getX(), ssh.getY(), ssh.getZ());
-		if(!(b instanceof Sign))
-		{
-			return null;
-		}
-		return (Sign) b;
-	}
 	
 	public static boolean isDiscount(SignShop ssh, long now)
 	{
@@ -71,7 +60,7 @@ public class SignHandler
 					if(ssh.getBuyAmount() != null && ssh.getBuyAmount() > 0.0)
 					{
 						return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
-								.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getBuyAmount()));
+								.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(formatDouble(ssh.getBuyAmount())));
 					}
 					return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
 							.replace("%amount%", "&4--");
@@ -86,7 +75,7 @@ public class SignHandler
 							.replace("%amount%", "&4--");
 				}
 				return plugin.getYamlHandler().getLang().getString("SignHandler.Line1")
-						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getBuyAmount()));
+						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(formatDouble(ssh.getBuyAmount())));
 			}			
 		case 2:
 			if(!ssh.canSell())
@@ -101,7 +90,7 @@ public class SignHandler
 					if(ssh.getSellAmount() != null && ssh.getSellAmount() > 0.0)
 					{
 						return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
-								.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getSellAmount()));
+								.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(formatDouble(ssh.getSellAmount())));
 					}
 					return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
 							.replace("%amount%", "&4--");
@@ -116,7 +105,7 @@ public class SignHandler
 							.replace("%amount%", "&4--");
 				}
 				return plugin.getYamlHandler().getLang().getString("SignHandler.Line2")
-						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(ssh.getSellAmount()));
+						.replace("%amount%", MaterialHandler.getSignColor(b.getType())+String.valueOf(formatDouble(ssh.getSellAmount())));
 			}
 		case 3:
 			StringBuilder sb = new StringBuilder();
@@ -511,5 +500,14 @@ public class SignHandler
 		back.setLine(3, "");
 		back.setGlowingText(false);
 		sign.update();
+	}
+	
+	public static String formatDouble(double d)
+	{
+		String locale = SaLE.getPlugin().getYamlHandler().getConfig().getString("SignShop.Sign.LocaleForDecimalAndThousandSeperator", "ENGLISH");
+		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.forLanguageTag(locale));
+		formatter.setMaximumFractionDigits(3);
+		formatter.setMinimumFractionDigits(0);
+		return formatter.format(d);
 	}
 }

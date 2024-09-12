@@ -11,7 +11,9 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.assistance.MatchApi;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.database.MysqlHandler.Type;
 import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.hook.WorldGuardHook;
@@ -83,6 +85,109 @@ public class SignChangeListener implements Listener
 					.replace("%actual%", String.valueOf(signShopAmount))
 					.replace("%max%", String.valueOf(maxSignShopAmount))
 					));
+			return;
+		}
+		if(event.getLine(1).equalsIgnoreCase(new ConfigHandler().getSignShopMoveLine()))
+		{
+			//Move SignShop
+			String line2 = event.getLine(2);
+			if(!MatchApi.isInteger(line2))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+						.replace("%value%", line2)));
+				return;
+			}
+			int sshID = Integer.valueOf(line2);
+			SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", sshID);
+			if(ssh == null)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.ShopNotExists")
+						.replace("%id%", line2)));
+				return;
+			}
+			if(!ssh.getOwner().equals(player.getUniqueId()))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
+				return;
+			}
+			ssh.setServer(plugin.getServername());
+			ssh.setWorld(event.getBlock().getWorld().getName());
+			ssh.setX(event.getBlock().getX());
+			ssh.setY(event.getBlock().getY());
+			ssh.setZ(event.getBlock().getZ());
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.ShopMoved")
+					.replace("%id%", line2)
+					.replace("%shopname%", ssh.getSignShopName())));
+			event.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh, event.getBlock())));
+			event.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, event.getBlock())));
+			event.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, ssh, event.getBlock())));
+			event.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, ssh, event.getBlock())));
+			Block b = event.getBlock();
+			if(b == null)
+			{
+				return;
+			}
+			BlockState bs = b.getState();
+			if(!(bs instanceof Sign))
+			{
+				return;
+			}
+			Sign sign = (Sign) bs;
+			sign.setWaxed(true);
+			plugin.getMysqlHandler().updateData(Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+			return;
+		} else if(event.getLine(1).equalsIgnoreCase(new ConfigHandler().getSignShopCopyLine()))
+		{
+			//Copy SignShop
+			String line2 = event.getLine(2);
+			if(!MatchApi.isInteger(line2))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+						.replace("%value%", line2)));
+				return;
+			}
+			int sshID = Integer.valueOf(line2);
+			SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", sshID);
+			if(ssh == null)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.ShopNotExists")
+						.replace("%id%", line2)));
+				return;
+			}
+			if(!ssh.getOwner().equals(player.getUniqueId()))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
+				return;
+			}
+			SignShop copy = ssh;
+			copy.setServer(plugin.getServername());
+			copy.setWorld(event.getBlock().getWorld().getName());
+			copy.setX(event.getBlock().getX());
+			copy.setY(event.getBlock().getY());
+			copy.setZ(event.getBlock().getZ());
+			copy.setItemStorageCurrent(0);
+			copy.setItemStorageTotal(new ConfigHandler().getDefaulStartItemStorage());
+			copy.setSignShopName("Copy: "+copy.getSignShopName());
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.ShopCopy")
+					.replace("%id%", line2)
+					.replace("%shopname%", ssh.getSignShopName())));
+			plugin.getMysqlHandler().create(Type.SIGNSHOP, copy);
+			event.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, copy, event.getBlock())));
+			event.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, copy, event.getBlock())));
+			event.setLine(2, ChatApi.tl(SignHandler.getSignLine(2, copy, event.getBlock())));
+			event.setLine(3, ChatApi.tl(SignHandler.getSignLine(3, copy, event.getBlock())));
+			Block b = event.getBlock();
+			if(b == null)
+			{
+				return;
+			}
+			BlockState bs = b.getState();
+			if(!(bs instanceof Sign))
+			{
+				return;
+			}
+			Sign sign = (Sign) bs;
+			sign.setWaxed(true);
 			return;
 		}
 		int lastnumber = plugin.getMysqlHandler().lastID(MysqlHandler.Type.SIGNSHOP)+1;

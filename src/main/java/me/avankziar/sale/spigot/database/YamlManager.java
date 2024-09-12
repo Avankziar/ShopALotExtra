@@ -440,9 +440,25 @@ public class YamlManager
 				"[SaleShop]"},
 				new Object[] {
 				"",
-				"Zeile welche zum initialisieren genutzt wird um ein SignShop zu gründen.",
+				"Zeile 0 welche zum initialisieren genutzt wird um ein SignShop zu gründen.",
 				"",
 				"Line which is used for initialization to create a SignShop."});
+		addConfig("SignShop.SignCopyLine",
+				new Object[] {
+				"[Copy]"},
+				new Object[] {
+				"",
+				"Zeile 1 welche zum Kopieren des angegeben Shops genutzt wird. Übernommen wird alles außer eingelagerte Items.",
+				"",
+				"Line 1 which is used to copy the specified store. Everything is copied except stored items."});
+		addConfig("SignShop.SignMoveLine",
+				new Object[] {
+				"[Move]"},
+				new Object[] {
+				"",
+				"Zeile 1 welche zum Verlegen des angegeben Shops genutzt wird. Altes Shopschild ist somit inaktiv. Wird aber nicht abgebaut.",
+				"",
+				"Line 1 which is used to relocate the specified store. The old store sign is therefore inactive. But will not be removed."});
 		addConfig("SignShop.DefaultStartItemStorage",
 				new Object[] {
 				3456},
@@ -485,6 +501,14 @@ public class YamlManager
 				"Wenn 'true' dann wird die 4 Zeile des Schildes des Shops in Stacks berechnet, ansteller einzelner Items.",
 				"",
 				"If 'true' then the 4 line of the store's sign is calculated in stacks instead of individual items."});
+		addConfig("SignShop.Sign.LocaleForDecimalAndThousandSeperator",
+				new Object[] {
+				"ENGLISH"},
+				new Object[] {
+				"",
+				"Sprache für die Seperatoren von Dezimal- und Tausend-Zeichen. Siehe https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html",
+				"",
+				"Language for the separators of decimal and thousand characters. See https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html"});
 		addConfig("SignShop.Tax.BuyInPercent",
 				new Object[] {
 				1.0},
@@ -912,6 +936,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst diesen Wert nicht ändern, da dir der Shop nicht gehört.",
 						"&cYou can't change this value because you don't own the store."}));
+		languageKeys.put("SignChangeListener.WorldGuardCreateDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Shops erstellt werden!",
+						"&cNo shops may be created in this region!"}));
 		languageKeys.put("Economy.AddStorage.Category", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Lagerraumerweiterung",
@@ -964,6 +992,18 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast den Shop &f%name% &eerstellt! &bKlicke auf das Schild und stelle dort das Item des Shops ein!",
 						"&eYou have created the store &f%name%! &bClick on the sign and set the item of the store there!"}));
+		languageKeys.put("SignChangeListener.ShopNotExists", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Shop %id% existiert nicht!",
+						"&cThe store %id% does not exist!"}));
+		languageKeys.put("SignChangeListener.ShopMoved", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Shops %id%-%shopname% wurde versetzt!",
+						"&eThe store %id%-%shopname% has been moved!"}));
+		languageKeys.put("SignChangeListener.ShopCopy", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Shops %id%-%shopname% wurde kopiert!",
+						"&eThe store %id%-%shopname% has been copied!"}));
 		languageKeys.put("PlayerInteractListener.IsBlackList", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu steht für diesen Shop auf der schwarzen Liste.",
