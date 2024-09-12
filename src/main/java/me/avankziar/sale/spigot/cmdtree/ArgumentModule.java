@@ -29,7 +29,7 @@ public abstract class ArgumentModule
 	
 	public void setCooldown(UUID uuid, long duration, TimeUnit timeUnit)
 	{
-		cooldown.put(uuid, timeUnit.convert(duration, TimeUnit.MILLISECONDS));
+		cooldown.put(uuid, timeUnit.convert(duration, TimeUnit.MILLISECONDS)+System.currentTimeMillis());
 	}
 	
 	public void removeCooldown(UUID uuid)
