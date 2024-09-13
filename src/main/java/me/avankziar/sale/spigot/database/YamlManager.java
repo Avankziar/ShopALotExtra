@@ -611,6 +611,14 @@ public class YamlManager
 				"Wenn 'true' dann wird bei jedem öffnen des Shop & AdministrationGui das Settingslevel auf den unten angegeben Wert gesetzt.",
 				"",
 				"If 'true' then the settings level is set to the value specified below each time the Shop & AdministrationGui is opened."});
+		addConfig("SignShop.Gui.ClickCooldown",
+				new Object[] {
+				500},
+				new Object[] {
+				"",
+				"Cooldown beim Klicken in den Guis in Millisekunden.",
+				"",
+				"Cooldown when clicking in the guis in milliseconds."});
 		addConfig("SignShop.Gui.ToBeForcedSettingsLevel",
 				new Object[] {
 				SettingsLevel.BASE.toString()},

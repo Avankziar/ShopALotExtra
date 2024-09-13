@@ -1,7 +1,9 @@
 package main.java.me.avankziar.sale.spigot.gui.listener;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,10 +26,30 @@ import main.java.me.avankziar.sale.spigot.objects.SignShop;
 public class UpperListener implements Listener
 {
 	private SaLE plugin;
+	private long dur = 1000;
 	
 	public UpperListener(SaLE plugin)
 	{
 		this.plugin = plugin;
+		dur = plugin.getYamlHandler().getConfig().getLong("SignShop.Gui.ClickCooldown", 1000L);
+	}
+	
+	private LinkedHashMap<UUID, Long> cooldown = new LinkedHashMap<>();;
+	
+	public boolean isOnCooldown(UUID uuid)
+	{
+		Long c = cooldown.get(uuid);
+		return c == null ? false : c.longValue() > System.currentTimeMillis();
+	}
+	
+	public void setCooldown(UUID uuid, long duration, TimeUnit timeUnit)
+	{
+		cooldown.put(uuid, timeUnit.convert(duration, TimeUnit.MILLISECONDS)+System.currentTimeMillis());
+	}
+	
+	public void removeCooldown(UUID uuid)
+	{
+		cooldown.remove(uuid);
 	}
 	
 	@EventHandler
@@ -54,6 +76,11 @@ public class UpperListener implements Listener
 		{
 			return;
 		}
+		if(isOnCooldown(player.getUniqueId()))
+		{
+			return;
+		}
+		setCooldown(player.getUniqueId(), dur, TimeUnit.MILLISECONDS);
 		int sshID = event.getValuesInteger().get(GuiHandler.SIGNSHOP_ID);
 		SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", sshID);
 		UUID ou = null;
