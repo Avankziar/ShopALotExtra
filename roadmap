@@ -62,6 +62,7 @@ Build 1-8-0
   Suchradius der möglichen Shops in der Gui durch Configpfad 'SignShop.Search.Radius' einstellbar. Möglich ist PROXY, SERVER, WORLD & Ganzzahlen.
   Einstellbar, was beim klicken auf einem Slot gemacht werden soll. Koordinaten oder Teleport zum Shop.
 - WorldGuard Shop-Erstellung Flag hinzugefügt (sale-shop-create). Default 'true'.
+- WorldGuard Shop-Erstellung Flag BypassPermission hinzugefügt.
 - Auf Schilder der Shops Dezimal- und Tausend-Zeichen für Zahlen hinzufügt. Minimale Dezimalstellen 0, maximale Dezimalstellen 3.
 - Kopieren und Repositionierung von Shops durch Schilderangabe hinzugefügt.
   Beim Kopieren wird nicht der Lagerinhalt und die maximal Lagerplatz mitkopiert. Der Standart maximale Lagerplatz wird eingesetzt.

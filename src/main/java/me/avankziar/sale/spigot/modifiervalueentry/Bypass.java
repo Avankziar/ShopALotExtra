@@ -10,6 +10,7 @@ public class Bypass
 	public enum Permission
 	{
 		SHOP_CREATION,
+		SHOP_CREATION_WORLDGUARD,
 		SHOP_GUI_BYPASS,
 		SHOP_LOG_OTHERPLAYER,
 		CLIENT_LOG_OTHERPLAYER;

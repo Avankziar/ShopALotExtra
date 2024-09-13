@@ -66,16 +66,16 @@ public class SignChangeListener implements Listener
 		}
 		if(!ModifierValueEntry.hasPermission(player, Bypass.Permission.SHOP_CREATION))
 		{
-			if(SaLE.getWorldGuard())
-			{
-				if(!WorldGuardHook.canCreateShop(player, event.getBlock().getLocation()))
-				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.WorldGuardCreateDeny")));
-					return;
-				}
-			}
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 			return;
+		}
+		if(SaLE.getWorldGuard())
+		{
+			if(!WorldGuardHook.canCreateShop(player, event.getBlock().getLocation()))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SignChangeListener.WorldGuardCreateDeny")));
+				return;
+			}
 		}
 		int signShopAmount = plugin.getMysqlHandler().getCount(MysqlHandler.Type.SIGNSHOP, "`player_uuid` = ?", player.getUniqueId().toString());
 		int maxSignShopAmount = ModifierValueEntry.getResult(player, Bypass.Counter.SHOP_CREATION_AMOUNT_);

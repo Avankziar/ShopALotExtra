@@ -11,6 +11,9 @@ import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
+
 public class WorldGuardHook
 {
 	public static StateFlag SHOP_CREATE;
@@ -34,6 +37,7 @@ public class WorldGuardHook
 	{
 		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
         com.sk89q.worldedit.util.Location loc1 = BukkitAdapter.adapt(pointOne);
-        return query.testState(loc1, WorldGuardPlugin.inst().wrapPlayer(player), SHOP_CREATE);
+        return ModifierValueEntry.hasPermission(player, Bypass.Permission.SHOP_CREATION_WORLDGUARD)
+        		? true : query.testState(loc1, WorldGuardPlugin.inst().wrapPlayer(player), SHOP_CREATE);
 	}
 }
