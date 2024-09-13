@@ -24,4 +24,5 @@ public enum CommandExecuteType
 	SALE_CLIENT,
 	SALE_CLIENT_LOG,
 	SALE_CLIENT_DAILYLOG,
+	SALE_SUBSCRIBED,
 }

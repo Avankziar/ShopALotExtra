@@ -45,6 +45,7 @@ public class YamlManager
 		initGuiKeyboard();
 		initGuiSearchBuy();
 		initGuiSearchSell();
+		initGuiSubscribe();
 	}
 	
 	public ISO639_2B getLanguageType()
@@ -477,6 +478,14 @@ public class YamlManager
 				"Die Kosten pro Währung um den Lagerplatz eines Shops um 1 zu erhöhen.",
 				"",
 				"The cost per currency to increase the storage space of a store by 1."});
+		addConfig("SignShop.DefaultMaxSubscribtion",
+				new Object[] {
+				45},
+				new Object[] {
+				"",
+				"Die Standart maximale Anzahl an abonnierten Shops. Per Permission erhöhbar.",
+				"",
+				"The standard maximum number of subscribed transactions. Can be increased by permission."});
 		addConfig("SignShop.ForbiddenWorld",
 				new Object[] {
 				"hubs", "spawns"},
@@ -674,7 +683,7 @@ public class YamlManager
 				"&bCommandright for &f/sale",
 				"&eBasisbefehl für das Sale Plugin.",
 				"&eGroundcommand for the Sale Plugin.");
-		String basePermission = "sale.cmd.";
+		String basePermission = "sale.cmd";
 		argumentInput("sale_shop", "shop", basePermission,
 				"/sale shop", "/sale shop ", false,
 				"&c/sale shop &f| Zwischenbefehl.",
@@ -779,6 +788,14 @@ public class YamlManager
 				"&bCommandright for &f/sale client dailylog",
 				"&eBefehl zeigt die Shop Aktivitäten des Eigentümer an.",
 				"&eCommand for displays the shop activities of the owner.");
+		argumentInput("sale_subscribed", "subscribed", basePermission+".subscribed",
+				"/sale subscribed [page] [searchparameter...]", "/sale subscribed", false,
+				"&c/sale subscribed [Seitenzahl] [Suchparameter...] &f| Auflistung per Gui aller abonnierten Shops. Suchparameter erlauben größere Eingrenzung. X ist dabei den Wert den ihr suchen wollt.",
+				"&c/sale subscribed [page] [searchparameter...] &f| Listing via Gui of all subscribed stores. Search parameters allow you to narrow down your search. X is the value you want to search for.",
+				"&bBefehlsrecht für &f/sale subscribed",
+				"&bCommandright for &f/sale subscribed",
+				"&eAuflistung per Gui aller abonnierten Shops. Suchparameter erlauben größere Eingrenzung. X ist dabei den Wert den ihr suchen wollt.",
+				"&eListing via Gui of all subscribed stores. Search parameters allow you to narrow down your search. X is the value you want to search for.");
 	}
 	
 	private void comBypass() //INFO:ComBypass
@@ -1380,14 +1397,25 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast den Shop &a%shop% &eabonniert!",
 						"&eYou have subscribed the shop &a%shop%&e!"}));
+		languageKeys.put("ShopFunctionHandler.Subscribes.HasMoreAsAllowed"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast zu viele Shops abonniert! &f%has%/%allowed%",
+						"&cYou have subscribed to too many stores! &f%has%/%allowed%"}));
 		languageKeys.put("ShopFunctionHandler.Unsubscribe"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast den Shop &c%shop% &edeabonniert!",
 						"&eYou have unsubscribed the shop &a%shop%&e!"}));
+		
 		languageKeys.put("SearchFunctionHandler.Title"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eSuche: &f%mat%",
 						"&eSearch: &f%mat%"}));
+		
+		languageKeys.put("SubscribedFunctionHandler.Title"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eAbos von &f%player%",
+						"&eSubscribes of &f%player%"}));
+		
 		languageKeys.put("SignShopProvider.GetOutOfStorage"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eVom Shop &f%shopname% &ewurden &f%amount% &eItems ins Lager verschoben.",
@@ -1540,6 +1568,30 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDas Plugin kann nicht auf Serverübergreifend teleportieren. API-Zugang fehlt.",
 						"&cThe plugin cannot teleport across servers. API access is missing."}));
+		languageKeys.put("Cmd.Subscribed.NoSubscribes", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast keine Shops abonniert!",
+						"&cYou have not subscribed to any shops!"}));
+		languageKeys.put("Cmd.Subscribed.NoSubscribesFound", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cEs wurden keine abonnierten Shops nach den Parameter gefunden!",
+						"&cNo subscribed stores were found according to the parameters!"}));
+		languageKeys.put("Cmd.Subscribed.NoSameServer", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDen Shop den du einsehen möchtest ist nicht auf dem gleichen Server!",
+						"&cThe store you want to view is not on the same server!"}));
+		languageKeys.put("Cmd.Subscribed.LocationInfo", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7====================",
+						"&eShop &f%signshopname% &e- Eigentümer &f%owner%",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eLocation: &f%server% - %world% | %x% %y% %z%",
+						"&7====================",
+						"&7====================",
+						"&eShop &f%signshopname% &e- Owner &f%owner%",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eLocation: &f%server% - %world% | %x% %y% %z%",
+						"&7===================="}));
 	}
 	
 	public void initModifierValueEntryLanguage() //INFO:ModifierValueEntryLanguages
@@ -5038,7 +5090,7 @@ public class YamlManager
 						"&eKosten: &f%buyraw1%",
 						"",
 						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
-						"&eKosten: &f%buyraw1%",}));
+						"&eCosts: &f%buyraw1%",}));
 		sbuy.put("ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.SEARCH_BUY.toString()}));
@@ -5062,7 +5114,7 @@ public class YamlManager
 						"&eKosten: &f%sellraw1%",
 						"",
 						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
-						"&eKosten: &f%sellraw1%",}));
+						"&eCosts: &f%sellraw1%",}));
 		ssell.put("ClickFunction."+ClickType.LEFT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.SEARCH_SELL.toString()}));
@@ -5070,5 +5122,69 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.SEARCH_SELL.toString()}));
 		guiKeys.put(GuiType.SEARCH_SELL, ssell);
+	}
+	
+	private void initGuiSubscribe() //INFO:GuiSubscribe
+	{
+		LinkedHashMap<String, Language> subs = new LinkedHashMap<>();
+		subs.put("Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e%signshopname% &f- &e%owner%",
+						"&e%signshopname% &f- &e%owner%"}));
+		subs.put("Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						"&eMaterial: &f%material%",
+						"&eDisplayname: &f%displayname%",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eKaufkosten: &f%buyraw1%",
+						"&eVerkaufskosten: &f%sellraw1%",
+						"",
+						"&eMaterial: &f%material%",
+						"&eDisplayname: &f%displayname%",
+						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
+						"&eBuycosts: &f%buyraw1%",
+						"&eSellcosts: &f%sellraw1%"}));
+		subs.put("ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SUBSCRIBED.toString()}));
+		subs.put("ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SUBSCRIBED.toString()}));
+		String path = "45"; //Past
+		subs.put(path+".Material",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						Material.PLAYER_HEAD.toString()}));
+		subs.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"http://textures.minecraft.net/texture/e35e42fc7060c223acc965f7c5996f272644af40a4723a372f5903f8e9f188e7"}));
+		subs.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7Klicke hier für die vorherige Seite!",
+						"&7Click here for the past page!"}));
+		subs.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SUBSCRIBED_PAST.toString()}));
+		subs.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SUBSCRIBED_PAST.toString()}));
+		path = "53"; //Next
+		subs.put(path+".Material",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						Material.PLAYER_HEAD.toString()}));
+		subs.put(path+".HeadTexture",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"http://textures.minecraft.net/texture/aee0f82fb33f6cfa5169b9f5eafe4dc1c73618c9783b131adada411d8f605505"}));
+		subs.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7Klicke hier für die nächste Seite!",
+						"&7Click here for the next page!"}));
+		subs.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SUBSCRIBED_NEXT.toString()}));
+		subs.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.SUBSCRIBED_NEXT.toString()}));
+		guiKeys.put(GuiType.SUBSCIBED, subs);
 	}
 }

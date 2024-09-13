@@ -37,7 +37,8 @@ public class Bypass
 		SHOP_ITEMSTORAGE_AMOUNT_,
 		COST_ADDING_STORAGE(false),
 		SHOP_BUYING_TAX(false),
-		SHOP_SELLING_TAX(false);
+		SHOP_SELLING_TAX(false),
+		SHOP_SUBSCRIPTION_;
 		
 		private boolean forPermission;
 		

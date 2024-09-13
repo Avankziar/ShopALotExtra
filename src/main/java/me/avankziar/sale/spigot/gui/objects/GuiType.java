@@ -24,4 +24,5 @@ public enum GuiType
 	ITEM_INPUT,
 	SEARCH_BUY,
 	SEARCH_SELL,
+	SUBSCIBED
 }

@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import main.java.me.avankziar.sale.spigot.cmd.sale.ARGDebug;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGDelete;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShop;
 import main.java.me.avankziar.sale.spigot.cmd.sale.ARGShopping;
+import main.java.me.avankziar.sale.spigot.cmd.sale.ARGSubscribed;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_BreakToggle;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SDailyLog;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SLog;
@@ -264,10 +266,24 @@ public class SaLE extends JavaPlugin
 		new ARGSPDailyLog(plugin, spdailylog);
 		ArgumentConstructor client = new ArgumentConstructor(CommandExecuteType.SALE_CLIENT, "sale_client", 0, 0, 0, false, null,
 				splog, spdailylog);
-		new ARGShopping(plugin, client);		
+		new ARGShopping(plugin, client);	
+		
+		ArrayList<String> subsType = new ArrayList<>();
+		subsType.addAll(Arrays.asList(
+				"buycost>X", "buycost<X",
+				"sellcost>X", "sellcost<X",
+				"storage>X", "storage<X",
+				"material=X", "displayname=X", "player=X", "sameserver", "sameworld", "usehanditem"));
+		subsType.sort(Comparator.naturalOrder());
+		LinkedHashMap<Integer, ArrayList<String>> subs = new LinkedHashMap<>();
+		subs.put(1, subsType);
+		subs.put(2, subsType);
+		subs.put(3, subsType);
+		ArgumentConstructor subscribed = new ArgumentConstructor(CommandExecuteType.SALE_SUBSCRIBED, "sale_subscribed", 0, 0, 10, false, subs);
+		new ARGSubscribed(plugin, subscribed);	
 		
 		CommandConstructor sale = new CommandConstructor(CommandExecuteType.SALE, "sale", false,
-				debug, shop, client);
+				debug, shop, client, subscribed);
 		registerCommand(sale.getPath(), sale.getName());
 		getCommand(sale.getName()).setExecutor(new SaLECommandExecutor(plugin, sale));
 		getCommand(sale.getName()).setTabCompleter(tab);
@@ -775,12 +791,13 @@ public class SaLE extends JavaPlugin
 						case SHOP_CREATION_AMOUNT_:
 						case SHOP_ITEMSTORAGE_AMOUNT_:
 						case COST_ADDING_STORAGE:
+						case SHOP_SUBSCRIPTION_:
 							bmt = ModificationType.UP;
 							break;
 						case SHOP_BUYING_TAX:
 						case SHOP_SELLING_TAX:
 							bmt = ModificationType.DOWN;
-							break;
+							break;							
 						}
 						List<String> lar = plugin.getYamlHandler().getMVELang().getStringList(ept.toString()+".Explanation");
 						getModifier().register(

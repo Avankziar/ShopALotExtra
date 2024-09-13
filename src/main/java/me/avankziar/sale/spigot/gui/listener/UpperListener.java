@@ -18,6 +18,7 @@ import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.AdminstrationFunctionHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.SearchFunctionHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.ShopFunctionHandler;
+import main.java.me.avankziar.sale.spigot.handler.gui.SubscribedFunctionHandler;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 
 public class UpperListener implements Listener
@@ -63,6 +64,12 @@ public class UpperListener implements Listener
 		boolean teleport_OR_location = event.getValuesString().containsKey(GuiHandler.SEARCH_TELEPORT_OR_LOCATION)
 				? Boolean.valueOf(event.getValuesString().get(GuiHandler.SEARCH_TELEPORT_OR_LOCATION))
 				: false;
+		int page = event.getValuesInteger().containsKey(GuiHandler.PAGE)
+				? event.getValuesInteger().get(GuiHandler.PAGE)
+				: -1;
+		String where = event.getValuesString().containsKey(GuiHandler.SEARCH_TELEPORT_OR_LOCATION)
+				? event.getValuesString().get(GuiHandler.SEARCH_TELEPORT_OR_LOCATION)
+				: "";
 		ClickType ct = getClickFunctionType(event.getEvent().getClick(), event.getEvent().getHotbarButton());
 		if(ct == null)
 		{
@@ -133,6 +140,16 @@ public class UpperListener implements Listener
 				public void run()
 				{
 					SearchFunctionHandler.doClickFunktion(cft, player, ssh, event.getEvent().getClickedInventory(), teleport_OR_location);
+				}
+			}.runTaskAsynchronously(plugin);
+			break;
+		case SUBSCIBED:
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					SubscribedFunctionHandler.doClickFunktion(cft, player, ssh, event.getEvent().getClickedInventory(), page, where);
 				}
 			}.runTaskAsynchronously(plugin);
 			break;

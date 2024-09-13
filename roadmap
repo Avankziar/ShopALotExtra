@@ -72,6 +72,10 @@ Build 1-8-0
   3. Zeile: ShopID
 - Ein Button im AdministrationGui hinzugefügt, welche per Chat anzeigt, welcher Spieler sich für diesen Shop auf welcher Liste steht.
   Zum sehen diesen Button, müssen die Gui Datein neu erstellt werden.
+- /sale subscribed [Seitenzahl] [Suchparameter...] hinzugefügt.
+  Suchparameter sind: (X als Wert ersetzt)
+  buycost>X, buycost<X, sellcost>X, sellcost<X,	storage>X, storage<X, material=X, displayname=X, player=X, sameserver, sameworld, usehanditem
+  Öffnet eine Gui mit allen abonnierten Shops mit geordnet nach den optionalen Suchparameter sowie einer möglichen Pagination.
 
 Build 1-7-1
 - Vault Buy / Sell Funktion fix

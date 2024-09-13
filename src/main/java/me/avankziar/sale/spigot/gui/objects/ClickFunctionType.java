@@ -225,5 +225,9 @@ public enum ClickFunctionType
 	
 	//Search Gui
 	SEARCH_BUY,
-	SEARCH_SELL
+	SEARCH_SELL,
+	
+	SUBSCRIBED,
+	SUBSCRIBED_PAST,
+	SUBSCRIBED_NEXT
 }

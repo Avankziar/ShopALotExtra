@@ -26,15 +26,18 @@ import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
+import main.java.me.avankziar.sale.spigot.database.MysqlHandler.Type;
 import main.java.me.avankziar.sale.spigot.event.ShopPostTransactionEvent;
 import main.java.me.avankziar.sale.spigot.event.ShopPreTransactionEvent;
 import main.java.me.avankziar.sale.spigot.gui.objects.ClickFunctionType;
 import main.java.me.avankziar.sale.spigot.gui.objects.GuiType;
 import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
+import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.MessageHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
 import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
+import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.ClientDailyLog;
 import main.java.me.avankziar.sale.spigot.objects.ClientLog;
 import main.java.me.avankziar.sale.spigot.objects.ClientLog.WayType;
@@ -757,6 +760,7 @@ public class ShopFunctionHandler
 	
 	private static void subscribe(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
 	{
+		int defaultmax = new ConfigHandler().getDefaulMaxSubscribeShops();
 		SubscribedShop subs = (SubscribedShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SUBSCRIBEDSHOP, 
 				"`player_uuid` = ? AND `sign_shop_id` = ?", player.getUniqueId().toString(), ssh.getId());
 		if(subs != null)
@@ -766,6 +770,18 @@ public class ShopFunctionHandler
 					.replace("%shop%", ssh.getSignShopName())));
 		} else
 		{
+			int has = plugin.getMysqlHandler().getCount(Type.SUBSCRIBEDSHOP, "`player_uuid` = ?", player.getUniqueId().toString());
+			if(has >= defaultmax)
+			{
+				int add = defaultmax + ModifierValueEntry.getResult(player, Bypass.Counter.SHOP_SUBSCRIPTION_);
+				if(has >= add)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Subscribes.HasMoreAsAllowed")
+							.replace("%has%", String.valueOf(has))
+							.replace("%allowed%", String.valueOf(add))));
+					return;
+				}
+			}
 			subs = new SubscribedShop(0, player.getUniqueId(), ssh.getId(), System.currentTimeMillis());
 			plugin.getMysqlHandler().create(MysqlHandler.Type.SUBSCRIBEDSHOP, subs);
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Subscribe")

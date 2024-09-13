@@ -525,6 +525,7 @@ public class AdminstrationFunctionHandler
 			bl = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX(), ssh.getY(), ssh.getZ()).getBlock();
 		}
 		final Block block = bl;
+		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SUBSCRIBEDSHOP, "`sign_shop_id` = ?", ssh.getId());
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", ssh.getId());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.DeleteAll.Delete")
 				.replace("%id%", String.valueOf(sshid))

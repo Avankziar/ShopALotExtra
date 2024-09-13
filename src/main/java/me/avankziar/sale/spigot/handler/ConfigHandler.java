@@ -72,4 +72,9 @@ public class ConfigHandler
 	{
 		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("SignShop.Gui.FillNotDefineGuiSlots", true);
 	}
+	
+	public int getDefaulMaxSubscribeShops()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getInt("SignShop.DefaultMaxSubscribtion", 45);
+	}
 }
