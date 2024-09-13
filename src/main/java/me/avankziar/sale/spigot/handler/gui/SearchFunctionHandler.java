@@ -35,7 +35,7 @@ public class SearchFunctionHandler
 		{
 			if(SaLE.getPlugin().getServername().equals(ssh.getServer()))
 			{
-				Location loc = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX(), ssh.getY(), ssh.getZ());
+				final Location loc = new Location(Bukkit.getWorld(ssh.getWorld()), ssh.getX(), ssh.getY(), ssh.getZ());
 				new BukkitRunnable()
 				{
 					@Override
@@ -44,7 +44,7 @@ public class SearchFunctionHandler
 						player.closeInventory();
 						player.teleport(loc);
 					}
-				};
+				}.runTask(SaLE.getPlugin());
 			} else
 			{
 				if(SaLE.getPlugin().getTeleport() == null)
@@ -53,17 +53,18 @@ public class SearchFunctionHandler
 					List<String> list = GuiHandler.getLorePlaceHolder(ssh, player,
 							SaLE.getPlugin().getYamlHandler().getLang().getStringList("Cmd.Search."+buyOrSell+".LocationInfo"), player.getName());
 					list.stream().forEach(x -> player.sendMessage(ChatApi.tl(x)));
-					return;
-				}
-				new BukkitRunnable()
+				} else
 				{
-					@Override
-					public void run()
+					new BukkitRunnable()
 					{
-						player.closeInventory();
-						SaLE.getPlugin().getTeleport().teleport(player, ssh.getServer(), ssh.getWorld(), ssh.getX(), ssh.getY(), ssh.getZ(), 0, 0);
-					}
-				};
+						@Override
+						public void run()
+						{
+							player.closeInventory();
+							SaLE.getPlugin().getTeleport().teleport(player, ssh.getServer(), ssh.getWorld(), ssh.getX(), ssh.getY(), ssh.getZ(), 0, 0);
+						}
+					}.runTask(SaLE.getPlugin());
+				}
 			}
 		} else
 		{
