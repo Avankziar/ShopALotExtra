@@ -186,7 +186,8 @@ public class ARGSubscribed extends ArgumentModule
 						UUID other = Utility.convertNameToUUID(c);
 						if(other == null)
 						{
-							continue;
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+							return;
 						}
 						if(whereQuery.isEmpty())
 						{
@@ -244,7 +245,9 @@ public class ARGSubscribed extends ArgumentModule
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Cmd.Subscribed.NoSubscribesFound")));
 			return;
 		}
-		GuiHandler.openSubscribed(list, player, page, where, true, null);
+		boolean openShop_OR_Location = "OPENSHOP".equalsIgnoreCase(
+				SaLE.getPlugin().getYamlHandler().getConfig().getString("SignShop.Subcribe.DoAfterGuiClick", "LOCATION"));
+		GuiHandler.openSubscribed(list, player, page, where, true, null, openShop_OR_Location);
 	}
 	
 	public static ArrayList<SignShop> getSubscribed(String sql, String where, int page)

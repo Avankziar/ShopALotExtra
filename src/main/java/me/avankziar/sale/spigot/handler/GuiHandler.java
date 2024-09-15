@@ -68,6 +68,7 @@ public class GuiHandler
 	public static String SEARCH_TELEPORT_OR_LOCATION = "search_teleport_or_location";
 	public static String PAGE = "page";
 	public static String WHERE = "where";
+	public static String SUBCRIBE_OPENSHOP_OR_LOCATION = "subcribe_openshop_or_location";
 	
 	public static void openAdministration(SignShop ssh, Player player, SettingsLevel settingsLevel, boolean closeInv)
 	{
@@ -127,7 +128,8 @@ public class GuiHandler
 		openSearchGui(list, player, gt, gui, settingsLevel, closeInv, searchMat, teleport_OR_Location);
 	}
 	
-	public static void openSubscribed(ArrayList<SignShop> list, Player player, int page, String where, boolean closeInv, Inventory inv)
+	public static void openSubscribed(ArrayList<SignShop> list, Player player, int page, String where, boolean closeInv,
+			Inventory inv, boolean openShop_OR_Location)
 	{
 		GuiType gt = GuiType.SUBSCIBED;
 		GUIApi gui = null;
@@ -142,7 +144,7 @@ public class GuiHandler
 			inv.clear();
 			gui = new GUIApi(plugin.pluginName, inv, gt.toString(), SettingsLevel.BASE);
 		}
-		openListGui(list, player, gt, gui, closeInv, page, where);
+		openListGui(list, player, gt, gui, closeInv, page, where, openShop_OR_Location);
 	}
 	
 	private static void openGui(SignShop ssh, Player player, GuiType gt, GUIApi gui, SettingsLevel settingsLevel, boolean closeInv)
@@ -534,7 +536,8 @@ public class GuiHandler
 		}.runTask(plugin);
 	}
 	
-	private static void openListGui(ArrayList<SignShop> list, Player player, GuiType gt, GUIApi gui, boolean closeInv, int page, String whereQuery)
+	private static void openListGui(ArrayList<SignShop> list, Player player, GuiType gt, GUIApi gui, boolean closeInv,
+			int page, String whereQuery, boolean openShop_OR_Location)
 	{
 		boolean fillNotDefineGuiSlots = new ConfigHandler().fillNotDefineGuiSlots();
 		Material filler = Material.valueOf(plugin.getConfig().getString("SignShop.Gui.FillerItemMaterial", "LIGHT_GRAY_STAINED_GLASS_PANE"));
@@ -624,6 +627,8 @@ public class GuiHandler
 			is.setItemMeta(im);
 			LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
 			map.put(SIGNSHOP_ID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, 0));
+			map.put(SUBCRIBE_OPENSHOP_OR_LOCATION,
+					new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.STRING, String.valueOf(openShop_OR_Location)));
 			if(y.getString(i+".Pagination").equalsIgnoreCase("Next"))
 			{
 				map.put(PAGE, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, page+1));

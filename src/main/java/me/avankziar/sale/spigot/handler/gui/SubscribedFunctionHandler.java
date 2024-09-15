@@ -19,14 +19,14 @@ import main.java.me.avankziar.sale.spigot.objects.SignShop;
 public class SubscribedFunctionHandler
 {
 	public static void doClickFunktion(ClickFunctionType cft, Player player, SignShop ssh,
-			Inventory openInv, int page, String where)
+			Inventory openInv, int page, String where, boolean openshop_OR_location)
 	{
 		switch(cft)
 		{
 		default: return;
 		case SUBSCRIBED: subscribed(player, ssh); break;
 		case SUBSCRIBED_PAST:
-		case SUBSCRIBED_NEXT: pagination(player, page, where, openInv); break;			
+		case SUBSCRIBED_NEXT: pagination(player, page, where, openInv, openshop_OR_location); break;			
 		}
 	}
 	
@@ -60,10 +60,10 @@ public class SubscribedFunctionHandler
 		}
 	}
 	
-	private static void pagination(Player player, int page, String where, Inventory inv)
+	private static void pagination(Player player, int page, String where, Inventory inv, boolean openshop_OR_location)
 	{
 		String sql = "SELECT * FROM `"+Type.SIGNSHOP.getValue()+"` ";
 		ArrayList<SignShop> list = ARGSubscribed.getSubscribed(sql, where, page);
-		GuiHandler.openSubscribed(list, player, page, where, true, inv);
+		GuiHandler.openSubscribed(list, player, page, where, true, inv, openshop_OR_location);
 	}
 }

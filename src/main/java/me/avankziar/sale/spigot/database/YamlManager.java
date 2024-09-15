@@ -677,6 +677,16 @@ public class YamlManager
 				"",
 				"Determines what is done by the search commands Guis when clicking on the stores.",
 				"With LOCATION, only the location of the store and a few other details are written via chat. With TELEPORT the player is teleported."});
+		addConfig("SignShop.Subcribe.DoAfterGuiClick",
+				new Object[] {
+				"LOCATION"},
+				new Object[] {
+				"",
+				"Determiniert, was bei dem Klicken auf die Shops von den Abobefehlen Guis gemacht wird.",
+				"Bei LOCATION wird nur die Location des Shops und ein paar andere Daten per Chat geschrieben. Bei OPENSHOP wird der Shop geöffnet solange man sich auf dem gleichen Server befindet.",
+				"",
+				"Determines what is done by the search commands Guis when clicking on the stores.",
+				"With LOCATION, only the location of the store and a few other details are written via chat. With OPENSHOP the shop will be open per GUI if the player are on the same server."});
 	}
 	
 	//INFO:Commands

@@ -97,6 +97,9 @@ public class UpperListener implements Listener
 		String where = event.getValuesString().containsKey(GuiHandler.SEARCH_TELEPORT_OR_LOCATION)
 				? event.getValuesString().get(GuiHandler.SEARCH_TELEPORT_OR_LOCATION)
 				: "";
+		boolean openshop_OR_location = event.getValuesString().containsKey(GuiHandler.SUBCRIBE_OPENSHOP_OR_LOCATION)
+				? Boolean.valueOf(event.getValuesString().get(GuiHandler.SUBCRIBE_OPENSHOP_OR_LOCATION))
+				: false;
 		ClickType ct = getClickFunctionType(event.getEvent().getClick(), event.getEvent().getHotbarButton());
 		if(ct == null)
 		{
@@ -176,7 +179,7 @@ public class UpperListener implements Listener
 				@Override
 				public void run()
 				{
-					SubscribedFunctionHandler.doClickFunktion(cft, player, ssh, event.getEvent().getClickedInventory(), page, where);
+					SubscribedFunctionHandler.doClickFunktion(cft, player, ssh, event.getEvent().getClickedInventory(), page, where, openshop_OR_location);
 				}
 			}.runTaskAsynchronously(plugin);
 			break;
