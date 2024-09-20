@@ -268,17 +268,20 @@ public class SaLE extends JavaPlugin
 				splog, spdailylog);
 		new ARGShopping(plugin, client);	
 		
+		ArrayList<String> page = new ArrayList<>();
+		page.addAll(Arrays.asList("0"));
 		ArrayList<String> subsType = new ArrayList<>();
-		subsType.addAll(Arrays.asList(
-				"buycost>X", "buycost<X",
-				"sellcost>X", "sellcost<X",
-				"storage>X", "storage<X",
-				"material=X", "displayname=X", "player=X", "sameserver", "sameworld", "usehanditem"));
+		subsType.addAll(plugin.getYamlHandler().getConfig().getStringList("SignShop.Subscribe.TabList"));
 		subsType.sort(Comparator.naturalOrder());
 		LinkedHashMap<Integer, ArrayList<String>> subs = new LinkedHashMap<>();
-		subs.put(1, subsType);
+		subs.put(1, page);
 		subs.put(2, subsType);
 		subs.put(3, subsType);
+		subs.put(4, subsType);
+		subs.put(5, subsType);
+		subs.put(6, subsType);
+		subs.put(7, subsType);
+		subs.put(8, subsType);
 		ArgumentConstructor subscribed = new ArgumentConstructor(CommandExecuteType.SALE_SUBSCRIBED, "sale_subscribed", 0, 0, 10, false, subs);
 		new ARGSubscribed(plugin, subscribed);	
 		

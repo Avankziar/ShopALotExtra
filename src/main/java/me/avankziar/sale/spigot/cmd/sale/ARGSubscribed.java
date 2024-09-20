@@ -246,14 +246,14 @@ public class ARGSubscribed extends ArgumentModule
 			return;
 		}
 		boolean openShop_OR_Location = "OPENSHOP".equalsIgnoreCase(
-				SaLE.getPlugin().getYamlHandler().getConfig().getString("SignShop.Subcribe.DoAfterGuiClick", "LOCATION"));
+				SaLE.getPlugin().getYamlHandler().getConfig().getString("SignShop.Subscribe.DoAfterGuiClick", "LOCATION"));
 		GuiHandler.openSubscribed(list, player, page, where, true, null, openShop_OR_Location);
 	}
 	
 	public static ArrayList<SignShop> getSubscribed(String sql, String where, int page)
 	{
 		String orderby = " ORDER BY `id` ASC LIMIT "+(page*45)+", 44";
-		SaLE.getPlugin().getLogger().info("SQL: "+sql+where+orderby);
+		//SaLE.getPlugin().getLogger().info("SQL: "+sql+where+orderby);
 		return SignShop.convert(SaLE.getPlugin().getMysqlHandler().getSQL(Type.SIGNSHOP, sql+where+orderby));
 	}
 }

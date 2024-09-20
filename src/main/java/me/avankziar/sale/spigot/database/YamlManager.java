@@ -677,7 +677,7 @@ public class YamlManager
 				"",
 				"Determines what is done by the search commands Guis when clicking on the stores.",
 				"With LOCATION, only the location of the store and a few other details are written via chat. With TELEPORT the player is teleported."});
-		addConfig("SignShop.Subcribe.DoAfterGuiClick",
+		addConfig("SignShop.Subscribe.DoAfterGuiClick",
 				new Object[] {
 				"LOCATION"},
 				new Object[] {
@@ -687,6 +687,25 @@ public class YamlManager
 				"",
 				"Determines what is done by the search commands Guis when clicking on the stores.",
 				"With LOCATION, only the location of the store and a few other details are written via chat. With OPENSHOP the shop will be open per GUI if the player are on the same server."});
+		addConfig("SignShop.Subscribe.TabList",
+				new Object[] {
+				"buycost>X",
+				"buycost<X",
+				"sellcost>X",
+				"sellcost<X",
+				"storage>X",
+				"storage<X",
+				"material=X",
+				"displayname=X",
+				"player=X",
+				"sameserver",
+				"sameworld",
+				"usehanditem"},
+				new Object[] {
+				"",
+				"Die Liste von Wörter, welche genutzt werden, welche Spieler beim Nutzen des Befehls /sale subscribed",
+				"",
+				"The list of words that are used when players use the command /sale subscribed"});
 	}
 	
 	//INFO:Commands
@@ -1604,11 +1623,15 @@ public class YamlManager
 						"&eShop &f%signshopname% &e- Eigentümer &f%owner%",
 						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
 						"&eLocation: &f%server% - %world% | %x% %y% %z%",
+						"&eKaufkosten: &f%buyraw1%",
+						"&eVerkaufkosten: &f%sellraw1%",
 						"&7====================",
 						"&7====================",
 						"&eShop &f%signshopname% &e- Owner &f%owner%",
 						"&eItems: &f%itemstoragecurrent% / %itemstoragetotal%",
 						"&eLocation: &f%server% - %world% | %x% %y% %z%",
+						"&eBuycosts: &f%buyraw1%",
+						"&eSellcosts: &f%sellraw1%",
 						"&7===================="}));
 	}
 	

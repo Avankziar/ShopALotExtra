@@ -68,7 +68,7 @@ public class GuiHandler
 	public static String SEARCH_TELEPORT_OR_LOCATION = "search_teleport_or_location";
 	public static String PAGE = "page";
 	public static String WHERE = "where";
-	public static String SUBCRIBE_OPENSHOP_OR_LOCATION = "subcribe_openshop_or_location";
+	public static String SUBSCRIBE_OPENSHOP_OR_LOCATION = "subscribe_openshop_or_location";
 	
 	public static void openAdministration(SignShop ssh, Player player, SettingsLevel settingsLevel, boolean closeInv)
 	{
@@ -570,6 +570,8 @@ public class GuiHandler
 			is.setItemMeta(im);
 			LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
 			map.put(SIGNSHOP_ID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, ssh.getId()));
+			map.put(SUBSCRIBE_OPENSHOP_OR_LOCATION,
+					new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.STRING, String.valueOf(openShop_OR_Location)));
 			gui.add(i, is, SettingsLevel.NOLEVEL, true, map, getClickFunction(y, null));
 			i++;
 		}
@@ -627,8 +629,6 @@ public class GuiHandler
 			is.setItemMeta(im);
 			LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
 			map.put(SIGNSHOP_ID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, 0));
-			map.put(SUBCRIBE_OPENSHOP_OR_LOCATION,
-					new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.STRING, String.valueOf(openShop_OR_Location)));
 			if(y.getString(i+".Pagination").equalsIgnoreCase("Next"))
 			{
 				map.put(PAGE, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER, page+1));

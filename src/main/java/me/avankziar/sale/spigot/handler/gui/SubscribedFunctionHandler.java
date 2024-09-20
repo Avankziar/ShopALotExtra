@@ -24,39 +24,47 @@ public class SubscribedFunctionHandler
 		switch(cft)
 		{
 		default: return;
-		case SUBSCRIBED: subscribed(player, ssh); break;
+		case SUBSCRIBED: subscribed(player, ssh, openshop_OR_location); break;
 		case SUBSCRIBED_PAST:
 		case SUBSCRIBED_NEXT: pagination(player, page, where, openInv, openshop_OR_location); break;			
 		}
 	}
 	
-	private static void subscribed(Player player, SignShop ssh)
+	private static void subscribed(Player player, SignShop ssh, boolean openshop_OR_location)
 	{
-		if(!SaLE.getPlugin().getServername().equals(ssh.getServer()))
+		if(openshop_OR_location)
 		{
-			player.sendMessage(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("Cmd.Search.TeleportIsNull")));
+			if(!SaLE.getPlugin().getServername().equals(ssh.getServer()))
+			{
+				player.sendMessage(ChatApi.tl(SaLE.getPlugin().getYamlHandler().getLang().getString("Cmd.Search.TeleportIsNull")));
+				List<String> list = GuiHandler.getLorePlaceHolder(ssh, player,
+						SaLE.getPlugin().getYamlHandler().getLang().getStringList("Cmd.Subscribed.LocationInfo"), player.getName());
+				list.stream().forEach(x -> player.sendMessage(ChatApi.tl(x)));
+				new BukkitRunnable()
+				{
+					@Override
+					public void run()
+					{
+						player.closeInventory();
+					}
+				}.runTask(SaLE.getPlugin());
+			} else
+			{
+				new BukkitRunnable()
+				{
+					@Override
+					public void run()
+					{
+						player.closeInventory();
+						GuiHandler.openShop(ssh, player, SettingsLevel.BASE, false);
+					}
+				}.runTask(SaLE.getPlugin());
+			}
+		} else
+		{
 			List<String> list = GuiHandler.getLorePlaceHolder(ssh, player,
 					SaLE.getPlugin().getYamlHandler().getLang().getStringList("Cmd.Subscribed.LocationInfo"), player.getName());
 			list.stream().forEach(x -> player.sendMessage(ChatApi.tl(x)));
-			new BukkitRunnable()
-			{
-				@Override
-				public void run()
-				{
-					player.closeInventory();
-				}
-			}.runTask(SaLE.getPlugin());
-		} else
-		{
-			new BukkitRunnable()
-			{
-				@Override
-				public void run()
-				{
-					player.closeInventory();
-					GuiHandler.openShop(ssh, player, SettingsLevel.BASE, false);
-				}
-			}.runTask(SaLE.getPlugin());
 		}
 	}
 	
