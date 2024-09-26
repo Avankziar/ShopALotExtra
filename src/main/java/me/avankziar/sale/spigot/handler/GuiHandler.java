@@ -1,6 +1,6 @@
 package main.java.me.avankziar.sale.spigot.handler;
 
-import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -38,9 +38,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
@@ -677,7 +674,7 @@ public class GuiHandler
 		gui.add(i, is, SettingsLevel.NOLEVEL, true, map, new ClickFunction[0]);
 	}
 	
-	/*@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	public static ItemStack getSkull(String paramString) 
 	{
 		ItemStack is = new ItemStack(Material.PLAYER_HEAD);
@@ -685,7 +682,7 @@ public class GuiHandler
 	    try 
 	    {
 	    	UUID uuid = UUID.randomUUID();
-	        PlayerProfile playerProfile = Bukkit.createPlayerProfile(uuid, uuid.toString());
+	        PlayerProfile playerProfile = Bukkit.createPlayerProfile(uuid, "null");
 	        playerProfile.getTextures().setSkin(new URL(paramString));
 	        paramSkullMeta.setOwnerProfile(playerProfile);
 	    } catch (IllegalArgumentException|SecurityException|java.net.MalformedURLException illegalArgumentException) {
@@ -693,9 +690,9 @@ public class GuiHandler
 	    }
 	    is.setItemMeta(paramSkullMeta);
 	    return is;
-	}*/
+	}
 	
-	public static ItemStack getSkull(String url) 
+	/*public static ItemStack getSkull(String url) 
 	{
 		return getSkull(url, 1);
 	}
@@ -724,7 +721,7 @@ public class GuiHandler
         }
         skull.setItemMeta(skullMeta);
         return skull;
-    }
+    }*/
 	
 	public static List<String> getLorePlaceHolder(SignShop ssh, Player player, List<String> lore, String playername)
 	{
