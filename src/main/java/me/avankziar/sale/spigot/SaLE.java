@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -290,6 +291,13 @@ public class SaLE extends JavaPlugin
 		registerCommand(sale.getPath(), sale.getName());
 		getCommand(sale.getName()).setExecutor(new SaLECommandExecutor(plugin, sale));
 		getCommand(sale.getName()).setTabCompleter(tab);
+		Collections.sort(helpList, new Comparator<BaseConstructor>()
+		{
+		    public int compare(BaseConstructor s1, BaseConstructor s2) 
+		    {
+		        return s1.getPath().compareToIgnoreCase(s2.getPath());
+		    }
+		});
 	}
 	
 	private void setupBypassPerm()
