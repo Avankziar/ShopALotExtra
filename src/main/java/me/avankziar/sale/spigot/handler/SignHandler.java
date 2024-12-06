@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.sale.general.ChatApi;
 import main.java.me.avankziar.sale.spigot.SaLE;
+import main.java.me.avankziar.sale.spigot.database.Language.ISO639_2B;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.handler.gui.ShopFunctionHandler;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
@@ -504,15 +505,32 @@ public class SignHandler
 	
 	public static Locale locale = null;
 	
-	static
-	{
-		
-	}
-	
 	public static String formatDouble(double d)
 	{
-		//String locale = SaLE.getPlugin().getYamlHandler().getConfig().getString("SignShop.Sign.LocaleForDecimalAndThousandSeperator", "ENGLISH");
-		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.getDefault());
+		if(locale == null)
+		{
+			String language = plugin.getAdministration() == null 
+					? plugin.getYamlHandler().getConfig().getString("Language", "ENG").toUpperCase() 
+					: plugin.getAdministration().getLanguage();
+			ISO639_2B iso = null;
+			try
+			{
+				iso = ISO639_2B.valueOf(language);
+				switch(iso)
+				{
+				default:
+				case ENG: locale = Locale.ENGLISH; break;
+				case GER: locale = Locale.GERMAN; break;
+				case FRE: locale = Locale.FRENCH; break;
+				case ITA: locale = Locale.ITALIAN; break;
+				case JPN: locale = Locale.JAPANESE; break;
+				}
+			} catch(Exception e)
+			{
+				locale = Locale.getDefault();
+			}
+		}
+		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(locale);
 		formatter.setMaximumFractionDigits(3);
 		formatter.setMinimumFractionDigits(0);
 		return formatter.format(d);

@@ -50,6 +50,10 @@ Future Build Ideas
 - Listeneinträge für Black/White etc. anzeigen lassen, wer dadrauf ist.
   
 Future Build
+x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
+x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config einstellen kann.
+- Locale für Formatierung nun hinter dem Language hinterlegt.
+- Temporäre 1-8-2-DEV zum Debuggen vom PlayerInteractEvent 
 
 Build 1-8-1
 - Gui Skull Fix
