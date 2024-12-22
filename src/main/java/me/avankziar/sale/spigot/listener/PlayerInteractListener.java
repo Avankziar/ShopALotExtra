@@ -1,10 +1,7 @@
 package main.java.me.avankziar.sale.spigot.listener;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -34,16 +31,16 @@ public class PlayerInteractListener implements Listener
 {
 	private SaLE plugin;
 	private static LinkedHashMap<String, Long> cooldown = new LinkedHashMap<>();
-	private static DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.GERMAN); //REMOVEME
+	//private static DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.GERMAN); //REMOVEME
 	
 	public PlayerInteractListener(SaLE plugin)
 	{
 		this.plugin = plugin;
-		formatter.setMaximumFractionDigits(2); //REMOVEME
-		formatter.setMinimumFractionDigits(0); //REMOVEME
+		//formatter.setMaximumFractionDigits(2); //REMOVEME
+		//formatter.setMinimumFractionDigits(0); //REMOVEME
 	}
 	
-	private void log(Player player, String log)
+	/*private void log(Player player, String log)
 	{
 		if(player.hasPermission("sale.debug.show"))
 		{
@@ -53,8 +50,8 @@ public class PlayerInteractListener implements Listener
 	
 	private String format(double d)
 	{
-		return formatter.format(d/1000);
-	}
+		return formatter.format(d/1000); REMOVEME
+	}*/
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event)
@@ -76,18 +73,18 @@ public class PlayerInteractListener implements Listener
 		final Player player = event.getPlayer();
 		final Action action = event.getAction();
 		final long start = System.currentTimeMillis();
-		log(player, format(System.currentTimeMillis()-start)+"s Call Mysql SignShop Object");
+		//log(player, format(System.currentTimeMillis()-start)+"s Call Mysql SignShop Object");
 		final SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP,
 				"`server_name` = ? AND `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				plugin.getServername(), player.getWorld().getName(),
 				b.getX(), b.getY(), b.getZ());
-		log(player, format(System.currentTimeMillis()-start)+"s Called SignShop Object");
+		//log(player, format(System.currentTimeMillis()-start)+"s Called SignShop Object");
 		if(ssh != null)
 		{
 			event.setCancelled(true);
 		} else
 		{
-			log(player, format(System.currentTimeMillis()-start)+"s Return, dont SignShop at that Location.");
+			//log(player, format(System.currentTimeMillis()-start)+"s Return, dont SignShop at that Location.");
 			return;
 		}
 		dodo(player, ssh, b, bs, action, start);
@@ -95,123 +92,123 @@ public class PlayerInteractListener implements Listener
 	
 	public void dodo(Player player, SignShop ssh, Block b, BlockState bs, Action action, long start)
 	{
-		log(player, format(System.currentTimeMillis()-start)+"s BreakToggel?");
+		//log(player, format(System.currentTimeMillis()-start)+"s BreakToggel?");
 		if(SignHandler.isBreakToggle(player.getUniqueId()))
 		{
-			log(player, format(System.currentTimeMillis()-start)+"s BreakToggel true, return");
+			//log(player, format(System.currentTimeMillis()-start)+"s BreakToggel true, return");
 			return;
 		}
-		log(player, format(System.currentTimeMillis()-start)+"s Cooldown?");
+		//log(player, format(System.currentTimeMillis()-start)+"s Cooldown?");
 		if(isOnCooldown(player))
 		{
-			log(player, format(System.currentTimeMillis()-start)+"s Cooldown, return");
+			//log(player, format(System.currentTimeMillis()-start)+"s Cooldown, return");
 			return;
 		}
-		log(player, format(System.currentTimeMillis()-start)+"s Call Mysql Playerdata Object");
+		//log(player, format(System.currentTimeMillis()-start)+"s Call Mysql Playerdata Object");
 		PlayerData pd = (PlayerData) plugin.getMysqlHandler().getData(
 				MysqlHandler.Type.PLAYERDATA, "`player_uuid` = ?", player.getUniqueId().toString());
-		log(player, format(System.currentTimeMillis()-start)+"s Called Mysql Playerdata Object");
-		log(player, format(System.currentTimeMillis()-start)+"s Check is new Shop?");
+		//log(player, format(System.currentTimeMillis()-start)+"s Called Mysql Playerdata Object");
+		//log(player, format(System.currentTimeMillis()-start)+"s Check is new Shop?");
 		if((ssh.getMaterial() == Material.AIR)
 				&& (SignHandler.isOwner(ssh, player.getUniqueId())
 				|| SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId())
 				|| SignHandler.isBypassToggle(player.getUniqueId())))
 		{
-			log(player, format(System.currentTimeMillis()-start)+"s Is new Shop, call Async");
+			//log(player, format(System.currentTimeMillis()-start)+"s Is new Shop, call Async");
 			new BukkitRunnable()
 			{
 				@Override
 				public void run()
 				{
-					log(player, format(System.currentTimeMillis()-start)+"s New Shop Async Open Gui");
+					//log(player, format(System.currentTimeMillis()-start)+"s New Shop Async Open Gui");
 					GuiHandler.openInputInfo(ssh, player, pd.getLastSettingLevel(), true);
-					log(player, format(System.currentTimeMillis()-start)+"s New Shop Async Opend Gui, return");
+					//log(player, format(System.currentTimeMillis()-start)+"s New Shop Async Opend Gui, return");
 				}
 			}.runTaskAsynchronously(plugin);
 			return;
 		}
 		if(action == Action.LEFT_CLICK_BLOCK)
 		{
-			log(player, format(System.currentTimeMillis()-start)+"s Action == LeftClickBlock Start");
-			log(player, format(System.currentTimeMillis()-start)+"s IsOwner || isMember?");
+			//log(player, format(System.currentTimeMillis()-start)+"s Action == LeftClickBlock Start");
+			//log(player, format(System.currentTimeMillis()-start)+"s IsOwner || isMember?");
 			if(SignHandler.isOwner(ssh, player.getUniqueId()) || SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
 			{
-				log(player, format(System.currentTimeMillis()-start)+"s MainItemInHand == AIR?");
+				//log(player, format(System.currentTimeMillis()-start)+"s MainItemInHand == AIR?");
 				if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 				{
-					log(player, format(System.currentTimeMillis()-start)+"s Take Items from Shop");
+					//log(player, format(System.currentTimeMillis()-start)+"s Take Items from Shop");
 					SignHandler.takeOutItemFromShop(ssh, player);
-					log(player, format(System.currentTimeMillis()-start)+"s Taked Items from Shop, return");
+					//log(player, format(System.currentTimeMillis()-start)+"s Taked Items from Shop, return");
 					return;
 				}
 			}
-			log(player, format(System.currentTimeMillis()-start)+"s SignShop isItemHologram?");
+			//log(player, format(System.currentTimeMillis()-start)+"s SignShop isItemHologram?");
 			if(ssh.isItemHologram())
 			{
-				log(player, format(System.currentTimeMillis()-start)+"s Start Spawn ItemHologram");
+				//log(player, format(System.currentTimeMillis()-start)+"s Start Spawn ItemHologram");
 				ItemHologramHandler.spawnHologram(ssh);
 			}
-			log(player, format(System.currentTimeMillis()-start)+"s Action LeftClickBlock end, return");
+			//log(player, format(System.currentTimeMillis()-start)+"s Action LeftClickBlock end, return");
 			return;
 		} else if(action == Action.RIGHT_CLICK_BLOCK)
 		{
-			log(player, format(System.currentTimeMillis()-start)+"s Action == RightClickBlock Start");
-			log(player, format(System.currentTimeMillis()-start)+"s IsOwner || isMember || IsBypass?");
+			//log(player, format(System.currentTimeMillis()-start)+"s Action == RightClickBlock Start");
+			//log(player, format(System.currentTimeMillis()-start)+"s IsOwner || isMember || IsBypass?");
 			if(SignHandler.isOwner(ssh, player.getUniqueId())
 					|| SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId())
 					|| SignHandler.isBypassToggle(player.getUniqueId()))
 			{
-				log(player, format(System.currentTimeMillis()-start)+"s SignShop Item != null?");
+				//log(player, format(System.currentTimeMillis()-start)+"s SignShop Item != null?");
 				if(ssh.getItemStack() != null)
 				{
-					log(player, format(System.currentTimeMillis()-start)+"s MainItemInHand == AIR?");
+					///log(player, format(System.currentTimeMillis()-start)+"s MainItemInHand == AIR?");
 					if(player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR)
 					{
 						if(ssh.getItemStack() == null || ssh.getItemStack().getType() == Material.AIR)
 						{
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.ShopItemIsNull")
 									.replace("%name%", ssh.getDisplayName())));
-							log(player, format(System.currentTimeMillis()-start)+"s Return");
+							//log(player, format(System.currentTimeMillis()-start)+"s Return");
 							return;
 						}
-						log(player, format(System.currentTimeMillis()-start)+"s call Async Open Admin Gui");
+						//log(player, format(System.currentTimeMillis()-start)+"s call Async Open Admin Gui");
 						new BukkitRunnable()
 						{
 							@Override
 							public void run()
 							{
-								log(player, format(System.currentTimeMillis()-start)+"s Start Async, Open Admin Gui");
+								//log(player, format(System.currentTimeMillis()-start)+"s Start Async, Open Admin Gui");
 								GuiHandler.openAdministration(ssh, player,
 										plugin.getYamlHandler().getConfig().getBoolean("SignShop.Gui.ForceSettingsLevel", false)
 										? SettingsLevel.valueOf(plugin.getYamlHandler().getConfig().getString("SignShop.Gui.ToBeForcedSettingsLevel", "BASE"))
 										: pd.getLastSettingLevel(), true);
-								log(player, format(System.currentTimeMillis()-start)+"s End Async, Open Admin Gui");
+								//log(player, format(System.currentTimeMillis()-start)+"s End Async, Open Admin Gui");
 							}
 						}.runTaskAsynchronously(plugin);
-						log(player, format(System.currentTimeMillis()-start)+"s Update Sign");
+						//log(player, format(System.currentTimeMillis()-start)+"s Update Sign");
 						SignHandler.updateSign(ssh);
-						log(player, format(System.currentTimeMillis()-start)+"s End Update Sign, return");
+						//log(player, format(System.currentTimeMillis()-start)+"s End Update Sign, return");
 						return;
 					} else
 					{
-						log(player, format(System.currentTimeMillis()-start)+"s Item put into Shop?");
+						//log(player, format(System.currentTimeMillis()-start)+"s Item put into Shop?");
 						if(SignHandler.putInItemIntoShop(ssh, player, player.getInventory().getItemInMainHand()))
 						{
-							log(player, format(System.currentTimeMillis()-start)+"s Item put into Shop end, return");
+							//log(player, format(System.currentTimeMillis()-start)+"s Item put into Shop end, return");
 							return;
 						}
 					}
 				}
 			}
 		}
-		log(player, format(System.currentTimeMillis()-start)+"s Called Async, to Open Shop Gui");
+		//log(player, format(System.currentTimeMillis()-start)+"s Called Async, to Open Shop Gui");
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
-				log(player, format(System.currentTimeMillis()-start)+"s Start Async, to Open Shop Gui");
-				log(player, format(System.currentTimeMillis()-start)+"s Player are Allowed to Access Shop (Lists)?");
+				//log(player, format(System.currentTimeMillis()-start)+"s Start Async, to Open Shop Gui");
+				//log(player, format(System.currentTimeMillis()-start)+"s Player are Allowed to Access Shop (Lists)?");
 				if((ssh.getListedType() == ListedType.BLACKLIST && SignHandler.isListed(ListedType.BLACKLIST, ssh, player.getUniqueId()))
 						|| (ssh.getListedType() == ListedType.WHITELIST && !SignHandler.isListed(ListedType.WHITELIST, ssh, player.getUniqueId()))
 						|| (ssh.getListedType() == ListedType.MEMBER && !SignHandler.isListed(ListedType.MEMBER, ssh, player.getUniqueId()))
@@ -240,26 +237,26 @@ public class PlayerInteractListener implements Listener
 						break;
 					}
 					//event.setCancelled(true);
-					log(player, format(System.currentTimeMillis()-start)+"s Player cannot access Shop because of Lists");
+					//log(player, format(System.currentTimeMillis()-start)+"s Player cannot access Shop because of Lists");
 					return;
 				}
-				log(player, format(System.currentTimeMillis()-start)+"s Start Open ShopGui");
+				//log(player, format(System.currentTimeMillis()-start)+"s Start Open ShopGui");
 				GuiHandler.openShop(ssh, player, pd.getLastSettingLevel(), false);
-				log(player, format(System.currentTimeMillis()-start)+"s End Open ShopGui, Async End");
+				//log(player, format(System.currentTimeMillis()-start)+"s End Open ShopGui, Async End");
 			}
 		}.runTaskAsynchronously(plugin);
-		log(player, format(System.currentTimeMillis()-start)+"s Call Sync, Sign Update");
+		//log(player, format(System.currentTimeMillis()-start)+"s Call Sync, Sign Update");
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
-				log(player, format(System.currentTimeMillis()-start)+"s Start Sync, Sign Update");
+				//log(player, format(System.currentTimeMillis()-start)+"s Start Sync, Sign Update");
 				SignHandler.updateSign(ssh);
-				log(player, format(System.currentTimeMillis()-start)+"s End Sync, Sign Update");
+				//log(player, format(System.currentTimeMillis()-start)+"s End Sync, Sign Update");
 			}
 		}.runTask(plugin);
-		log(player, format(System.currentTimeMillis()-start)+"s Global End");
+		//log(player, format(System.currentTimeMillis()-start)+"s Global End");
 	}
 	
 	@EventHandler

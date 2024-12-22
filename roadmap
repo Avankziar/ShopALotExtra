@@ -52,8 +52,12 @@ Future Build Ideas
 Future Build
 x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
 x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config einstellen kann.
-- Locale für Formatierung nun hinter dem Language hinterlegt.
 - Temporäre 1-8-2-DEV zum Debuggen vom PlayerInteractEvent 
+
+1-9-0
+- Spigot 1.21.4 support
+- Api muss nun mindestens 1.21.3 oder höher sein.
+- Locale für Formatierung nun hinter dem Language hinterlegt.
 
 Build 1-8-1
 - Gui Skull Fix
