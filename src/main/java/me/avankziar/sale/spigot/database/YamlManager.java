@@ -1364,6 +1364,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						" &7Mehr Infos?",
 						" &7More Infos?"}));
+		languageKeys.put("ShopFunctionHandler.Buy.NoGoodsInStockIII"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Shop %id% - %shopname% hat keine Ware mehr zum Kaufen!",
+						"&cThe store %id% - %shopname% has no more goods for sale!"}));
 		languageKeys.put("ShopFunctionHandler.InfoHover"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cKunde: &f%client%",
@@ -1410,6 +1414,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Shop &f%shopname% &cist voll!",
 						"&cThe store &f%shopname% &cis full!"}));
+		languageKeys.put("ShopFunctionHandler.Sell.ShopIsFullIII"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Shop %id% - %shopname% &cist voll!",
+						"&cThe store %id% - %shopname% &cis full!"}));
 		languageKeys.put("ShopFunctionHandler.Sell.NoItemInInventory"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast keine Items im Inventar zum Kaufen!",

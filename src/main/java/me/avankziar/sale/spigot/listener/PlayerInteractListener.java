@@ -244,7 +244,7 @@ public class PlayerInteractListener implements Listener
 				//log(player, format(System.currentTimeMillis()-start)+"s Start Open ShopGui");
 				if(SaLE.getWorldGuard())
 				{
-					if(!WorldGuardHook.canCreateShop(player, b.getLocation()))
+					if(!WorldGuardHook.canUsageShop(player, b.getLocation()))
 					{
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.WorldGuardUsageDeny")));
 						return;

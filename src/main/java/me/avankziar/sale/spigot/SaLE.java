@@ -79,6 +79,7 @@ import me.avankziar.ifh.spigot.interfaces.EnumTranslation;
 import me.avankziar.ifh.spigot.teleport.Teleport;
 import me.avankziar.ifh.spigot.tobungee.chatlike.BaseComponentToBungee;
 import me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
+import me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity;
 
 public class SaLE extends JavaPlugin
 {
@@ -108,6 +109,7 @@ public class SaLE extends JavaPlugin
 	private ValueEntry valueEntryConsumer;
 	private Modifier modifierConsumer;
 	private MessageToBungee mtbConsumer;
+	private MessageToVelocity mtvConsumer;
 	private BaseComponentToBungee bctbConsumer;
 	private Teleport teleportConsumer;
 	private static boolean worldGuard = false;
@@ -522,6 +524,7 @@ public class SaLE extends JavaPlugin
 		setupIFHEnumTranslation();
 		setupIFHEconomy();
 		setupIFHMessageToBungee();
+		setupIFHMessageToVelocity();
 		setupIFHBaseComponentToBungee();
 		setupIFHTeleport();
 	}
@@ -868,6 +871,49 @@ public class SaLE extends JavaPlugin
 	public MessageToBungee getMtB()
 	{
 		return mtbConsumer;
+	}
+	
+	private void setupIFHMessageToVelocity() 
+	{
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    mtvConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> MessageToVelocity.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public MessageToVelocity getMtV()
+	{
+		return mtvConsumer;
 	}
 	
 	private void setupIFHBaseComponentToBungee() 

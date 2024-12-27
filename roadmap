@@ -1,8 +1,4 @@
 Future Build Ideas
-- Shop ist leer, kommt nicht, wenn der Shop gerade mit der Aktion leer gekauft ist.
-- Adminshops sollen eine neue ShopGui methode bekommen/weiterleiten an diese, damit auch der Eigentümer diesen benutzen kann.
-- Also, es soll einen Boolean in der Config existierten, der das automatische Löschen von Shops verhindert.
-
 - Konzept Auktion
   - Hauptgui per Befehl/NPC erreichbar machen.
     - Folgende Optionen im HauptGui:
@@ -47,16 +43,19 @@ Future Build Ideas
      - Erstellung von Nachrichten im Discord Channel per Webhoock
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
-- Listeneinträge für Black/White etc. anzeigen lassen, wer dadrauf ist.
   
 Future Build
 x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
 x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config einstellen kann.
-- Temporäre 1-8-2-DEV zum Debuggen vom PlayerInteractEvent 
 
 2-0-0
 - Worldguard Flag "sale-shop-use" hinzugefügt. (Default allow)
 - Bypass Permission für die Umgehung der Flag Shop-Usage hinzugefügt.
+- IFH spigot.tovelocity.chatlike.MessageToVelocity wird nun unterstützt.
+- Wenn der Shop Lagerstand nun 0 oder Max erreicht, wird der Eigentümer benachricht.
+- Anmerkung: Es wurde angefragt, dass bei Adminshop (aka Shop die Unendlichviele Items habe), dass dort auch der Eigentümer kaufen darf.
+  Wenn das gewünscht ist, sollte bei einem IFH verwendeten Economysystem dafür gesorgt werden, dass der Shop einen anderen EconomyAccount nutzt,
+  als den MAIN Account des Eigentümers.
 
 1-9-0
 - Spigot 1.21.4 support

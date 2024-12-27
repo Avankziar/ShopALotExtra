@@ -23,6 +23,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import main.java.me.avankziar.sale.general.ChatApi;
+import main.java.me.avankziar.sale.general.ChatApiV;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.assistance.TimeHandler;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
@@ -200,7 +201,9 @@ public class ShopFunctionHandler
 			list.add(tc2);
 			ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
 			listInList.add(list);
-			new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
+			ArrayList<String> vlist = new ArrayList<>();
+			vlist.add(msg+ChatApiV.hover(msg, "SHOW_TEXT", sb.toString()));
+			new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList, vlist);
 			return;
 		}
 		long now = System.currentTimeMillis();
@@ -422,6 +425,16 @@ public class ShopFunctionHandler
 		if(!ssh.isUnlimitedBuy())
 		{
 			ssh.setItemStorageCurrent(postc);
+			if(postc <= 0)
+			{
+				if(ssh.getOwner() != null)
+				{
+					new MessageHandler().sendMessage(ssh.getOwner(),
+							plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Buy.NoGoodsInStockIII")
+							.replace("%id%", String.valueOf(ssh.getId()))
+							.replace("%shopname%", ssh.getSignShopName()));
+				}				
+			}
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		for(ItemStack is : islist)
@@ -477,7 +490,9 @@ public class ShopFunctionHandler
 			list.add(tc2);
 			ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
 			listInList.add(list);
-			new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList);
+			ArrayList<String> vlist = new ArrayList<>();
+			vlist.add(msg+ChatApiV.hover(msg, "SHOW_TEXT", sb.toString()));
+			new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList, vlist);
 			return;
 		}
 		Double d = 0.0;
@@ -753,6 +768,16 @@ public class ShopFunctionHandler
 		if(!ssh.isUnlimitedSell())
 		{
 			ssh.setItemStorageCurrent(postc);
+			if(postc >= ssh.getItemStorageTotal())
+			{
+				if(ssh.getOwner() != null)
+				{
+					new MessageHandler().sendMessage(ssh.getOwner(),
+							plugin.getYamlHandler().getLang().getString("ShopFunctionHandler.Sell.ShopIsFullIII")
+							.replace("%id%", String.valueOf(ssh.getId()))
+							.replace("%shopname%", ssh.getSignShopName()));
+				}				
+			}
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
 		GuiHandler.openShop(ssh, player, settingsLevel, inv, false);

@@ -33,6 +33,9 @@ public class MessageHandler
 			if(plugin.getMtB() != null)
 			{
 				plugin.getMtB().sendMessage(uuid, msg);
+			} else if(plugin.getMtV() != null)
+			{
+				plugin.getMtV().sendMessage(uuid, msg);
 			}
 		}
 	}
@@ -54,40 +57,42 @@ public class MessageHandler
 		sendMessageToOwnerAndMember(ssh.getId(), msg);
 	}
 	
-	public void sendMessage(UUID uuid, ArrayList<ArrayList<BaseComponent>> listInList)
+	public void sendMessage(UUID uuid, ArrayList<ArrayList<BaseComponent>> listInList, ArrayList<String> list)
 	{
 		if(Bukkit.getPlayer(uuid) != null)
 		{
-			for(ArrayList<BaseComponent> list : listInList)
+			for(ArrayList<BaseComponent> l : listInList)
 			{
 				TextComponent tc = ChatApi.tc("");
-				tc.setExtra(list);
+				tc.setExtra(l);
 				Bukkit.getPlayer(uuid).spigot().sendMessage(tc);
 			}
-			
 		} else
 		{
 			if(plugin.getMtB() != null)
 			{
 				plugin.getBctB().sendMessage(uuid, listInList);
+			} else if(plugin.getMtV() != null)
+			{
+				plugin.getMtV().sendMessage(uuid, list.toArray(new String[list.size()]));
 			}
 		}
 	}
 	
-	public void sendMessageToOwnerAndMember(int shopid, ArrayList<ArrayList<BaseComponent>> listInList)
+	public void sendMessageToOwnerAndMember(int shopid, ArrayList<ArrayList<BaseComponent>> listInList, ArrayList<String> list)
 	{
 		SignShop ssh = (SignShop) plugin.getMysqlHandler().getData(MysqlHandler.Type.SIGNSHOP, "`id` = ?", shopid);
 		ArrayList<ShopAccessType> member = ShopAccessType.convert(plugin.getMysqlHandler().getFullList(MysqlHandler.Type.SHOPACCESSTYPE,
 				"`id` ASC", "`sign_shop_id` = ? AND `listed_type` = ?", ssh.getId(), ListedType.MEMBER.toString()));
-		sendMessage(ssh.getOwner(), listInList);
+		sendMessage(ssh.getOwner(), listInList, list);
 		for(ShopAccessType sat : member)
 		{
-			sendMessage(sat.getUUID(), listInList);
+			sendMessage(sat.getUUID(), listInList, list);
 		}
 	}
 	
-	public void sendMessageToOwnerAndMember(SignShop ssh, ArrayList<ArrayList<BaseComponent>> listInList)
+	public void sendMessageToOwnerAndMember(SignShop ssh, ArrayList<ArrayList<BaseComponent>> listInList, ArrayList<String> list)
 	{
-		sendMessageToOwnerAndMember(ssh.getId(), listInList);
+		sendMessageToOwnerAndMember(ssh.getId(), listInList, list);
 	}
 }
