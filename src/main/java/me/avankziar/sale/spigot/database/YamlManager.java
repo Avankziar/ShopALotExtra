@@ -998,6 +998,10 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst diesen Wert nicht ändern, da dir der Shop nicht gehört.",
 						"&cYou can't change this value because you don't own the store."}));
+		languageKeys.put("PlayerInteractListener.WorldGuardUsageDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Shops benutzt werden!",
+						"&cNo shops may be used in this region!"}));
 		languageKeys.put("SignChangeListener.WorldGuardCreateDeny", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cIn dieser Region dürfen keine Shops erstellt werden!",

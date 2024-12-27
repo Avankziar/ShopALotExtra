@@ -17,6 +17,7 @@ import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 public class WorldGuardHook
 {
 	public static StateFlag SHOP_CREATE;
+	public static StateFlag SHOP_USAGE;
 	
 	public static boolean init()
 	{
@@ -26,6 +27,9 @@ public class WorldGuardHook
 			StateFlag sc = new StateFlag("sale-shop-create", true);
 	        registry.register(sc);
 	        SHOP_CREATE = sc;
+	        StateFlag su = new StateFlag("sale-shop-use", true);
+	        registry.register(su);
+	        SHOP_USAGE = su;
 	    } catch (FlagConflictException e) 
 		{
 	        return false;
@@ -39,5 +43,13 @@ public class WorldGuardHook
         com.sk89q.worldedit.util.Location loc1 = BukkitAdapter.adapt(pointOne);
         return ModifierValueEntry.hasPermission(player, Bypass.Permission.SHOP_CREATION_WORLDGUARD)
         		? true : query.testState(loc1, WorldGuardPlugin.inst().wrapPlayer(player), SHOP_CREATE);
+	}
+	
+	public static boolean canUsageShop(Player player, Location pointOne)
+	{
+		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
+        com.sk89q.worldedit.util.Location loc1 = BukkitAdapter.adapt(pointOne);
+        return ModifierValueEntry.hasPermission(player, Bypass.Permission.SHOP_USAGE_WORLDGUARD)
+        		? true : query.testState(loc1, WorldGuardPlugin.inst().wrapPlayer(player), SHOP_USAGE);
 	}
 }

@@ -23,6 +23,7 @@ import main.java.me.avankziar.sale.spigot.gui.objects.SettingsLevel;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.ItemHologramHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
+import main.java.me.avankziar.sale.spigot.hook.WorldGuardHook;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
 import main.java.me.avankziar.sale.spigot.objects.PlayerData;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
@@ -241,6 +242,14 @@ public class PlayerInteractListener implements Listener
 					return;
 				}
 				//log(player, format(System.currentTimeMillis()-start)+"s Start Open ShopGui");
+				if(SaLE.getWorldGuard())
+				{
+					if(!WorldGuardHook.canCreateShop(player, b.getLocation()))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerInteractListener.WorldGuardUsageDeny")));
+						return;
+					}
+				}
 				GuiHandler.openShop(ssh, player, pd.getLastSettingLevel(), false);
 				//log(player, format(System.currentTimeMillis()-start)+"s End Open ShopGui, Async End");
 			}
