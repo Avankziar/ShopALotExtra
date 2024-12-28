@@ -202,7 +202,7 @@ public class ShopFunctionHandler
 			ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
 			listInList.add(list);
 			ArrayList<String> vlist = new ArrayList<>();
-			vlist.add(msg+ChatApiV.hover(msg, "SHOW_TEXT", sb.toString()));
+			vlist.add(ChatApiV.oldBukkitFormat(msg+ChatApiV.hover(msg, "SHOW_TEXT", sb.toString())));
 			new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList, vlist);
 			return;
 		}
@@ -491,7 +491,7 @@ public class ShopFunctionHandler
 			ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
 			listInList.add(list);
 			ArrayList<String> vlist = new ArrayList<>();
-			vlist.add(msg+ChatApiV.hover(msg, "SHOW_TEXT", sb.toString()));
+			vlist.add(ChatApiV.oldBukkitFormat(msg+ChatApiV.hover(msg, "SHOW_TEXT", sb.toString())));
 			new MessageHandler().sendMessageToOwnerAndMember(ssh, listInList, vlist);
 			return;
 		}

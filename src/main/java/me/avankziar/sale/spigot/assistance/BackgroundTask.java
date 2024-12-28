@@ -438,11 +438,14 @@ public class BackgroundTask
 							Bukkit.getPlayer(shopOwner).spigot().sendMessage(tc);
 						} else
 						{
-							ArrayList<BaseComponent> list = new ArrayList<>();
-							list.add(tc);
-							ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
-							listInList.add(list);
-							SaLE.getPlugin().getBctB().sendMessage(shopOwner, listInList);
+							if(SaLE.getPlugin().getBctB() != null)
+							{
+								ArrayList<BaseComponent> list = new ArrayList<>();
+								list.add(tc);
+								ArrayList<ArrayList<BaseComponent>> listInList = new ArrayList<>();
+								listInList.add(list);
+								SaLE.getPlugin().getBctB().sendMessage(shopOwner, listInList);
+							}
 						}
 					}
 					del.add(shopOwner);

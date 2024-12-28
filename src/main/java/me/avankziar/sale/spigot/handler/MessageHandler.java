@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 
 import main.java.me.avankziar.sale.general.ChatApi;
+import main.java.me.avankziar.sale.general.ChatApiV;
 import main.java.me.avankziar.sale.spigot.SaLE;
 import main.java.me.avankziar.sale.spigot.database.MysqlHandler;
 import main.java.me.avankziar.sale.spigot.objects.ListedType;
@@ -35,7 +36,7 @@ public class MessageHandler
 				plugin.getMtB().sendMessage(uuid, msg);
 			} else if(plugin.getMtV() != null)
 			{
-				plugin.getMtV().sendMessage(uuid, msg);
+				plugin.getMtV().sendMessage(uuid, ChatApiV.oldBukkitFormat(msg));
 			}
 		}
 	}

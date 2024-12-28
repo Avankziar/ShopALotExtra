@@ -48,6 +48,9 @@ Future Build
 x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
 x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config einstellen kann.
 
+2-0-1
+Small Fixes
+
 2-0-0
 - Worldguard Flag "sale-shop-use" hinzugefügt. (Default allow)
 - Bypass Permission für die Umgehung der Flag Shop-Usage hinzugefügt.
