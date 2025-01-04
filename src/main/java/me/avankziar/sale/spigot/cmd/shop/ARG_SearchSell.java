@@ -176,7 +176,7 @@ public class ARG_SearchSell extends ArgumentModule
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
 				w = player.getWorld().getName();
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, orderBy, sql,
+				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), true, 0, s, w));
 				break;
 			}

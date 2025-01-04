@@ -48,6 +48,9 @@ Future Build
 x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
 x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config einstellen kann.
 
+2-0-3
+- /sale shop searchsell fix
+
 2-0-2
 - /sale shop delete, Syntax fix
 - /sale shop breaktoggle fix
