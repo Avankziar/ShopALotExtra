@@ -360,7 +360,7 @@ public class ShopFunctionHandler
 			double w = samo*d;
 			if(taxation > 0.0 && taxation < 100.0)
 			{
-				w = samo*d + samo*d*taxation;
+				w = samo*d - samo*d*taxation;
 			}
 			if(!plugin.getVaultEco().has(player, w))
 			{

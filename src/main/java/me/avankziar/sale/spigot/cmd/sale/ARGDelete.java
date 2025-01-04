@@ -26,14 +26,14 @@ public class ARGDelete extends ArgumentModule
 		this.plugin = plugin;
 	}
 
-	//sale delete [xxx:yyy...]
+	//sale shop delete [xxx:yyy...]
 	@Override
 	public void run(CommandSender sender, String[] args) throws IOException
 	{
 		Player player = (Player) sender;
 		String query = "";
 		ArrayList<Object> ol = new ArrayList<>();
-		for(int i = 1; i < args.length; i++)
+		for(int i = 2; i < args.length; i++)
 		{
 			String[] split = args[i].split(":");
 			if(split.length != 2)
@@ -42,7 +42,7 @@ public class ARGDelete extends ArgumentModule
 			}
 			String identifier = split[0];
 			String value = split[1];
-			if(i > 1)
+			if(i > 2)
 			{
 				query += " AND ";
 			}
@@ -88,7 +88,7 @@ public class ARGDelete extends ArgumentModule
 				int ymin = player.getLocation().getBlockY() - v;
 				int zmax = player.getLocation().getBlockZ() + v;
 				int zmin = player.getLocation().getBlockZ() - v;
-				query += "`server_name` = ? AND `world` = ? AND `x` > ? AND `x` <= ? AND `y` > ? AND `y` <= ? AND z` > ? AND `z` <= ?";
+				query += "`server_name` = ? AND `world` = ? AND `x` > ? AND `x` <= ? AND `y` > ? AND `y` <= ? AND `z` > ? AND `z` <= ?";
 				ol.add(server);
 				ol.add(world);
 				ol.add(xmax);

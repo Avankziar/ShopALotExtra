@@ -82,16 +82,21 @@ public class PlayerInteractListener implements Listener
 		//log(player, format(System.currentTimeMillis()-start)+"s Called SignShop Object");
 		if(ssh != null)
 		{
+			if(SignHandler.isBreakToggle(player.getUniqueId()))
+			{
+				//log(player, format(System.currentTimeMillis()-start)+"s BreakToggel true, return");
+				return;
+			}
 			event.setCancelled(true);
 		} else
 		{
 			//log(player, format(System.currentTimeMillis()-start)+"s Return, dont SignShop at that Location.");
 			return;
 		}
-		dodo(player, ssh, b, bs, action, start);
+		dodo(event, player, ssh, b, bs, action, start);
 	}
 	
-	public void dodo(Player player, SignShop ssh, Block b, BlockState bs, Action action, long start)
+	public void dodo(final PlayerInteractEvent event, Player player, SignShop ssh, Block b, BlockState bs, Action action, long start)
 	{
 		//log(player, format(System.currentTimeMillis()-start)+"s BreakToggel?");
 		if(SignHandler.isBreakToggle(player.getUniqueId()))
