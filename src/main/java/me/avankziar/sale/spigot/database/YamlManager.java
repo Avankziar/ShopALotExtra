@@ -2188,8 +2188,8 @@ public class YamlManager
 						Material.CHEST.toString()}));
 		admin.put(path+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&dErhöht den Lageraum des Shop",
-						"&dSwitch the Gui level view"}));
+						"&dErhöht den Lagerraum des Shop",
+						"&dIncreases the shops storage space"}));
 		admin.put(path+".Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bZz.: &f%itemstoragetotal%",
