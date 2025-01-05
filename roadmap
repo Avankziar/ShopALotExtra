@@ -43,6 +43,9 @@ Future Build Ideas
      - Erstellung von Nachrichten im Discord Channel per Webhoock
    - Server Eigene Auktionsbereich?
    - Chatweite Zusatzaufruf für extra Gebühren?
+- MuckiDEE:
+  - Die Settingslevel eine Permission vergeben.
+  - 
   
 Future Build
 x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
@@ -50,6 +53,8 @@ x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config ei
 
 2-0-3
 - /sale shop searchsell fix
+- Grammatikfehler fix
+- SearchGui fehlende Glassscheibe fix
 
 2-0-2
 - /sale shop delete, Syntax fix

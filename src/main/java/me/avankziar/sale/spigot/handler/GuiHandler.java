@@ -512,7 +512,7 @@ public class GuiHandler
 			gui.add(i, is, settingsLevel, true, map, getClickFunction(y, null));
 			i++;
 		}
-		for(int j = i; j < 53; j++)
+		for(int j = i; j < 54; j++)
 		{
 			if(fillNotDefineGuiSlots)
 			{
