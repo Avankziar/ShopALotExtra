@@ -1,5 +1,7 @@
 package main.java.me.avankziar.sale.spigot.listener;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,22 +25,24 @@ public class PlayerJoinListener implements Listener
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event)
 	{
-		final Player player = event.getPlayer();
+		Player player = event.getPlayer();
+		final UUID uuid = player.getUniqueId();
+		final String name = player.getName();
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
-				PlayerData pd = (PlayerData) plugin.getMysqlHandler().getData(MysqlHandler.Type.PLAYERDATA, "`player_uuid` = ?", player.getUniqueId().toString());
+				PlayerData pd = (PlayerData) plugin.getMysqlHandler().getData(MysqlHandler.Type.PLAYERDATA, "`player_uuid` = ?", uuid.toString());
 				if(pd == null)
 				{
-					pd = new PlayerData(0, player.getUniqueId(), player.getName(), SettingsLevel.BASE, System.currentTimeMillis());
+					pd = new PlayerData(0, uuid, name, SettingsLevel.BASE, System.currentTimeMillis());
 					plugin.getMysqlHandler().create(MysqlHandler.Type.PLAYERDATA, pd);
 				} else
 				{
-					pd.setName(player.getName());
+					pd.setName(name);
 					pd.setLastLogin(System.currentTimeMillis());
-					plugin.getMysqlHandler().updateData(MysqlHandler.Type.PLAYERDATA, pd, "`player_uuid` = ?", player.getUniqueId().toString());
+					plugin.getMysqlHandler().updateData(MysqlHandler.Type.PLAYERDATA, pd, "`player_uuid` = ?", uuid.toString());
 				}
 			}
 		}.runTaskAsynchronously(plugin);
