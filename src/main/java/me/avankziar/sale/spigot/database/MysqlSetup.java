@@ -47,15 +47,15 @@ public class MysqlSetup
 	
 	public boolean connectToDatabase() 
 	{
-		SaLE.log.info("Connecting to the database...");
+		SaLE.logger.info("Connecting to the database...");
 		try
 		{
 			getConnection();
-			SaLE.log.info("Database connection successful!");
+			SaLE.logger.info("Database connection successful!");
 			return true;
 		} catch(Exception e) 
 		{
-			SaLE.log.log(Level.WARNING, "Could not connect to Database!", e);
+			SaLE.logger.log(Level.WARNING, "Could not connect to Database!", e);
 			return false;
 		}		
 	}
@@ -104,7 +104,7 @@ public class MysqlSetup
 			query.execute();
 		} catch (SQLException e) 
 		{
-			SaLE.log.log(Level.WARNING, "Could not build data source. Or connection is null", e);
+			SaLE.logger.log(Level.WARNING, "Could not build data source. Or connection is null", e);
 		}
 		return true;
 	}

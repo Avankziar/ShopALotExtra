@@ -18,6 +18,6 @@ public interface MysqlHandable
 	
 	default void log(Level level, String log, Exception e)
 	{
-		SaLE.log.log(level, log, e);
+		SaLE.logger.log(level, log, e);
 	}
 }

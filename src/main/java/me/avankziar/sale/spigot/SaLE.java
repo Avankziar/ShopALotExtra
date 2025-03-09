@@ -71,6 +71,7 @@ import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
 import main.java.me.avankziar.sale.spigot.objects.ItemHologram;
 import me.avankziar.ifh.general.modifier.ModificationType;
 import me.avankziar.ifh.general.modifier.Modifier;
+import me.avankziar.ifh.general.statistic.Statistic;
 import me.avankziar.ifh.general.valueentry.ValueEntry;
 import me.avankziar.ifh.spigot.administration.Administration;
 import me.avankziar.ifh.spigot.comparison.ItemStackComparison;
@@ -83,7 +84,7 @@ import me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity;
 
 public class SaLE extends JavaPlugin
 {
-	public static Logger log;
+	public static Logger logger;
 	private static SaLE plugin;
 	public String pluginName = "SaLE";
 	private YamlHandler yamlHandler;
@@ -113,6 +114,7 @@ public class SaLE extends JavaPlugin
 	private BaseComponentToBungee bctbConsumer;
 	private Teleport teleportConsumer;
 	private static boolean worldGuard = false;
+	private Statistic statisticConsumer;
 	
 	private net.milkbowl.vault.economy.Economy vEco;
 	
@@ -124,15 +126,15 @@ public class SaLE extends JavaPlugin
 	public void onEnable()
 	{
 		plugin = this;
-		log = getLogger();
+		logger = getLogger();
 		
 		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=SaLE
-		log.info(" ███████╗ █████╗ ██╗     ███████╗ | API-Version: "+plugin.getDescription().getAPIVersion());
-		log.info(" ██╔════╝██╔══██╗██║     ██╔════╝ | Author: "+plugin.getDescription().getAuthors().toString());
-		log.info(" ███████╗███████║██║     █████╗   | Plugin Website: "+plugin.getDescription().getWebsite());
-		log.info(" ╚════██║██╔══██║██║     ██╔══╝   | Depend Plugins: "+plugin.getDescription().getDepend().toString());
-		log.info(" ███████║██║  ██║███████╗███████╗ | SoftDepend Plugins: "+plugin.getDescription().getSoftDepend().toString());
-		log.info(" ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝ | LoadBefore: "+plugin.getDescription().getLoadBefore().toString());
+		logger.info(" ███████╗ █████╗ ██╗     ███████╗ | API-Version: "+plugin.getDescription().getAPIVersion());
+		logger.info(" ██╔════╝██╔══██╗██║     ██╔════╝ | Author: "+plugin.getDescription().getAuthors().toString());
+		logger.info(" ███████╗███████║██║     █████╗   | Plugin Website: "+plugin.getDescription().getWebsite());
+		logger.info(" ╚════██║██╔══██║██║     ██╔══╝   | Depend Plugins: "+plugin.getDescription().getDepend().toString());
+		logger.info(" ███████║██║  ██║███████╗███████╗ | SoftDepend Plugins: "+plugin.getDescription().getSoftDepend().toString());
+		logger.info(" ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝ | LoadBefore: "+plugin.getDescription().getLoadBefore().toString());
 		
 		setupIFHAdministration();
 		
@@ -148,7 +150,7 @@ public class SaLE extends JavaPlugin
 			mysqlSetup = new MysqlSetup(plugin, adm, path);
 		} else
 		{
-			log.severe("MySQL is not set in the Plugin " + pluginName + "!");
+			logger.severe("MySQL is not set in the Plugin " + pluginName + "!");
 			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 			return;
 		}
@@ -169,20 +171,20 @@ public class SaLE extends JavaPlugin
 	
 	public void onDisable()
 	{
-		log.info(pluginName + " despawn all Holograms");
+		logger.info(pluginName + " despawn all Holograms");
 		for(Entry<String, ItemHologram> e : ItemHologramHandler.taskMap.entrySet())
 		{
 			e.getValue().despawn();
 		}
-		log.info(pluginName + " do all open Shoplogs!");
+		logger.info(pluginName + " do all open Shoplogs!");
 		if(backgroundTask != null)
 		{
 			backgroundTask.doShopLog();
 		}
-		log.info(pluginName + " done all open Shoplogs!");
+		logger.info(pluginName + " done all open Shoplogs!");
 		Bukkit.getScheduler().cancelTasks(this);
 		HandlerList.unregisterAll(this);
-		log.info(pluginName + " is disabled!");
+		logger.info(pluginName + " is disabled!");
 	}
 
 	public static SaLE getPlugin()
@@ -487,7 +489,7 @@ public class SaLE extends JavaPlugin
 		{
 			return false;
 		}
-		log.info(pluginName+" hook with "+externPluginName);
+		logger.info(pluginName+" hook with "+externPluginName);
 		return true;
 	}
 	
@@ -504,7 +506,7 @@ public class SaLE extends JavaPlugin
 		   return;
 		}
 		administrationConsumer = rsp.getProvider();
-		log.info(pluginName + " detected InterfaceHub >>> Administration.class is consumed!");
+		logger.info(pluginName + " detected InterfaceHub >>> Administration.class is consumed!");
 	}
 	
 	public Administration getAdministration()
@@ -527,6 +529,7 @@ public class SaLE extends JavaPlugin
 		setupIFHMessageToVelocity();
 		setupIFHBaseComponentToBungee();
 		setupIFHTeleport();
+		setupIFHStatistic();
 	}
 	
 	public void setupIFHValueEntry()
@@ -561,7 +564,7 @@ public class SaLE extends JavaPlugin
 				        return;
 				    }
 				    valueEntryConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> ValueEntry.class is consumed!");
+				    logger.info(pluginName + " detected InterfaceHub >>> ValueEntry.class is consumed!");
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
@@ -619,7 +622,7 @@ public class SaLE extends JavaPlugin
     	signShopProvider,
         this,
         ServicePriority.Normal);
-    	log.info(pluginName + " detected InterfaceHub >>> SignShop.class is provided!");
+    	logger.info(pluginName + " detected InterfaceHub >>> SignShop.class is provided!");
 		return false;
 	}
 	
@@ -651,7 +654,7 @@ public class SaLE extends JavaPlugin
 				        return;
 				    }
 				    enumTranslationConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> EnumTranslation.class is consumed!");
+				    logger.info(pluginName + " detected InterfaceHub >>> EnumTranslation.class is consumed!");
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
@@ -670,7 +673,7 @@ public class SaLE extends JavaPlugin
 	{
 		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
 	    {
-			log.severe("ItemStackComparison Interface dependency cannot found!");
+			logger.severe("ItemStackComparison Interface dependency cannot found!");
 			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 	    	return;
 	    }
@@ -679,12 +682,12 @@ public class SaLE extends JavaPlugin
                         		 me.avankziar.ifh.spigot.comparison.ItemStackComparison.class);
 	    if(rsp == null) 
 	    {
-	    	log.severe("ItemStackComparison Interface dependency cannot found!");
+	    	logger.severe("ItemStackComparison Interface dependency cannot found!");
 			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 	    	return;
 	    }
 	    itemStackComparisonConsumer = rsp.getProvider();
-	    log.info(pluginName + " detected InterfaceHub >>> ItemStackComparison.class is consumed!");
+	    logger.info(pluginName + " detected InterfaceHub >>> ItemStackComparison.class is consumed!");
 	}
 	
 	public ItemStackComparison getItemStackComparison()
@@ -697,8 +700,8 @@ public class SaLE extends JavaPlugin
 		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")
 				&& !plugin.getServer().getPluginManager().isPluginEnabled("Vault")) 
 	    {
-			log.severe("Plugin InterfaceHub or Vault are missing!");
-			log.severe("Disable "+pluginName+"!");
+			logger.severe("Plugin InterfaceHub or Vault are missing!");
+			logger.severe("Disable "+pluginName+"!");
 			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 	    	return;
 	    }
@@ -713,17 +716,17 @@ public class SaLE extends JavaPlugin
 		        		.getRegistration(net.milkbowl.vault.economy.Economy.class);
 		        if (rsp2 == null) 
 		        {
-		        	log.severe("A economy plugin which supported InterfaceHub or Vault is missing!");
-					log.severe("Disable "+pluginName+"!");
+		        	logger.severe("A economy plugin which supported InterfaceHub or Vault is missing!");
+					logger.severe("Disable "+pluginName+"!");
 					Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 		            return;
 		        }
 		        vEco = rsp2.getProvider();
-		        log.info(pluginName + " detected Vault >>> Economy.class is consumed!");
+		        logger.info(pluginName + " detected Vault >>> Economy.class is consumed!");
 				return;
 			}
 			ecoConsumer = rsp.getProvider();
-			log.info(pluginName + " detected InterfaceHub >>> Economy.class is consumed!");
+			logger.info(pluginName + " detected InterfaceHub >>> Economy.class is consumed!");
 		} else
 		{
 			RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> rsp = getServer()
@@ -731,13 +734,13 @@ public class SaLE extends JavaPlugin
 	        		.getRegistration(net.milkbowl.vault.economy.Economy.class);
 	        if (rsp == null) 
 	        {
-	        	log.severe("A economy plugin which supported Vault is missing!");
-				log.severe("Disable "+pluginName+"!");
+	        	logger.severe("A economy plugin which supported Vault is missing!");
+				logger.severe("Disable "+pluginName+"!");
 				Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(plugin);
 	            return;
 	        }
 	        vEco = rsp.getProvider();
-	        log.info(pluginName + " detected Vault >>> Economy.class is consumed!");
+	        logger.info(pluginName + " detected Vault >>> Economy.class is consumed!");
 		}
         return;
     }
@@ -783,7 +786,7 @@ public class SaLE extends JavaPlugin
 				    	i++;
 				        return;
 				    }
-				    log.info(pluginName + " detected InterfaceHub >>> Modifier.class is consumed!");
+				    logger.info(pluginName + " detected InterfaceHub >>> Modifier.class is consumed!");
 				    modifierConsumer = rsp.getProvider();
 				    cancel();
 				} catch(NoClassDefFoundError e)
@@ -858,7 +861,7 @@ public class SaLE extends JavaPlugin
 				        return;
 				    }
 				    mtbConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> MessageToBungee.class is consumed!");
+				    logger.info(pluginName + " detected InterfaceHub >>> MessageToBungee.class is consumed!");
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
@@ -901,7 +904,7 @@ public class SaLE extends JavaPlugin
 				        return;
 				    }
 				    mtvConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> MessageToVelocity.class is consumed!");
+				    logger.info(pluginName + " detected InterfaceHub >>> MessageToVelocity.class is consumed!");
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
@@ -944,7 +947,7 @@ public class SaLE extends JavaPlugin
 				        return;
 				    }
 				    bctbConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> BaseComponentToBungee.class is consumed!");
+				    logger.info(pluginName + " detected InterfaceHub >>> BaseComponentToBungee.class is consumed!");
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
@@ -987,7 +990,7 @@ public class SaLE extends JavaPlugin
 				        return;
 				    }
 				    teleportConsumer = rsp.getProvider();
-				    log.info(pluginName + " detected InterfaceHub >>> Teleport.class is consumed!");
+				    logger.info(pluginName + " detected InterfaceHub >>> Teleport.class is consumed!");
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{
@@ -1000,6 +1003,50 @@ public class SaLE extends JavaPlugin
 	public Teleport getTeleport()
 	{
 		return teleportConsumer;
+	}
+	
+	private void setupIFHStatistic() 
+	{
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+	    	return;
+	    }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+				    	return;
+				    }
+				    RegisteredServiceProvider<me.avankziar.ifh.general.statistic.Statistic> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 me.avankziar.ifh.general.statistic.Statistic.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    statisticConsumer = rsp.getProvider();
+				    logger.info(pluginName + " detected InterfaceHub >>> Statistic.class is consumed!");
+				    new main.java.me.avankziar.sale.spigot.ifh.StatisticHandler(plugin);
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 0L, 20*2);
+	}
+	
+	public Statistic getStatistic()
+	{
+		return statisticConsumer;
 	}
 	
 	private void setupWordEditGuard()

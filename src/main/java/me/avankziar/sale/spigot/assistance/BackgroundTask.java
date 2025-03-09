@@ -277,7 +277,7 @@ public class BackgroundTask
 								block = Bukkit.getWorld(ss.getWorld()).getBlockAt(ss.getX(), ss.getY(), ss.getZ());
 							} catch(Exception e)
 							{
-								SaLE.log.warning("World "+ss.getWorld()+" are not to be found on server "+SaLE.getPlugin().getServername()+"!");
+								SaLE.logger.warning("World "+ss.getWorld()+" are not to be found on server "+SaLE.getPlugin().getServername()+"!");
 								continue;
 							}
 							if(!(block.getState() instanceof org.bukkit.block.Sign))

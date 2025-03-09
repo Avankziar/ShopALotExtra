@@ -37,6 +37,7 @@ import main.java.me.avankziar.sale.spigot.handler.ConfigHandler;
 import main.java.me.avankziar.sale.spigot.handler.GuiHandler;
 import main.java.me.avankziar.sale.spigot.handler.MessageHandler;
 import main.java.me.avankziar.sale.spigot.handler.SignHandler;
+import main.java.me.avankziar.sale.spigot.ifh.StatisticHandler;
 import main.java.me.avankziar.sale.spigot.modifiervalueentry.Bypass;
 import main.java.me.avankziar.sale.spigot.modifiervalueentry.ModifierValueEntry;
 import main.java.me.avankziar.sale.spigot.objects.ClientDailyLog;
@@ -441,6 +442,26 @@ public class ShopFunctionHandler
 		{
 			player.getInventory().addItem(is);
 		}
+		if(plugin.getStatistic() != null)
+		{
+			StatisticHandler.addStatistic(player.getUniqueId(), StatisticHandler.CLIENT_BUY_AMOUNT_MATERIAL, 
+					"null", (double) samo);
+			StatisticHandler.addStatistic(player.getUniqueId(), StatisticHandler.CLIENT_BUY_AMOUNT_MATERIAL, 
+					ssh.getItemStack().getType().toString(), (double) samo);
+			StatisticHandler.addStatistic(player.getUniqueId(), StatisticHandler.CLIENT_BUY_AMOUNT_CURRENCY, 
+					"null", (double) samo);
+			StatisticHandler.addStatistic(player.getUniqueId(), StatisticHandler.CLIENT_BUY_AMOUNT_CURRENCY, 
+					ssh.getItemStack().getType().toString(), (double) samo*d);
+			
+			StatisticHandler.addStatistic(ssh.getOwner(), StatisticHandler.SHOPOWNER_SELL_AMOUNT_MATERIAL, 
+					"null", (double) samo);
+			StatisticHandler.addStatistic(ssh.getOwner(), StatisticHandler.SHOPOWNER_SELL_AMOUNT_MATERIAL, 
+					ssh.getItemStack().getType().toString(), (double) samo);
+			StatisticHandler.addStatistic(ssh.getOwner(), StatisticHandler.SHOPOWNER_SELL_AMOUNT_CURRENCY, 
+					"null", (double) samo);
+			StatisticHandler.addStatistic(ssh.getOwner(), StatisticHandler.SHOPOWNER_SELL_AMOUNT_CURRENCY, 
+					ssh.getItemStack().getType().toString(), (double) samo*d);
+		}
 		GuiHandler.openShop(ssh, player, settingsLevel, inv, false);
 	}
 	
@@ -780,6 +801,26 @@ public class ShopFunctionHandler
 			}
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+		if(plugin.getStatistic() != null)
+		{
+			StatisticHandler.addStatistic(player.getUniqueId(), StatisticHandler.CLIENT_SELL_AMOUNT_MATERIAL, 
+					"null", (double) samo);
+			StatisticHandler.addStatistic(player.getUniqueId(), StatisticHandler.CLIENT_SELL_AMOUNT_MATERIAL, 
+					ssh.getItemStack().getType().toString(), (double) samo);
+			StatisticHandler.addStatistic(player.getUniqueId(), StatisticHandler.CLIENT_SELL_AMOUNT_CURRENCY, 
+					"null", (double) samo);
+			StatisticHandler.addStatistic(player.getUniqueId(), StatisticHandler.CLIENT_SELL_AMOUNT_CURRENCY, 
+					ssh.getItemStack().getType().toString(), (double) samo*d);
+			
+			StatisticHandler.addStatistic(ssh.getOwner(), StatisticHandler.SHOPOWNER_BUY_AMOUNT_MATERIAL, 
+					"null", (double) samo);
+			StatisticHandler.addStatistic(ssh.getOwner(), StatisticHandler.SHOPOWNER_BUY_AMOUNT_MATERIAL, 
+					ssh.getItemStack().getType().toString(), (double) samo);
+			StatisticHandler.addStatistic(ssh.getOwner(), StatisticHandler.SHOPOWNER_BUY_AMOUNT_CURRENCY, 
+					"null", (double) samo);
+			StatisticHandler.addStatistic(ssh.getOwner(), StatisticHandler.SHOPOWNER_BUY_AMOUNT_CURRENCY, 
+					ssh.getItemStack().getType().toString(), (double) samo*d);
+		}
 		GuiHandler.openShop(ssh, player, settingsLevel, inv, false);
 	}
 	

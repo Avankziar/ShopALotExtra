@@ -51,6 +51,19 @@ Future Build
 x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
 x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config einstellen kann.
 
+2-1-0
+- IFH general.statistic.Statistic konsumiert.
+- Statistik hinzugefügt:
+  - CLIENT_BUY_AMOUNT_MATERIAL | Wieviel Materialienanzahl man als Kunde gekauft hat.
+  - CLIENT_SELL_AMOUNT_MATERIAL | Wieviel Materialienanzal man als Kunde verkauft hat.
+  - SHOPOWNER_BUY_AMOUNT_MATERIAL | Wieviel Materialienanzahl man als Shopbesitzter ankauft hat.
+  - SHOPOWNER_SELL_AMOUNT_MATERIAL | Wieviel Materialienanzahl mal als Shopbesitzter verkauft hat.
+  - CLIENT_BUY_AMOUNT_CURRENCY | Wieviel Geld (Währungslos) man als Kunde durch das Verkaufen gemacht hat.
+  - CLIENT_SELL_AMOUNT_CURRENCY | Wieviel Geld (Währungslos) man als Kunde durch das Kaufen bezahlt hat.
+  - SHOPOWNER_BUY_AMOUNT_CURRENCY | Wieviel Geld (Währungslos) man als Shopbesitzer durch das ankaufen bezahlt hat.
+  - SHOPOWNER_SELL_AMOUNT_CURRENCY | Wieviel Geld (Währungslos) man als Shopbesitzer durch das Verkaufen eingenommen hat.
+- Statistiken werden nun beim Kaufen und Verkaufen bei Shop erhoben. Jeweils 2 für den Kunden und 2 für den Shopeigentümer.
+
 2-0-4
 - Änderung zur Aufrufung des Player Obejcts im PlayerJoinEvent
 
