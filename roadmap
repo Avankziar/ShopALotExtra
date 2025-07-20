@@ -51,6 +51,9 @@ Future Build
 x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
 x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config einstellen kann.
 
+2-2-0
+- Spigot 1.21.8 Support
+
 2-1-0
 - IFH general.statistic.Statistic konsumiert.
 - Statistik hinzugefügt:
