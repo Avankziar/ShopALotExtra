@@ -202,6 +202,8 @@ public enum ClickFunctionType
 	ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE,
 	ADMINISTRATION_ADDLISTEDTYPE_PLAYER_CUSTOM_REMOVE_WORLD,
 	
+	ADMINISTRATION_TOGGLE_SEARCHABLE,
+	
 	//ShopGui Button Anzahl: 15
 	//SHOP_ITEMSTACK_VIEW, //Einfache Ansicht des Items wie es ist. Return beim Klick.
 	//SHOP_ITEMSTACK_INFO, //Zeigt alle weitere Infos, Haltbarkeit, ItemFlags etc.

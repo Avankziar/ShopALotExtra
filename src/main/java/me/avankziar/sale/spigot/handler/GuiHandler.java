@@ -1644,6 +1644,10 @@ public class GuiHandler
 		{
 			s = s.replace("%hologram%", getBoolean(ssh.isItemHologram()));
 		}
+		if(text.contains("%searchable%"))
+		{
+			s = s.replace("%searchable%", getBoolean(ssh.isSearchable()));
+		}
 		return ChatApi.tl(s);
 	}
 	

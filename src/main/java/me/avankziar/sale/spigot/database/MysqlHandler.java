@@ -114,6 +114,26 @@ public class MysqlHandler
         return ps;
 	}
 	
+	public int rawQuery(Type type, String query, Object... whereObject)
+	{
+		try (Connection conn = plugin.getMysqlSetup().getConnection();)
+		{
+			PreparedStatement ps = getPreparedStatement(conn,
+					query.replace("%table%", type.getValue()),
+					1,
+					whereObject);
+			return ps.executeUpdate();
+	    } catch (SQLException e) 
+		{
+			  if(type.getObject() instanceof MysqlHandable)
+			  {
+				  MysqlHandable mh = (MysqlHandable) type.getObject();
+				  mh.log(Level.WARNING, "Could not check "+type.getObject().getClass().getName()+" Object if it exist!", e);
+			  }
+		}
+		return 0;
+	}
+	
 	public boolean exist(Type type, String whereColumn, Object... whereObject)
 	{
 		//All Object which leaves the try-block, will be closed. So conn and ps is closed after the methode

@@ -198,7 +198,8 @@ public class MysqlSetup
 		+ " num_text text,"
 		+ " sign_glowing boolean,"
 		+ " listed_type text,"
-		+ " item_hologram boolean);";
+		+ " item_hologram boolean,"
+		+ " searchable boolean);";
 		baseSetup(data);
 		return true;
 	}

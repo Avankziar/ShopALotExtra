@@ -202,6 +202,20 @@ public class SignChangeListener implements Listener
 			acid = ac.getID();
 		}
 		long defaultStartItemStorage = new ConfigHandler().getDefaulStartItemStorage();
+		if(plugin.getYamlHandler().getConfig().get("SignShop.VIPStartItemStorage") != null)
+		{
+			for(String x : plugin.getYamlHandler().getConfig().getStringList("SignShop.VIPStartItemStorage"))
+			{
+				String[] s = x.split(";");
+				if(s.length != 2) continue;
+				if(!MatchApi.isLong(s[1])) continue;
+				long vipstorage = Long.valueOf(s[1]);
+				if(vipstorage <= 0) continue;
+				if(defaultStartItemStorage > vipstorage) continue;
+				if(!player.hasPermission(s[0])) continue;
+				defaultStartItemStorage = vipstorage;
+			}
+		}
 		SignShop ssh = new SignShop(
 				0, player.getUniqueId(),
 				"Shop_"+lastnumber, acid, System.currentTimeMillis(), null, null, Material.AIR,
@@ -210,7 +224,7 @@ public class SignChangeListener implements Listener
 				0, 0, -1.0, -1.0, -1, -1, 
 				plugin.getServername(), player.getWorld().getName(),
 				event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), 
-				0, false, false, true, true, "", false, ListedType.ALL, false);
+				0, false, false, true, true, "", false, ListedType.ALL, false, false);
 		plugin.getMysqlHandler().create(MysqlHandler.Type.SIGNSHOP, ssh);
 		event.setLine(0, ChatApi.tl(SignHandler.getSignLine(0, ssh, event.getBlock())));
 		event.setLine(1, ChatApi.tl(SignHandler.getSignLine(1, ssh, event.getBlock())));

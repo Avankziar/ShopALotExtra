@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
@@ -43,6 +44,7 @@ import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SLog;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SearchBuy;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_SearchSell;
 import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_Toggle;
+import main.java.me.avankziar.sale.spigot.cmd.shop.ARG_ToggleSearchAll;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentConstructor;
 import main.java.me.avankziar.sale.spigot.cmdtree.ArgumentModule;
 import main.java.me.avankziar.sale.spigot.cmdtree.BaseConstructor;
@@ -254,12 +256,22 @@ public class SaLE extends JavaPlugin
 		new ARG_SLog(plugin, slog);
 		ArgumentConstructor sdailylog = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_DAILYLOG, "sale_shop_dailylog", 1, 1, 4, false, null);
 		new ARG_SDailyLog(plugin, sdailylog);
-		ArgumentConstructor searchbuy = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_SEARCHBUY, "sale_shop_searchbuy", 1, 1, 999, false, null);
+		ArrayList<String> mata = new ArrayList<>();
+		for(Material m : Material.values()) 
+		{
+			mata.add(m.toString());
+		}
+		LinkedHashMap<Integer, ArrayList<String>> mats = new LinkedHashMap<>();
+		mats.put(2, mata);
+		ArgumentConstructor searchbuy = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_SEARCHBUY, "sale_shop_searchbuy", 1, 1, 999, false, mats);
 		new ARG_SearchBuy(plugin, searchbuy);
-		ArgumentConstructor searchsell = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_SEARCHBUY, "sale_shop_searchsell", 1, 1, 999, false, null);
+		ArgumentConstructor searchsell = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_SEARCHBUY, "sale_shop_searchsell", 1, 1, 999, false, mats);
 		new ARG_SearchSell(plugin, searchsell);
+		ArgumentConstructor togglesearchall = new ArgumentConstructor(CommandExecuteType.SALE_SHOP_TOGGLESEARCHALL, "sale_shop_togglesearchall", 1, 2, 2, false, null);
+		new ARG_ToggleSearchAll(plugin, togglesearchall);
+		
 		ArgumentConstructor shop = new ArgumentConstructor(CommandExecuteType.SALE_SHOP, "sale_shop", 0, 0, 0, false, null,
-				breaktoggle, delete, toggle, slog, sdailylog, searchbuy, searchsell);
+				breaktoggle, delete, toggle, slog, sdailylog, searchbuy, searchsell, togglesearchall);
 		new ARGShop(plugin, shop);
 		
 		
@@ -991,6 +1003,7 @@ public class SaLE extends JavaPlugin
 				    }
 				    teleportConsumer = rsp.getProvider();
 				    logger.info(pluginName + " detected InterfaceHub >>> Teleport.class is consumed!");
+				    teleportConsumer.setBackAsDefault(true);
 				    cancel();
 				} catch(NoClassDefFoundError e)
 				{

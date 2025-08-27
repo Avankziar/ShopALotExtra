@@ -51,6 +51,23 @@ Future Build
 x ToBungee im BackgroundTask, ToVelocity hinzufügen (mit config angabe)
 x Cooldown für das aufrufen von Gui so bearbeiten, dass man diese per Config einstellen kann.
 
+2-3-0
+- MySQL Änderungen:
+  ALTER TABLE `salesignshop` ADD `searchable` BOOLEAN NOT NULL DEFAULT FALSE AFTER `item_hologram`;
+- 'Toggle Suchfunktion' in AdministrationGui in 'Advanced' hinzugefügt. Besitzt die Standart Permission 'sale.shop.gui.bypass.searchable'
+- Bei /sale shop searchbuy|searchsell, ist nun per Config einstellbar, ob Shop vorher als "Suchbar" eingestellt worden werden müssen um mit den Befehlen gefunden zu werden. ('SignShop.Search.MustBeSearchable')
+- Configliste eingefügt, welche es per Permission erlaubt, eine Start Standartlagerplatz für neue Shops einzustellen. 'SignShop.VIPStartItemStorage'
+- /sale shop togglesearchall <true|false> | Setzt alle Shops auf suchbar bzw. unsuchbar.
+- /sale serveraccount | Als Zwischenbefehl hinzugefügt.
+- Permission hinzugefügt:
+  - sale.serveraccount.create
+  - sale.serveraccount
+- Die AccountID Einstellung ist nun so gebaut, dass man nun, wenn der Account dem Server oder einem Entity gehört, per Permission einstellen kann.
+  Zugriff auf das AdministrationGui wie zuvor über das BypassPermission.
+- Das hinzufügen eines Server oder EntityAccounts ist bitte über das Economyplugin zu regeln, wenn möglich.
+- /sale shop searchbuy/searchsell | Items als Argument sind Tabbar.
+- NPE fix bei AdministrationGui NumPad Takeover
+
 2-2-0
 - Spigot 1.21.8 Support
 

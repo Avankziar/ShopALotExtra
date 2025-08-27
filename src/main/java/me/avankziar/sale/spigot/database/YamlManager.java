@@ -302,7 +302,7 @@ public class YamlManager
 				"",
 				"SSL ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
 				"",
-				"SSL is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+				"SSL is one of the three options which, as long as you dont know what it is, you should leave it as it is."});
 		addConfig("Mysql.AutoReconnect",
 				new Object[] {
 				true},
@@ -310,7 +310,7 @@ public class YamlManager
 				"",
 				"AutoReconnect ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
 				"",
-				"AutoReconnect is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+				"AutoReconnect is one of the three options which, as long as you dont know what it is, you should leave it as it is."});
 		addConfig("Mysql.VerifyServerCertificate",
 				new Object[] {
 				false},
@@ -318,7 +318,7 @@ public class YamlManager
 				"",
 				"VerifyServerCertificate ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
 				"",
-				"VerifyServerCertificate is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+				"VerifyServerCertificate is one of the three options which, as long as you dont know what it is, you should leave it as it is."});
 		addConfig("Mysql.User",
 				new Object[] {
 				"admin"},
@@ -468,6 +468,15 @@ public class YamlManager
 				"Die Anzahl an Standartlagerplatz für ein neuer Shop.",
 				"",
 				"The number of standard storage spaces for a new store."});
+		addConfig("SignShop.VIPStartItemStorage",
+				new Object[] {
+				"sale.storage.vip;6912",
+				"sale.storage.vipp;13824"},
+				new Object[] {
+				"",
+				"Die Permission mit der neuen Start Standartlagerplatz füp einen neuen Shop.",
+				"",
+				"The permission with the new starting default storage location for a new shop."});
 		addConfig("SignShop.CostToAdd1Storage",
 				new Object[] {
 				"dollar;1000.0",
@@ -643,6 +652,14 @@ public class YamlManager
 				"Füllmaterial für die Guis",
 				"",
 				"Filling material for the guis"});
+		addConfig("SignShop.Search.MustBeSearchable",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn 'true', dann müssen Shops sich aktiv per AdministrationGui 'suchbar' gemacht haben um bei den searchbuy|searchsell aufzutauchen.",
+				"",
+				"If 'true', then shops must have actively made themselves 'searchable' via AdministrationGui in order to appear in searchbuy|searchsell."});
 		addConfig("SignShop.Search.Radius",
 				new Object[] {
 				"PROXY"},
@@ -801,6 +818,14 @@ public class YamlManager
 				"&bCommandright for &f/sale shop searchsell",
 				"&eSucht alle Shops nach den angegebenen Parameter für Items zum verkaufen.",
 				"&eSearches all stores for the specified parameters for items to sell.");
+		argumentInput("sale_shop_togglesearchall", "togglesearchall", basePermission+".signshop",
+				"/sale shop togglesearchall <true|false>", "/sale shop togglesearchall", false,
+				"&c/sale shop togglesearchall <true|false> &f| Setzt alle eigenen Shop auf suchbar bzw. unsuchbar.",
+				"&c/sale shop togglesearchall <true|false> &f| Now all your own shops are searchable or unsearchable.",
+				"&bBefehlsrecht für &f/sale shop togglesearchall",
+				"&bCommandright for &f/sale shop togglesearchall",
+				"&eetzt alle eigenen Shop auf suchbar bzw. unsuchbar.",
+				"&eNow all your own shops are searchable or unsearchable.");
 		argumentInput("sale_client", "client", basePermission,
 				"/sale client", "/sale client ", false,
 				"&c/sale client &f| Zwischenbefehl.",
@@ -962,6 +987,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Befehl ist in Cooldown!",
 						"&cThe command is in cooldown!"}));
+		languageKeys.put("OnlyOnIFHEconomy",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas Feature ist nur auf IFH Economy möglich!",
+						"&cThis feature is only available on IFH Economy!"}));
 		languageKeys.put("ShopOwnerNotEnought",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer ShopEigentümer hat nicht genug Geld!",
@@ -997,7 +1026,11 @@ public class YamlManager
 		languageKeys.put("NotOwner"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst diesen Wert nicht ändern, da dir der Shop nicht gehört.",
-						"&cYou can't change this value because you don't own the store."}));
+						"&cYou cant change this value because you dont own the store."}));
+		languageKeys.put("AccountIDNotExisting"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDie Account ID existiert nicht!",
+						"&cThe account ID does not exist!"}));
 		languageKeys.put("PlayerInteractListener.WorldGuardUsageDeny", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cIn dieser Region dürfen keine Shops benutzt werden!",
@@ -1645,6 +1678,14 @@ public class YamlManager
 						"&eBuycosts: &f%buyraw1%",
 						"&eSellcosts: &f%sellraw1%",
 						"&7===================="}));
+		languageKeys.put("Cmd.ToggleSearchAll.ToggleSearch", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eEs wurden %a% Shops suchbar gemacht.",
+						"&e%a% shops have been made searchable."}));
+		languageKeys.put("Cmd.ToggleSearchAll.ToggleUnsearch", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eEs wurden %a% Shops unsuchbar gemacht.",
+						"&e%a% shops have been made unsearchable."}));
 	}
 	
 	public void initModifierValueEntryLanguage() //INFO:ModifierValueEntryLanguages
@@ -2476,6 +2517,32 @@ public class YamlManager
 		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						ClickFunctionType.ADMINISTRATION_OPEN_SHOPLOG.toString()}));
+		path = "19"; //SetSearchable
+		admin.put(path+".Permission",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						".searchable"}));
+		admin.put(path+".SettingLevel",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						SettingsLevel.ADVANCED.toString()}));
+		admin.put(path+".Material",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						Material.CHERRY_HANGING_SIGN.toString()}));
+		admin.put(path+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&dToggle Suchfunktion",
+						"&dToggle Searchfunction"}));
+		admin.put(path+".Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bZz.: &f%searchable%",
+						"&cToggle Ob man in der Suchfunktion auffindbar ist.",
+						"&bAtm.: &f%searchable%",
+						"&cToggle Whether you can be found in the search function."}));
+		admin.put(path+".ClickFunction."+ClickType.LEFT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_TOGGLE_SEARCHABLE.toString()}));
+		admin.put(path+".ClickFunction."+ClickType.RIGHT.toString(),
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						ClickFunctionType.ADMINISTRATION_TOGGLE_SEARCHABLE.toString()}));
 		path = "40"; //Unlimited Toggle Buy
 		admin.put(path+".Permission",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {

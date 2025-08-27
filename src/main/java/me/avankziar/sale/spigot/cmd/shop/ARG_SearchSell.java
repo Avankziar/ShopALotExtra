@@ -67,14 +67,16 @@ public class ARG_SearchSell extends ArgumentModule
 			}
 			if(args.length >= 4)
 			{
+				StringBuilder sb = new StringBuilder();
 				for(int i = 3; i < args.length; i++)
 				{
-					displayname += args[i];
+					sb.append(args[i]);
 					if(i+1 < args.length)
 					{
-						displayname += " ";
+						sb.append(" ");
 					}
 				}
+				displayname = sb.toString();
 			}
 		}
 		Material searchMat = mat;
@@ -96,18 +98,19 @@ public class ARG_SearchSell extends ArgumentModule
 		}
 		boolean price_OR_RandomSort = "PRICE".equals(plugin.getYamlHandler().getConfig().getString("SignShop.Search.SortType", "PRICE"));
 		boolean teleport_OR_Location = "TELEPORT".equals(plugin.getYamlHandler().getConfig().getString("SignShop.Search.DoAfterGuiClick", "LOCATION"));
+		boolean mustBeSearchable = plugin.getYamlHandler().getConfig().getBoolean("SignShop.Search.MustBeSearchable");
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
-				doAsync(player, searchMat, searchDisplayname, searchradius, price_OR_RandomSort, teleport_OR_Location);
+				doAsync(player, searchMat, searchDisplayname, searchradius, price_OR_RandomSort, teleport_OR_Location, mustBeSearchable);
 			}
 		}.runTaskAsynchronously(plugin);
 	}
 	
 	private void doAsync(Player player, Material searchMat, String searchDisplayname,
-			String searchRadius, boolean price_OR_RandomSort, boolean teleport_OR_Location)
+			String searchRadius, boolean price_OR_RandomSort, boolean teleport_OR_Location, boolean mustBeSearchable)
 	{
 		String orderBy = null;
 		if(price_OR_RandomSort)
@@ -138,45 +141,85 @@ public class ARG_SearchSell extends ArgumentModule
 				int zmin = player.getLocation().getBlockZ()-r;
 				s = plugin.getServername();
 				w = player.getWorld().getName();
-				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
-							+ Type.SIGNSHOP.getValue()+
-							"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
-							+ "AND `server_name` = ? AND `world` = ? "
-							+ "AND `x` < ? AND `x` > ? "
-							+ "AND `y` < ? AND `y` > ? "
-							+ "AND `z` < ? AND `z` > ? "
-							+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+				sql = mustBeSearchable ? 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
+						+ "AND `server_name` = ? AND `world` = ? "
+						+ "AND `x` < ? AND `x` > ? "
+						+ "AND `y` < ? AND `y` > ? "
+						+ "AND `z` < ? AND `z` > ? "
+						+ "AND 'searchable' = ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53" : 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
+						+ "AND `server_name` = ? AND `world` = ? "
+						+ "AND `x` < ? AND `x` > ? "
+						+ "AND `y` < ? AND `y` > ? "
+						+ "AND `z` < ? AND `z` > ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
+				list = mustBeSearchable ? 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+								searchMat.toString(), true, 0,
+								s, w, xmax, xmin, ymax, ymin, zmax, zmin, true)) : 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), true, 0,
 						s, w, xmax, xmin, ymax, ymin, zmax, zmin));
 				break;
 			case "PROXY":
-				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+				sql = mustBeSearchable ? 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? AND 'searchable' = ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53" : 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
 						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+				list = mustBeSearchable ? 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+								searchMat.toString(), true, 0, true)) : 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), true, 0));
 				break;
 			case "SERVER":
-				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+				sql = mustBeSearchable ?
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
+						+ "AND `server_name` = ? AND 'searchable' = ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53" : 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
 						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+				list = mustBeSearchable ? 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+								searchMat.toString(), true, 0, s, true)) : 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), true, 0, s));
 				break;
 			case "WORLD":
-				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+				sql = mustBeSearchable ? 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
+						+ "AND `server_name` = ? AND `world` = ? AND 'searchable' = ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53" : 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
 						"` WHERE `material` = ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? AND `world` = ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
 				w = player.getWorld().getName();
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+				list = mustBeSearchable ? 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+								searchMat.toString(), true, 0, s, w, true)) : 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), true, 0, s, w));
 				break;
 			}
@@ -192,7 +235,17 @@ public class ARG_SearchSell extends ArgumentModule
 				int ymin = player.getLocation().getBlockY()-r;
 				int zmax = player.getLocation().getBlockZ()+r;
 				int zmin = player.getLocation().getBlockZ()-r;
-				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+				sql = mustBeSearchable ? 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
+						+ "AND `server_name` = ? AND `world` = ? "
+						+ "AND `x` < ? AND `x` > ? "
+						+ "AND `y` < ? AND `y` > ? "
+						+ "AND `z` < ? AND `z` > ? "
+						+ "AND 'searchable' = ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53" : 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
 						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? AND `world` = ? "
@@ -202,36 +255,66 @@ public class ARG_SearchSell extends ArgumentModule
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
 				w = player.getWorld().getName();
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+				list = mustBeSearchable ? 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+								searchMat.toString(), "%"+searchDisplayname+"%", true, 0, s, w, xmax, xmin, ymax, ymin, zmax, zmin, true)) : 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), "%"+searchDisplayname+"%", true, 0, s, w, xmax, xmin, ymax, ymin, zmax, zmin));
 				break;
 			case "PROXY":
-				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+				sql = mustBeSearchable ? 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
+						+ "AND 'searchable' = ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53" : 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
 						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+				list = mustBeSearchable ? 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+								searchMat.toString(), "%"+searchDisplayname+"%", true, 0, true)) : 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), "%"+searchDisplayname+"%", true, 0));
 				break;
 			case "SERVER":
-				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+				sql = mustBeSearchable ? 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
+						+ "AND `server_name` = ? AND 'searchable' = ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53" : 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
 						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+				list = mustBeSearchable ? 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+								searchMat.toString(), "%"+searchDisplayname+"%", true, 0, s, true)) : 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), "%"+searchDisplayname+"%", true, 0, s));
 				break;
 			case "WORLD":
-				sql = "SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+				sql = mustBeSearchable ? 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
+						+ Type.SIGNSHOP.getValue()+
+						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
+						+ "AND `server_name` = ? AND `world` = ? AND 'searchable' = ? "
+						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53" : 
+						"SELECT *, cast(item_storage_total - item_storage_current as SIGNED) as blubb FROM `" 
 						+ Type.SIGNSHOP.getValue()+
 						"` WHERE `material` = ? AND `display_name` LIKE ? AND `can_sell` = ? AND `sell_amount` > ? "
 						+ "AND `server_name` = ? AND `world` = ? "
 						+ "HAVING blubb > 0 ORDER BY "+orderBy+" LIMIT 0, 53";
 				s = plugin.getServername();
 				w = player.getWorld().getName();
-				list = SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+				list = mustBeSearchable ? 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
+								searchMat.toString(), "%"+searchDisplayname+"%", 1, true, 0, s, w, true)) : 
+						SignShop.convert(plugin.getMysqlHandler().getSQL(Type.SIGNSHOP, sql,
 						searchMat.toString(), "%"+searchDisplayname+"%", 1, true, 0, s, w));
 				break;
 			}

@@ -37,6 +37,7 @@ import main.java.me.avankziar.sale.spigot.objects.ShopAccessType;
 import main.java.me.avankziar.sale.spigot.objects.SignShop;
 import me.avankziar.ifh.general.economy.account.AccountCategory;
 import me.avankziar.ifh.general.economy.account.AccountManagementType;
+import me.avankziar.ifh.general.economy.account.EconomyEntity.EconomyType;
 import me.avankziar.ifh.general.economy.action.EconomyAction;
 import me.avankziar.ifh.general.economy.action.OrdererType;
 import me.avankziar.ifh.general.economy.currency.CurrencyType;
@@ -228,6 +229,7 @@ public class AdminstrationFunctionHandler
 		case ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_WHITELIST: sendPlayerOnList(player, ssh, ListedType.WHITELIST); break;
 		case ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_MEMBER: sendPlayerOnList(player, ssh, ListedType.MEMBER); break;
 		case ADMINISTRATION_LISTEDTYPE_PLAYER_OPENLIST_CUSTOM: sendPlayerOnList(player, ssh, ListedType.CUSTOM); break;
+		case ADMINISTRATION_TOGGLE_SEARCHABLE: setSearchable(player, ssh, openInv, settingsLevel); break;
 		}
 		new BukkitRunnable()
 		{
@@ -715,6 +717,12 @@ public class AdminstrationFunctionHandler
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotOwner")));
 			return;
 		}
+		if(ssh.getNumText() == null)
+		{
+			ssh.setNumText("");
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+			return;
+		}
 		switch(gt)
 		{
 		default: break;
@@ -738,15 +746,25 @@ public class AdminstrationFunctionHandler
 			Account ac = plugin.getIFHEco().getAccount(Integer.parseInt(ssh.getNumText()));
 			if(ac == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AccountNotExist")
-						.replace("%value%", ssh.getNumText())));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AccountIDNotExisting")));
 				break;
 			}
-			if(!plugin.getIFHEco().canManageAccount(ac, player.getUniqueId(), AccountManagementType.CAN_WITHDRAW))
+			if(ac.getOwner() != null && ac.getOwner().getType() == EconomyType.PLAYER)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoWithdrawRights")));
-				break;
-			}			
+				if(!plugin.getIFHEco().canManageAccount(ac, player.getUniqueId(), AccountManagementType.CAN_WITHDRAW))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoWithdrawRights")));
+					break;
+				}
+			} else
+			{
+				if(!ModifierValueEntry.hasPermission(player, Bypass.Permission.SERVERACCOUNT_SHOP_CREATE))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
+					return;
+				}
+			}
+			
 			ssh.setAccountId(Integer.parseInt(ssh.getNumText()));
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AdminstrationFunctionHandler.SetAccount.Set")));
 			break;
@@ -1156,5 +1174,12 @@ public class AdminstrationFunctionHandler
 			}
 		}.runTask(plugin);
 		return;
+	}
+	
+	private static void setSearchable(Player player, SignShop ssh, Inventory inv, SettingsLevel settingsLevel)
+	{
+		ssh.setSearchable(!ssh.isSearchable());
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.SIGNSHOP, ssh, "`id` = ?", ssh.getId());
+		GuiHandler.openAdministration(ssh, player, settingsLevel, inv, false);
 	}
 }
